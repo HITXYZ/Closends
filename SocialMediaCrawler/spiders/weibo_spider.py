@@ -8,7 +8,7 @@
 from scrapy.spider import CrawlSpider
 from scrapy.selector import Selector
 from scrapy import Request
-from SocialMediaCrawler.items import UserItem
+from SocialMediaCrawler.items import WeiboUserItem
 
 
 class WeiboSpider(CrawlSpider):
@@ -22,7 +22,7 @@ class WeiboSpider(CrawlSpider):
 
     def parse(self, response):
         selector = Selector(response)
-        user_item = UserItem()
+        user_item = WeiboUserItem()
         user_item["username"] = \
             selector.xpath('//h1[contains(concat(" ", normalize-space(@class), " "), " username ")]/text()').extract()
         user_item["location"] = \

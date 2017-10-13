@@ -8,7 +8,7 @@
 from scrapy import Field, Item
 
 
-class UserItem(Item):
+class WeiboUserItem(Item):
     username = Field()
     sex = Field()
     location = Field()
