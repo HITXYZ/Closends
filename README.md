@@ -99,13 +99,9 @@
 	
 	2.4 进行调试测试修改；
 
->
->
-<center> 
-**↑↑↑**    
-**Created by XYZ**   
-**Sept.28 2017**   
-</center >   
+> **↑↑↑**    
+> **Created by XYZ**   
+> **Sept.28 2017**   
 
 ---
 
@@ -132,13 +128,10 @@
 
 ![](https://github.com/HITXYZ/Closends/raw/master/Image/BurndownChart.jpg)
 
->
->
-<center> 
-**↑↑↑**  
-**Created by XYZ**   
-**Oct.2 2017**   
-</center >
+> **↑↑↑**  
+> **Created by XYZ**   
+> **Oct.2 2017**   
+
 
 ---
 
