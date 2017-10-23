@@ -99,7 +99,6 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{di
 .icon_closends_logo
 {
     width:251px;height:98px;background-image:url(img/closends-login-logo.32.png);
-    _background-image:url(img/closends-login-logo.ie6.png)
 }
 .ui_hide{visibility:hidden}
 .ui_btn{border:0 none;background-color:transparent;overflow:hidden}
