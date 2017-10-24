@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="312a3ff6-4464-414d-a95d-6e75730f6b5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/SocialMediaCrawler.iml" afterPath="$PROJECT_DIR$/.idea/SocialMediaScraper.iml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -108,6 +107,11 @@
             <path>
               <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
               <item name="SocialMediaScraper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SocialMediaScraper" type="462c0819:PsiDirectoryNode" />
+              <item name="weibo" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
