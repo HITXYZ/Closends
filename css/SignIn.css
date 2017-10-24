@@ -127,7 +127,6 @@ body
     background-repeat: no-repeat;
 }
 
-.imgbox img{width:100%;}
 
 .lay_wrap{color: #ffffff;height:100%;position:relative;min-height:600px;z-index:2}
 .lay_wrap a{color: #ffffff}
@@ -139,12 +138,14 @@ body
 .lay_wrap .lay_main .login_head a{color: #4b4a4a}
 .lay_wrap .lay_main .login_head a:focus{border:0 none;outline:0}
 .lay_wrap .lay_main .login_head .linwei-logo{margin-left:24px;width:188px;height:50px}
+
 .lay_wrap .lay_main .login_wrap{width:265px;position:absolute;right:0}
 .lay_wrap .lay_main .login_wrap .login_option{}
 .lay_wrap .lay_main .login_wrap .option_item{margin-bottom:18px;overflow:hidden;zoom:1}
 .lay_wrap .lay_main .login_wrap .option_item a{float:left;margin-right:10px}
 .lay_wrap .lay_main .login_wrap .option_item .ui_sep_line{float:left;margin-left:0}
 .lay_wrap .lay_main .login_wrap .login_fast{margin-bottom:7px}
+
 .lay_wrap .lay_main .login_form .form_item{margin-bottom:19px;position:relative}
 .lay_wrap .lay_main .login_form .form_item .ui_placeholder{position:absolute;left:2px;top:0;height:18px;padding:12px 10px;line-height:18px;font-size:16px;cursor:text;color:#979797}
 .lay_wrap .lay_main .login_form .form_item_error{color:#F48C12;margin-bottom:10px;border:1px solid #FCEFB7;background:#FFFDE5;line-height:20px;padding:3px 10px}
@@ -198,4 +199,11 @@ only screen and (-webkit-min-device-pixel-ratio:2)
     .linwei-login .icon_closends_logo{background-image:url(img/closends-ad-login-logo.32@2x.png);background-size:183px 50px}
 }
 
+
+
 #CssGaga{content:"160520135044,jan,334"}
+
+
+
+
+
