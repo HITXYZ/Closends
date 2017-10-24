@@ -10,8 +10,8 @@
     <link rel="shortcut icon" href="img/closends.ico" type="image/x-icon"/>
     <link rel="bookmark" href="img/closends.ico" type="image/x-icon"/>
 
-     <script type="text/JavaScript" src="js/bootstrap.js"></script>
-    <!--<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script> -->
+    <!--<script type="text/JavaScript" src="js/bootstrap.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
             $("div.submit").onclick(function(){
@@ -25,38 +25,40 @@
                 $(this).fadeTo("fast",1);
             });
         });
-    </script>
+    </script> -->
 </head>
 <body>
-    <div class="web_login" id="web_login">
-        <br><br>
-        <div class="title">账号密码登录</div>
-        <div>
+<div class="web_login" id="web_login">
+    <br><br>
+    <div class="title">账号密码登录</div>
+    <br>
+    <div class="login_form">
+        <form id="loginform" autocomplete="off" name="loginform" action="" method="post" target="0" style="margin: 0px">
+            <div class="form-group">
+                <input type="email" class="form-control" id="emailInput" placeholder="支持用户名/邮箱登录">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="passwordInput" placeholder="密码">
+            </div>
+
+            <div class="submit">
+                <a class="login_button" href="javascript:void(0);" hidefocus="true">
+                    <input type="submit" tabindex="6" value="登 录" class="btn" id="login_button" disabled="true">
+                </a>
+            </div>
             <br>
-        </div>
-        <div class="login_form">
-            <form id="loginform" autocomplete="off" name="loginform" action="" method="post" target="0" style="margin: 0px">
-                <div class="form-group">
-                    <input type="email" class="form-control" id="emailInput" placeholder="支持用户名/邮箱登录">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="passwordInput" placeholder="密码">
-                </div>
-                <p></p>
-                <div class="submit">
-                    <a class="login_button" href="javascript:void(0);" hidefocus="true">
-                        <input type="submit" tabindex="6" value="登 录" class="btn" id="login_button" disabled="true">
-                    </a>
-                </div>
-            </form>
-        </div>
-        <div class="bottom" id="bottom_web">
-            <a href="#" class="link" id="forgetpwd" target="_blank">忘了密码？</a>
-            <span class="dotted">|</span>
-            <a href="#" class="link" target="_blank">注册新帐号</a>
-            <span class="dotted">|</span>
-            <a href="#" class="link" id="feedback_web" target="_blank">意见反馈</a>
-        </div>
+            <div class="form-group">
+                <!-- <font style="color:red">用户名/邮箱或密码错误</font> -->
+            </div>
+        </form>
     </div>
+    <div class="bottom" id="bottom_web">
+        <a href="#" class="link" id="forgetpwd" target="_blank">忘了密码？</a>
+        <span class="dotted">|</span>
+        <a href="#" class="link" target="_blank">注册新帐号</a>
+        <span class="dotted">|</span>
+        <a href="#" class="link" id="feedback_web" target="_blank">意见反馈</a>
+    </div>
+</div>
 </body>
 </html>
