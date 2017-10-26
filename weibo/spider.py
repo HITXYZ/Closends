@@ -4,6 +4,7 @@
     @desc: scraper of sina weibo
 """
 import re
+import traceback
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -69,7 +70,6 @@ class WeiboSpider:
         weibo_number = int(re.search(r".*\[(\d+)\]", tips[0].get_text()).group(1))
         follow_number = int(re.search(r".*\[(\d+)\]", tips[1].get_text()).group(1))
         fans_number = int(re.search(r".*\[(\d+)\]", tips[2].get_text()).group(1))
-        print(weibo_number, follow_number, fans_number)
 
         # 进入详细资料页面
         self.driver.get("https://weibo.cn/%s/info" % self.id)
@@ -83,7 +83,6 @@ class WeiboSpider:
         address = re.search(r"地区</a>:(.+?)<br/>", detail).group(1)
         birthday = re.search(r"生日</a>:(.+?)<br/>", detail).group(1)
         synopsis = re.search(r"简介</a>:(.+?)<br/>", detail).group(1)
-        print(user_name, sex, address, birthday, synopsis)
 
         item = WeiboUserItem()
         item["user_id"] = self.id
@@ -99,36 +98,87 @@ class WeiboSpider:
         self.item = item
         return item
 
-    def scrape_follow_id(self):
+    def scrape_follow_id(self, id=None):
         if not self.is_login:
             raise LoginError
+        if id is None:
+            id = self.id
         self.follow_id = {}
         wait = WebDriverWait(self.driver, 5)
-        self.driver.get("https://weibo.cn/%s/follow" % self.id)
+        self.driver.get("https://weibo.cn/%s/follow" % id)
         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "pa")))
         bs = BeautifulSoup(self.driver.page_source, "lxml")
 
         page_number = int(bs.find(id="pagelist").form.div.input.attrs["value"])
         follow_tables = bs.find_all("table")
         for table in follow_tables:
-            links = table.tbody.tr.td.next_sibling.find_all("a")
-            name = links[0].get_text()
-            id = re.search(r"uid=(\d+?)&", links[1].attrs["href"]).group(1)
-            self.follow_id[name] = id
+            link = table.find("td").next_sibling.a
+            name = link.get_text()
+            uid_match = re.search(r"weibo.cn/u/(.+)", link.attrs["href"])
+            if uid_match is not None:
+                uid = uid_match.group(1)
+            else:
+                uid = re.search(r"weibo.cn/(.+)", link.attrs["href"]).group(1)
+            self.follow_id[uid] = name
 
         for i in range(2, page_number + 1):
-            self.driver.get("https://weibo.cn/%s/follow?page=%d" % (self.id, i))
+            self.driver.get("https://weibo.cn/%s/follow?page=%d" % (id, i))
             wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "pa")))
             bs = BeautifulSoup(self.driver.page_source, "lxml")
 
             follow_tables = bs.find_all("table")
             for table in follow_tables:
-                links = table.tbody.tr.td.next_sibling.find_all("a")
-                name = links[0].get_text()
-                id = re.search(r"uid=(\d+?)&", links[1].attrs["href"]).group(1)
-                self.follow_id[name] = id
+                link = table.find("td").next_sibling.a
+                name = link.get_text()
+                uid_match = re.search(r"weibo.cn/u/(.+)", link.attrs["href"])
+                if uid_match is not None:
+                    uid = uid_match.group(1)
+                else:
+                    uid = re.search(r"weibo.cn/(.+)", link.attrs["href"]).group(1)
+                self.follow_id[uid] = name
         print(self.follow_id)
         return self.follow_id
+
+    def scrape_fans_id(self, id=None):
+        if not self.is_login:
+            raise LoginError
+        if id is None:
+            id = self.id
+        self.fans_id = {}
+        wait = WebDriverWait(self.driver, 5)
+        self.driver.get("https://weibo.cn/%s/fans" % id)
+        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "pa")))
+        bs = BeautifulSoup(self.driver.page_source, "lxml")
+
+        page_number = int(bs.find(id="pagelist").form.div.input.attrs["value"])
+        fans_tables = bs.find_all("table")
+        for table in fans_tables:
+            link = table.find("td").next_sibling.a
+            name = link.get_text()
+            uid_match = re.search(r"weibo.cn/u/(.+)", link.attrs["href"])
+            if uid_match is not None:
+                uid = uid_match.group(1)
+            else:
+                uid = re.search(r"weibo.cn/(.+)", link.attrs["href"]).group(1)
+            self.fans_id[uid] = name
+
+        for i in range(2, page_number + 1):
+            self.driver.get("https://weibo.cn/%s/fans?page=%d" % (id, i))
+            wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "pa")))
+            bs = BeautifulSoup(self.driver.page_source, "lxml")
+
+            fans_tables = bs.find_all("table")
+            for table in fans_tables:
+                link = table.find("td").next_sibling.a
+                name = link.get_text()
+                uid_match = re.search(r"weibo.cn/u/(.+)", link.attrs["href"])
+                if uid_match is not None:
+                    uid = uid_match.group(1)
+                else:
+                    uid = re.search(r"weibo.cn/(.+)", link.attrs["href"]).group(1)
+                self.fans_id[uid] = name
+        print(self.fans_id)
+        return self.fans_id
 
     def scrape_info(self, id=None):
         if not self.is_login:
@@ -146,7 +196,6 @@ class WeiboSpider:
         weibo_number = int(re.search(r".*\[(\d+)\]", tip2.span.get_text()).group(1))
         follow_number = int(re.search(r".*\[(\d+)\]", tips[0].get_text()).group(1))
         fans_number = int(re.search(r".*\[(\d+)\]", tips[1].get_text()).group(1))
-        print(weibo_number, follow_number, fans_number)
 
         # 进入详细资料页面
         self.driver.get("https://weibo.cn/%s/info" % id)
@@ -160,7 +209,6 @@ class WeiboSpider:
         address = re.search(r"地区:(.+?)<br/>", detail).group(1)
         birthday = re.search(r"生日:(.+?)<br/>", detail).group(1)
         synopsis = re.search(r"简介:(.+?)<br/>", detail).group(1)
-        print(user_name, sex, address, birthday, synopsis)
 
         item = WeiboUserItem()
         item["user_id"] = id
@@ -279,11 +327,22 @@ class WeiboSpider:
                 bs = BeautifulSoup(self.driver.page_source, "lxml")
         return weibo_list
 
+    def quit(self):
+        self.driver.quit()
+
 
 if __name__ == "__main__":
     spider = WeiboSpider("******", "******")
-    spider.login()
-    # spider.scrape_self_info()
-    # spider.scrape_follow_id()
-    # spider.scrape_info("5782276689")
-    spider.scrape_weibo("5782276689", 20)
+    try:
+        spider.login()
+        spider.scrape_self_info()
+        spider.scrape_follow_id()
+        spider.scrape_fans_id()
+        spider.scrape_follow_id("5884913735")
+        spider.scrape_fans_id("5884913735")
+        spider.scrape_info("5782276689")
+        spider.scrape_weibo("5782276689", 10)
+    except Exception:
+        traceback.print_exc()
+    finally:
+        spider.quit()
