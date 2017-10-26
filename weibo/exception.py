@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     @author: Jiale Xu
     @date: 2017/10/23
@@ -31,4 +30,4 @@ class ItemEmptyError(WeiboError):
         self.info = value
 
     def __str__(self):
-        return self.info
+        return repr(self.info)
