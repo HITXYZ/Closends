@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07beefcc-bc03-4e6b-9378-0916f4a47ffe" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SignUpSuccess.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/SignUp.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/SignInFrame.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/css/img/closends-ad-login-logo.ie6.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Login.html" afterPath="$PROJECT_DIR$/SignInFrame.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/Login.css" afterPath="$PROJECT_DIR$/css/SignInFrame.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SIgnUp.html" afterPath="$PROJECT_DIR$/SIgnUp.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SignIn.html" afterPath="$PROJECT_DIR$/SignIn.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/SignIn.css" afterPath="$PROJECT_DIR$/css/SignIn.css" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,8 +20,8 @@
       <file leaf-file-name="SignIn.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SignIn.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="36" column="28" lean-forward="true" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
+            <state relative-caret-position="336">
+              <caret line="34" column="50" lean-forward="true" selection-start-line="34" selection-start-column="50" selection-end-line="34" selection-end-column="50" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -67,8 +60,8 @@
       <file leaf-file-name="SIgnUp.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SIgnUp.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="464">
-              <caret line="96" column="131" lean-forward="true" selection-start-line="96" selection-start-column="131" selection-end-line="96" selection-end-column="131" />
+            <state relative-caret-position="503">
+              <caret line="100" column="7" lean-forward="true" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -176,10 +169,10 @@
         <option value="$PROJECT_DIR$/js/SignUp.js" />
         <option value="$PROJECT_DIR$/js/SignInFrame.js" />
         <option value="$PROJECT_DIR$/SignInFrame.html" />
-        <option value="$PROJECT_DIR$/SignIn.html" />
         <option value="$PROJECT_DIR$/css/SignIn.css" />
         <option value="$PROJECT_DIR$/css/SignInFrame.css" />
         <option value="$PROJECT_DIR$/css/SignUp.css" />
+        <option value="$PROJECT_DIR$/SignIn.html" />
         <option value="$PROJECT_DIR$/SIgnUp.html" />
       </list>
     </option>
@@ -277,12 +270,12 @@
       <updated>1508558003036</updated>
       <workItem from="1508558005602" duration="2558000" />
       <workItem from="1508639966312" duration="2799000" />
-      <workItem from="1508727931516" duration="100702000" />
+      <workItem from="1508727931516" duration="101116000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="106059000" />
+    <option name="totallyTimeSpent" value="106473000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="89" y="23" width="1342" height="877" extended-state="0" />
@@ -495,16 +488,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SignIn.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="28" lean-forward="true" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SignInFrame.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -529,10 +512,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/SignIn.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="34" column="50" lean-forward="true" selection-start-line="34" selection-start-column="50" selection-end-line="34" selection-end-column="50" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SIgnUp.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="96" column="131" lean-forward="true" selection-start-line="96" selection-start-column="131" selection-end-line="96" selection-end-column="131" />
+        <state relative-caret-position="503">
+          <caret line="100" column="7" lean-forward="true" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
