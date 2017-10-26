@@ -1,0 +1,63 @@
+html{height:100%;width:100%;font-family:-apple-system,"Helvetica Neue",Arial,"PingFang SC","Hiragino Sans GB",STHeiti,"Microsoft YaHei","Microsoft JhengHei","Source Han Sans SC","Noto Sans CJK SC","Source Han Sans CN","Noto Sans SC","Source Han Sans TC","Noto Sans CJK TC","WenQuanYi Micro Hei",SimSun,sans-serif}
+*{margin:0;padding:0;border:none;transition:all .2s}
+
+a{outline:0;text-decoration:none;color:#359eff}
+a:hover{color:#2b72ff}
+a:focus{outline:0}
+
+input::-ms-clear,input::-ms-reveal{display:none;width:0;height:0}
+input:focus{outline:0}
+
+body{margin:0;padding:0;height:100%;min-width:560px}
+
+.logo{position:fixed;_position:absolute;top:0;left:0;background:url(img/logo_36-40.png) no-repeat;
+    background-size:36px 40px;background-image:image-set("img/logo_36-40.png" 1x, "img/logo_36-40.png" 2x);
+    z-index:2;height:43px;line-height:43px;padding-left:46px;margin-left:30px;margin-top:18px;font-size:30px;display:block;color:#000}
+
+.side{position:fixed;top:0;left:0;height:100%;width:480px;float:left;overflow:hidden;background-repeat:no-repeat;background-position:center;background-size:cover}
+.side .switcher{position:absolute;width:100%;bottom:0;left:0;height:10px;margin-bottom:10px;text-align:center}
+.side .container{position:relative}.side .container img{min-height:100%;margin:0;padding:0}
+
+.top{min-width:560px;top:0;left:0;text-align:right;position:relative;z-index:1}
+.top .item{float:right;margin:20px 40px 0 0;font-size:16px;color:rgba(0,0,0,.902);padding:10px 0 0;line-height:24px}
+.top .item   a{display:inline-block;color:#000}
+
+.main-wraper{margin-left:480px;position:relative;height:100%}
+.main-wraper .upgrade-tips{position:absolute;top:0;width:100%;background-color:#fef9cc;text-align:center;font-size:14px;color:#666}
+.main{position:absolute;padding-bottom:10px;top:100px;width:100%}
+
+.main .form{position:relative;margin:0 auto;width:480px}
+.main .form .welcome{font-size:44px;margin-bottom:20px}
+.main .form .header{font-size:28px;margin-bottom:64px;line-height:1.2;color:#333}
+
+.main  .form .input-area{position:relative}
+.main  .form .input-area .input-flags{position:absolute;right:0;height:52px;z-index:1}
+.main  .form .input-area .input-flags .input-ok{background:url(img/tick.png) no-repeat;width:20px;height:15px;display:block;float:right;margin:18.5px 10px}
+.main  .form .input-area .input-placeholder{position:absolute;font-size:20px;line-height:20px;padding:16px 20px;background:#fff;z-index:-1;font-weight:lighter;color:#aaa}
+.main  .form .input-area .input-outer{background:0 0;margin:20px 0 0}
+.main  .form .input-area .input-outer input{border:1px #aaa solid;border-radius:4px;background:0 0;text-align:left;font-size:20px;width:438px;height:50px;line-height:50px;padding:0 20px}
+.main  .form .input-area .input-outer input:hover{border-color:#777}
+.main  .form .input-area .input-outer input:focus{border-color:#549df8}
+.main  .form .input-area .input-outer input.error{color:#ff5b5b;border-color:#ff5b5b}
+
+.main  .form .password-tips-group{height:78px;line-height:1;overflow:hidden}
+.main  .form .password-tips-group .password-tips{padding:0 0 0 24px;font-size:14px;line-height:18px;margin:8px 0 8px}
+.main  .form .error-tips-wrap{padding-top:8px;height:21px;overflow:hidden;position:relative;line-height:1}
+.main  .form .error-tips-wrap .error-tips{background:url(img/error.png) no-repeat;background-image:image-set("img/error.png" 1x, "img/error@2x.png" 2x);
+    padding:0 0 0 26px;color:#ff5b5b;font-size:15px;line-height:21px;height:21px;overflow:hidden;position:absolute;bottom:0}
+.main  .form .error-tips-wrap .error-tips .slideup{top:-28px}
+.main  .form .input-tips-wrap{position:relative;overflow:hidden;height:14px;line-height:1}
+.main  .form .input-tips-wrap .input-tips{font-size:14px;height:14px;color:#999;white-space:nowrap;overflow:hidden;position:absolute;bottom:0}
+
+.main  .form .input-area.code-area,.main   .form .input-area.nation-area{width:154px}
+.main  .form .input-area.code-area input.code,.main   .form .input-area.code-area input.nation,.main   .form .input-area.nation-area input.code,.main   .form .input-area.nation-area input.nation{width:112px}
+.main  .form .input-area.phone-area{float:right}
+.main  .form .input-area.phone-area .input-outer{margin:0}
+
+.main  .form .submit{border:1px #3083ff solid;border-radius:4px;background-color:#3487ff;box-shadow:0 5px 8px 0 rgba(24,95,255,.1);color:#fff;text-align:center;font-weight:lighter;background-image:linear-gradient(0deg,#398bff,#3083ff);width:478px;height:60px;margin:40px 0 8px;font-size:24px}
+.main  .form .submit:focus,.main   .form .submit:hover{background-color:#3580eb;background-image:linear-gradient(0deg,#3580eb,#2c79eb)}
+.main  .form .submit.disabled{color:#ccc;background-color:#f0f0f0;background-image:none;border-color:transparent;box-shadow:none}
+
+.main  .footer{font-size:14px;color:#bbb;text-align:center;margin:30px 0;font-weight:lighter}
+.main  .footer.bottom{position:fixed;bottom:0}
+
