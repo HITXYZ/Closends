@@ -218,7 +218,7 @@ class WeiboSpider:
                         if image_all_a is None:     # 含有一张图片
                             image_img = divs[1].a.img
                             item["images"].append(image_img.attrs["src"])
-                        else:                       # 含有多张图片
+                        else:       # 含有多张图片
                             self.driver.get(image_all_a.attrs["href"])
                             wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "c")))
                             bs1 = BeautifulSoup(self.driver.page_source, "lxml")
@@ -228,7 +228,7 @@ class WeiboSpider:
                                 item["images"].append(image_img.attrs["src"])
                         print(item)
                         weibo_list.append(item)
-                    else:                                       # 转发微博，无图
+                    else:       # 转发微博，无图
                         repost_from_span = divs[0].find("span", {"class": "cmt"})
                         content_span = divs[0].find("span", {"class": "ctt"})
                         repost_reason_div = divs[1]
@@ -255,7 +255,7 @@ class WeiboSpider:
                     item["repost_from"] = re.search(r"转发了(.*)的微博", str(repost_from_span)).group(1)
                     item["repost_reason"] = re.search(r"转发理由:</span>(.*)<a href=\"http://weibo.cn/attitude/",
                                                       str(repost_reason_div)).group(1)
-                    if image_all_a is None:  # 含有一张图片
+                    if image_all_a is None:     # 含有一张图片
                         image_img = divs[1].a.img
                         item["images"].append(image_img.attrs["src"])
                     else:   # 含有多张图片
@@ -281,7 +281,7 @@ class WeiboSpider:
 
 
 if __name__ == "__main__":
-    spider = WeiboSpider("15544404545", "XJL970928wb")
+    spider = WeiboSpider("******", "******")
     spider.login()
     # spider.scrape_self_info()
     # spider.scrape_follow_id()

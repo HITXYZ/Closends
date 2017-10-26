@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="312a3ff6-4464-414d-a95d-6e75730f6b5c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/SocialMediaScraper.iml" afterPath="$PROJECT_DIR$/.idea/SocialMediaScraper.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weibo/exception.py" afterPath="$PROJECT_DIR$/weibo/exception.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weibo/ghostdriver.log" afterPath="$PROJECT_DIR$/weibo/ghostdriver.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weibo/items.py" afterPath="$PROJECT_DIR$/weibo/items.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/weibo/spider.py" afterPath="$PROJECT_DIR$/weibo/spider.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,8 +25,8 @@
       <file leaf-file-name="spider.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/weibo/spider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1790">
-              <caret line="288" column="41" lean-forward="true" selection-start-line="288" selection-start-column="41" selection-end-line="288" selection-end-column="41" />
+            <state relative-caret-position="-3095">
+              <caret line="115" column="75" lean-forward="true" selection-start-line="115" selection-start-column="75" selection-end-line="115" selection-end-column="75" />
               <folding>
                 <element signature="e#85#94#0" expanded="true" />
               </folding>
@@ -41,17 +34,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="items.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="items.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/weibo/items.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+            <state relative-caret-position="1327">
+              <caret line="117" column="0" lean-forward="true" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="exception.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="exception.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/weibo/exception.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-191">
@@ -94,8 +87,8 @@
         <option value="$PROJECT_DIR$/weibo/weibo_items.py" />
         <option value="$PROJECT_DIR$/weibo/weibo_spider.py" />
         <option value="$PROJECT_DIR$/weibo/exception.py" />
-        <option value="$PROJECT_DIR$/weibo/spider.py" />
         <option value="$PROJECT_DIR$/weibo/items.py" />
+        <option value="$PROJECT_DIR$/weibo/spider.py" />
       </list>
     </option>
   </component>
@@ -485,11 +478,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/weibo/spider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1790">
-          <caret line="288" column="41" lean-forward="true" selection-start-line="288" selection-start-column="41" selection-end-line="288" selection-end-column="41" />
+        <state relative-caret-position="-3095">
+          <caret line="115" column="75" lean-forward="true" selection-start-line="115" selection-start-column="75" selection-end-line="115" selection-end-column="75" />
           <folding>
             <element signature="e#85#94#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/weibo/items.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1327">
+          <caret line="117" column="0" lean-forward="true" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -497,14 +498,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-191">
           <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/weibo/items.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
           <folding />
         </state>
       </provider>
