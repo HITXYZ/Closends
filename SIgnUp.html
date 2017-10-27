@@ -35,7 +35,7 @@
     </div>
     <div class="main-wrapper" id="main-wrapper" style="margin-left: 480px">
         <div class="main" >
-            <div class="form" autocomplete="off" >
+            <div class="form" id="sign_up_form" autocomplete="off" style="display:block">
                 <div>
                     <div class="welcome">邮箱帐号注册Closends</div>
                     <div class="header">邮箱登录，便于记忆</div>
@@ -90,6 +90,20 @@
                 </div>
                 <div>
                     <input id="get_acc" type="submit" class="submit" value="立即注册" tabindex="7">
+                </div>
+            </div>
+            <div class="error" id="sign_up_error" style="display:none">
+                <div class="error-logo"></div>
+                <div class="error-msg" data-bind="text: errorMsg">注册失败，该邮箱已被注册</div>
+                <div class="error-link">
+                    <a href="javascript:backtoSignUp()">返回</a>|<a href="javascript:void(0)">联系我们</a>
+                </div>
+            </div>
+            <div class="succ" id="sign_up_succ" style="display:none">
+                <div class="succ-logo"></div>
+                <div class="reg-succ">注册成功<br><br>开启属于你的特别关注</div>
+                <div>
+                    <a href="SignIn.html" target="_blank"><button class="login">立即登录</button></a>
                 </div>
             </div>
             <br>

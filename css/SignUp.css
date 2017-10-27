@@ -61,3 +61,20 @@ body{margin:0;padding:0;height:100%;min-width:560px}
 .main  .footer{font-size:14px;color:#bbb;text-align:center;margin:30px 0;font-weight:lighter}
 .main  .footer.bottom{position:fixed;bottom:0}
 
+
+.main .error{ text-align:center;margin:120px auto;position:relative}
+.main .error .error-logo
+{
+    width:80px;height:80px;background:url(img/alert.png) no-repeat;
+    background-image:image-set("img/alert.png" 1x, "img/alert@2x.png" 2x);
+    background-size:80px 80px;font-size:34px;color:#000;margin:0 auto
+}
+.main .error .error-msg{font-size:28px;color:#000;padding:60px 0 70px}
+.main .error .error-link{padding-top:20px;font-size:18px;color:#aaa}
+.main .error .error-link a{padding:0 10px}
+
+.main .succ {position:relative;margin:90px auto;text-align:center}
+.main .succ .succ-logo{background:url(img/succ.png) no-repeat;background-image:image-set(url("img/succ.png") 1x, url("img/succ@2x.png") 2x);background-size:80px 80px;margin:20px auto;width:80px;height:80px}
+.main .succ .reg-succ{padding-top:16px;font-size:28px;line-height:1;color:#000;margin-bottom: 20px}
+.main .succ .login{border:1px #3083ff solid;border-radius:4px;background-color:#3487ff;box-shadow:0 5px 8px 0 rgba(24,95,255,.1);color:#fff;text-align:center;font-weight:lighter;background-image:linear-gradient(0deg,#398bff,#3083ff);font-size:24px;width:400px;height:62px;margin:56px auto 0 auto}
+.main .succ .login:focus,.main .succ .login:hover{background-color:#3580eb;background-image:linear-gradient(0deg,#3580eb,#2c79eb)}

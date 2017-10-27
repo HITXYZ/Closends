@@ -7,6 +7,7 @@ $(function () {
     $("#emailInput").focus(function () {
         document.getElementById("mail-tips").style.display="none";
         document.getElementById("mail-error").style.display="none";
+        document.getElementById("sign_in_error").style.display="none";
     })
     $("#emailInput").blur(function () {
         var email = $("#emailInput").val();
@@ -30,6 +31,7 @@ $(function () {
     $("#passwordInput").focus(function () {
         document.getElementById("password-tips").style.display="none";
         document.getElementById("password-error").style.display="none";
+        document.getElementById("sign_in_error").style.display="none";
     })
     $("#passwordInput").blur(function () {
 

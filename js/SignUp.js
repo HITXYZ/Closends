@@ -14,7 +14,11 @@ function load(){
     }
     return;
 }
-
+function backtoSignUp() {
+    document.getElementById("sign_up_error").style.display="none";
+    document.getElementById("sign_up_form").style.display="block";
+    return;
+}
 var flag = {
     "nickname":false,
     "password":false,
