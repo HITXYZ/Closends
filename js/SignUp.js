@@ -1,12 +1,49 @@
+function load(){
+    var window_width=document.documentElement.clientWidth;
+    if(window_width<=1000){
+        document.getElementById("sideshow").style.display="none";
+        $("#main-wrapper").css("marginLeft",0);
+    }else if(window_width<=1200) {
+        document.getElementById("sideshow").style.display="block";
+        document.getElementById("sideshow").style.width="240px";
+        $("#main-wrapper").css("marginLeft",240);
+    }else{
+        document.getElementById("sideshow").style.display="block";
+        document.getElementById("sideshow").style.width="480px";
+        $("#main-wrapper").css("marginLeft",480);
+    }
+    return;
+}
+
 var flag = {
     "nickname":false,
     "password":false,
     "mail":false,
 };
 $(function(){
+    //窗口大小变化实时监测
+    $(window).resize(function () {
+        var window_width=document.documentElement.clientWidth;
+        if(window_width<=1000){
+            document.getElementById("sideshow").style.display="none";
+            $("#main-wrapper").css("marginLeft",0);
+        }else if(window_width<=1200) {
+            document.getElementById("sideshow").style.display="block";
+            document.getElementById("sideshow").style.width="240px";
+            $("#main-wrapper").css("marginLeft",240);
+        }else{
+            document.getElementById("sideshow").style.display="block";
+            document.getElementById("sideshow").style.width="480px";
+            $("#main-wrapper").css("marginLeft",480);
+        }
+        return;
+    })
     // mail验证
     $("#mail").focus(function () {
         document.getElementById("mail-tips").style.display="none";
+        document.getElementById("mail-error").style.display="none";
+        document.getElementById("mail-ok").style.display="none";
+        return;
     })
     $("#mail").blur(function(){
         var mail = $(this).val();
@@ -30,6 +67,9 @@ $(function(){
     // 用户名校验
     $("#nickname").focus(function () {
         document.getElementById("nickname-tips").style.display="none";
+        document.getElementById("nickname-error").style.display="none";
+        document.getElementById("nickname-ok").style.display="none";
+        return;
     })
     $("#nickname").blur(function(){
         var nickname = $(this).val();
@@ -54,6 +94,9 @@ $(function(){
     // 密码校验
     $("#password1").focus(function () {
         document.getElementById("password1-tips").style.display="none";
+        document.getElementById("password1-error").style.display="none";
+        document.getElementById("password1-ok").style.display="none";
+        return;
     })
     $("#password1").blur(function(){
         var password1=$(this).val();
@@ -92,6 +135,9 @@ $(function(){
     // 密码重复校验
     $("#password2").focus(function () {
         document.getElementById("password2-tips").style.display="none";
+        document.getElementById("password2-error").style.display="none";
+        document.getElementById("password2-ok").style.display="none";
+        return;
     })
     $("#password2").blur(function(){
 
