@@ -1,16 +1,18 @@
 """
     @author: Jiale Xu
     @date: 2017/10/05
-    @desc: scraper of sina weibo
+    @desc: Scraper for sina weibo
 """
 import re
 import traceback
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from bs4 import BeautifulSoup
-from weibo.exception import LoginError
+from selenium.webdriver.support.ui import WebDriverWait
+
+from exception import LoginError
 from weibo.items import WeiboUserItem, WeiboItem, RepostWeiboItem
 
 
@@ -20,10 +22,6 @@ class WeiboSpider:
         self.account = account
         self.password = password
         self.driver = webdriver.PhantomJS("../phantomjs")
-        self.user_agent = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-            '(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
-        ]
         self.item = None
         self.follow_id = {}
         self.fans_id = {}
@@ -39,17 +37,12 @@ class WeiboSpider:
         login_entrance.click()
         wait.until(ec.visibility_of_element_located((By.ID, "loginName")))
 
-        # 定位登录元素
-        act_field = self.driver.find_element_by_id("loginName")
-        pwd_field = self.driver.find_element_by_id("loginPassword")
-        submit = self.driver.find_element_by_id("loginAction")
-        act_field.clear()
-        pwd_field.clear()
-
-        # 登录
-        act_field.send_keys(self.account)
-        pwd_field.send_keys(self.password)
-        submit.click()
+        # 模拟登录
+        self.driver.find_element_by_id("loginName").clear()
+        self.driver.find_element_by_id("loginName").send_keys(self.account)
+        self.driver.find_element_by_id("loginPassword").clear()
+        self.driver.find_element_by_id("loginPassword").send_keys(self.password)
+        self.driver.find_element_by_id("loginAction").click()
 
         # 获取登录用户id
         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "tip2")))
@@ -85,15 +78,15 @@ class WeiboSpider:
         synopsis = re.search(r"简介</a>:(.+?)<br/>", detail).group(1)
 
         item = WeiboUserItem()
-        item["user_id"] = self.id
-        item["user_name"] = user_name
-        item["sex"] = sex
-        item["address"] = address
-        item["birthday"] = birthday
-        item["synopsis"] = synopsis
-        item["weibo_number"] = weibo_number
-        item["follow_number"] = follow_number
-        item["fans_number"] = fans_number
+        item.id = self.id
+        item.name = user_name
+        item.sex = sex
+        item.address = address
+        item.birthday = birthday
+        item.synopsis = synopsis
+        item.weibo_number = weibo_number
+        item.follow_number = follow_number
+        item.fans_number = fans_number
         print(item)
         self.item = item
         return item
@@ -211,15 +204,15 @@ class WeiboSpider:
         synopsis = re.search(r"简介:(.+?)<br/>", detail).group(1)
 
         item = WeiboUserItem()
-        item["user_id"] = id
-        item["user_name"] = user_name
-        item["sex"] = sex
-        item["address"] = address
-        item["birthday"] = birthday
-        item["synopsis"] = synopsis
-        item["weibo_number"] = weibo_number
-        item["follow_number"] = follow_number
-        item["fans_number"] = fans_number
+        item.id = id
+        item.name = user_name
+        item.sex = sex
+        item.address = address
+        item.birthday = birthday
+        item.synopsis = synopsis
+        item.weibo_number = weibo_number
+        item.follow_number = follow_number
+        item.fans_number = fans_number
         print(item)
         return item
 
@@ -249,9 +242,9 @@ class WeiboSpider:
                     content_span = divs[0].find("span", {"class": "ctt"})
                     time_span = divs[0].find("span", {"class": "ct"})
                     item = WeiboItem()
-                    item["content"] = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
-                    item["from"] = id
-                    item["time"] = time_span.get_text()
+                    item.owner = id
+                    item.time = time_span.get_text()
+                    item.content = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
                     print(item)
                     weibo_list.append(item)
                 elif len(divs) == 2:
@@ -260,12 +253,12 @@ class WeiboSpider:
                         image_all_a = divs[0].find("a", {"href": re.compile("http://weibo.cn/mblog/picAll/.+")})
                         time_span = divs[1].find("span", {"class": "ct"})
                         item = WeiboItem()
-                        item["content"] = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
-                        item["from"] = id
-                        item["time"] = time_span.get_text()
+                        item.owner = id
+                        item.time = time_span.get_text()
+                        item.content = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
                         if image_all_a is None:     # 含有一张图片
                             image_img = divs[1].a.img
-                            item["images"].append(image_img.attrs["src"])
+                            item.images.append(image_img.attrs["src"])
                         else:       # 含有多张图片
                             self.driver.get(image_all_a.attrs["href"])
                             wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "c")))
@@ -273,39 +266,39 @@ class WeiboSpider:
                             image_divs = bs1.find_all("div")[1:-1]
                             for image_div in image_divs:
                                 image_img = image_div.a.img
-                                item["images"].append(image_img.attrs["src"])
+                                item.images.append(image_img.attrs["src"])
                         print(item)
                         weibo_list.append(item)
                     else:       # 转发微博，无图
-                        repost_from_span = divs[0].find("span", {"class": "cmt"})
+                        repost_source_span = divs[0].find("span", {"class": "cmt"})
                         content_span = divs[0].find("span", {"class": "ctt"})
                         repost_reason_div = divs[1]
                         time_span = divs[1].find("span", {"class": "ct"})
                         item = RepostWeiboItem()
-                        item["content"] = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
-                        item["from"] = id
-                        item["time"] = time_span.get_text()
-                        item["repost_from"] = re.search(r"转发了(.*)的微博", str(repost_from_span)).group(1)
-                        item["repost_reason"] = re.search(r"转发理由:</span>(.*)<a href=\"http://weibo.cn/attitude/",
+                        item.content = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
+                        item.owner = id
+                        item.time = time_span.get_text()
+                        item.repost_source = re.search(r"转发了(.*)的微博", str(repost_source_span)).group(1)
+                        item.repost_reason = re.search(r"转发理由:</span>(.*)<a href=\"http://weibo.cn/attitude/",
                                                           str(repost_reason_div)).group(1)
                         print(item)
                         weibo_list.append(item)
                 else:       # 转发微博，有图
-                    repost_from_span = divs[0].find("span", {"class": "cmt"})
+                    repost_source_span = divs[0].find("span", {"class": "cmt"})
                     content_span = divs[0].find("span", {"class": "ctt"})
                     image_all_a = divs[0].find("a", {"href": re.compile("http://weibo.cn/mblog/picAll/.+")})
                     repost_reason_div = divs[2]
                     time_span = divs[2].find("span", {"class": "ct"})
                     item = RepostWeiboItem()
-                    item["content"] = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
-                    item["from"] = id
-                    item["time"] = time_span.get_text()
-                    item["repost_from"] = re.search(r"转发了(.*)的微博", str(repost_from_span)).group(1)
-                    item["repost_reason"] = re.search(r"转发理由:</span>(.*)<a href=\"http://weibo.cn/attitude/",
+                    item.content = re.search(r"<span class=\"ctt\">(.*)</span>", str(content_span)).group(1)
+                    item.owner = id
+                    item.time = time_span.get_text()
+                    item.repost_source = re.search(r"转发了(.*)的微博", str(repost_source_span)).group(1)
+                    item.repost_reason = re.search(r"转发理由:</span>(.*)<a href=\"http://weibo.cn/attitude/",
                                                       str(repost_reason_div)).group(1)
                     if image_all_a is None:     # 含有一张图片
                         image_img = divs[1].a.img
-                        item["images"].append(image_img.attrs["src"])
+                        item.images.append(image_img.attrs["src"])
                     else:   # 含有多张图片
                         self.driver.get(image_all_a.attrs["href"])
                         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "c")))
@@ -313,7 +306,7 @@ class WeiboSpider:
                         image_divs = bs1.find_all("div")[1:-1]
                         for image_div in image_divs:
                             image_img = image_div.a.img
-                            item["images"].append(image_img.attrs["src"])
+                            item.images.append(image_img.attrs["src"])
                     print(item)
                     weibo_list.append(item)
 
