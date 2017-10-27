@@ -16,7 +16,7 @@
     <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
     <script src="js/SignUp.js"></script>
     <!--<script>
-        var imgArray = ['img/BG1.jpg', 'img/BG2.jpg','img/BG3.jpg']
+        var imgArray = ['img/bg1.jpg', 'img/bg2.jpg']
         var i = -1;
         setInterval(function () {
             i++;
@@ -28,7 +28,7 @@
 
 <body onload="load()">
     <p class="logo">密友</p>
-    <div class="side" id="sideshow" style="background-image: url('img/BG1.jpg')"></div>
+    <div class="side" id="sideshow" style="background-image: url('img/SignUpBG.jpg')"></div>
     <div class="top">
         <div class="item feedback" tabindex="2"><a href="javascript:void(0)">意见反馈</a></div>
         <div class="item language-entry" tabindex="1"><a  href="SignIn.html" target="_parent">已有账号？账号密码登录</a></div>
@@ -61,7 +61,7 @@
                         <input autocomplete="off" type="text" id="nickname" class="nickname" minlength="1" maxlength="16" tabindex="4">
                     </div>
                     <div class="error-tips-wrap" id="nickname-error" style="display: none">
-                        <div class="error-tips">昵称不能为空且不超过12个字符</div>
+                        <div class="error-tips">昵称不能为空且不超过12个字符、不能包含特殊字符(下划线"_"除外)</div>
                     </div>
                 </div>
                 <div class="input-area">
