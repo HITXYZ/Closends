@@ -3,9 +3,11 @@
     @date: 2017/10/26
     @desc: Scraper for qzone
 """
+import json
 import re
-import traceback
+import requests
 import time
+import traceback
 
 from selenium import webdriver
 
@@ -28,6 +30,7 @@ class QzoneSpider:
         self.cookie = {}
         self.gtk = None
         self.qzonetoken = None
+        self.emotion_url = ""
 
     def login(self):
         self.driver.maximize_window()
@@ -67,13 +70,22 @@ class QzoneSpider:
     def scrape_emotion(self, qq=None):
         if self.cookie is None or self.gtk is None or self.qzonetoken is None:
             return []
+        if qq is None:
+            qq = self.qq
+        base_url = "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?" \
+                      "uin=%s&ftype=0&sort=0&pos=0&num=20&replynum=100&g_tk=%s&callback=_preloadCallback&" \
+                      "code_version=1&format=jsonp&need_private_comment=1&qzonetoken=%s&g_tk=%d"
+        emotion_url = base_url % (qq, self.gtk, self.qzonetoken, self.gtk)
+        response_text = requests.get(emotion_url, cookies=self.cookie).text
+        print(response_text)
+        response = json.loads(response_text[17, -2])
 
     def quit(self):
         self.driver.quit()
 
 
 if __name__ == "__main__":
-    spider = QzoneSpider("690147660", "XJL970928qqa")
+    spider = QzoneSpider("******", "******")
     try:
         spider.login()
     except:

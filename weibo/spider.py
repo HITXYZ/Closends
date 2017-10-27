@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-from exception import LoginError
+from exceptions import LoginError
 from weibo.items import WeiboUserItem, WeiboItem, RepostWeiboItem
 
 
