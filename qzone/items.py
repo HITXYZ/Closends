@@ -32,9 +32,10 @@ class EmotionItem:
 
     def __str__(self):
         string = ""
-        string += "Owner: " + str(self.owner) + "\n"
+        string += "Owner: " + str(self.owner)
         string += "Time: " + str(self.time) + "\n"
         string += "Content: " + str(self.content) + "\n"
+        string += "Pictures: " + str(self.pictures) + "\n"
         string += "Source Name: " + str(self.source_name) + "\n"
         string += "Location: " + str(self.location) + "\n"
         string += "Visit Times: " + str(self.visit_times) + "\n"
@@ -55,7 +56,7 @@ class RepostEmotionItem(EmotionItem):
     def __str__(self):
         string = EmotionItem.__str__(self)
         string += "Repost Source: " + str(self.repost_source)
-        string += "Repost Reason: " + str(self.repost_reason)
+        string += "Repost Reason: " + str(self.repost_reason) + "\n"
         return string
 
     def __hash__(self):
@@ -64,17 +65,34 @@ class RepostEmotionItem(EmotionItem):
 
 class CommentItem:
     def __init__(self):
+        self.commenter = QzoneUserItem()
         self.time = None
         self.content = None
-        self.replies = []
         self.pictures = []
+        self.replies = []
 
     def __str__(self):
         string = ""
+        string += "Commenter: " + str(self.commenter)
         string += "Time: " + str(self.time) + "\n"
         string += "Content: " + str(self.content) + "\n"
+        string += "Pictures: " + str(self.pictures) + "\n"
         string += "Reply Number: " + str(len(self.replies)) + "\n"
         return string
+
+    def __hash__(self):
+        return hash(self.content)
+
+
+class CommentReplyItem:
+    def __init__(self):
+        self.replier = QzoneUserItem()
+        self.replyto = QzoneUserItem()
+        self.time = None
+        self.content = None
+
+    def __str__(self):
+        return str(self.replier.name) + " reply to " + str(self.replyto.name) + ": " + str(self.content) + "\n"
 
     def __hash__(self):
         return hash(self.content)
