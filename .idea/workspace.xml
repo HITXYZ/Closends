@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="312a3ff6-4464-414d-a95d-6e75730f6b5c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/qzone/items.py" afterPath="$PROJECT_DIR$/qzone/items.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/qzone/spider.py" afterPath="$PROJECT_DIR$/qzone/spider.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,8 +25,8 @@
       <file leaf-file-name="spider.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/qzone/spider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1312">
-              <caret line="130" column="74" lean-forward="false" selection-start-line="130" selection-start-column="74" selection-end-line="130" selection-end-column="74" />
+            <state relative-caret-position="528">
+              <caret line="216" column="22" lean-forward="true" selection-start-line="216" selection-start-column="22" selection-end-line="216" selection-end-column="22" />
               <folding>
                 <element signature="e#81#92#0" expanded="true" />
               </folding>
@@ -594,8 +593,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/qzone/spider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1312">
-          <caret line="130" column="74" lean-forward="false" selection-start-line="130" selection-start-column="74" selection-end-line="130" selection-end-column="74" />
+        <state relative-caret-position="528">
+          <caret line="216" column="22" lean-forward="true" selection-start-line="216" selection-start-column="22" selection-end-line="216" selection-end-column="22" />
           <folding>
             <element signature="e#81#92#0" expanded="true" />
           </folding>

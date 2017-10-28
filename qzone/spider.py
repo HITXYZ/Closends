@@ -82,16 +82,14 @@ class QzoneSpider:
             return []
         if qq is None:
             qq = self.qq
-
         emotion_pre_url = emotion_base_url % (qq, 0, self.gtk)
         response_text = requests.get(emotion_pre_url, cookies=self.cookie).text
         response = json.loads(response_text[17:-2])
 
-        if int(response["code"]) < 0:       # 没有访问权限
+        if int(response["code"]) < 0:       # 没有空间访问权限
             return []
-
-        total = int(response["total"])
-        page_number = int(total / 20 + 1)
+        total = int(response["total"])      # 获取说说总数
+        page_number = int(total / 20 + 1)   # 获取页数
         print(total, page_number)
 
         emotion_list = []
@@ -105,6 +103,7 @@ class QzoneSpider:
             pos += 20   # 每发出一次请求获取接下来20条说说
             if emotion_response["msglist"] is None:     # 所有说说已读取完毕
                 break
+
             for emotion in emotion_response["msglist"]:
                 if "rt_tid" in emotion.keys():     # 转发说说
                     item = RepostEmotionItem()
@@ -115,10 +114,12 @@ class QzoneSpider:
                 else:       # 原创说说
                     item = EmotionItem()
                     item.content = emotion["content"]
+
                 item.id = emotion["tid"]
                 item.owner.qq = emotion["uin"]
                 item.owner.name = emotion["name"]
                 item.time = emotion["createTime"]
+
                 if "pic" in emotion.keys():  # 带图说说
                     for pic in emotion["pic"]:
                         pic_url = pic["pic_id"].replace("\/", "/")
@@ -129,6 +130,7 @@ class QzoneSpider:
                     item.location = emotion["lbs"]["idname"]
                 elif "story_info" in emotion.keys():    # 照片含有位置信息
                     item.location = emotion["story_info"]["lbs"]["idname"]
+
                 like_url = like_base_url % (self.qq, qq, item.id, self.gtk)
                 like_response_content = requests.get(like_url, cookies=self.cookie, headers=headers).content  # 请求获取点赞列表
                 like_response = json.loads(like_response_content.decode("utf-8")[10:-3])
@@ -138,6 +140,7 @@ class QzoneSpider:
                         liker_item.qq = like["fuin"]
                         liker_item.name = like["nick"]
                         item.likers.append(liker_item)
+
                 if emotion["cmtnum"] > 0:  # 有评论
                     if emotion["commentlist"] is None or emotion["cmtnum"] > len(emotion["commentlist"]):     # 评论未加载完毕
                         comment_url = comment_base_url % (qq, emotion["tid"], emotion["cmtnum"], self.gtk)
@@ -169,9 +172,9 @@ class QzoneSpider:
                                     reply_item.content = reply_content
                                 reply_item.time = reply["createTime2"]
                                 comment_item.replies.append(reply_item)
-                        if "pic" in comment.keys():
+                        if "pic" in comment.keys():         # 评论带图
                             for pic in comment["pic"]:
-                                pic_url = pic["b_url"].replace("\/", "/")
+                                pic_url = pic["b_url"].replace("\/", "/")       # 处理图片链接
                                 comment_item.pictures.append(pic_url)
                         item.comments.append(comment_item)
                 emotion_list.append(item)
@@ -209,10 +212,10 @@ class QzoneSpider:
 
 
 if __name__ == "__main__":
-    spider = QzoneSpider("690147660", "XJL970928qqa")
+    spider = QzoneSpider("******", "******")
     try:
-        # spider.login()
-        # spider.save_cookie()
+        spider.login()
+        spider.save_cookie()
         spider.load_cookie()
         spider.scrape_emotion("1844338962")
     except:
