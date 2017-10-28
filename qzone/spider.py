@@ -10,6 +10,8 @@ import requests
 import time
 import traceback
 
+from gzip import GzipFile
+from io import StringIO
 from selenium import webdriver
 
 from qzone.items import *
@@ -18,9 +20,16 @@ from qzone.items import *
 emotion_base_url = "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=%s" \
                            "&ftype=0&sort=0&pos=%d&num=20&replynum=100&g_tk=%s&callback=_preloadCallback&code_version=1" \
                            "&format=jsonp&need_private_comment=1"
+
 comment_base_url = "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msgdetail_v6?uin=%s" \
                    "&tid=%s&ftype=0&sort=0&pos=0&num=%d&g_tk=%s&callback=_preloadCallback&code_version=1" \
                    "&format=jsonp&need_private_comment=1"
+
+like_base_url = "https://user.qzone.qq.com/proxy/domain/users.qzone.qq.com/cgi-bin/likes/get_like_list_app?uin=%s&" \
+                "unikey=http%%3A%%2F%%2Fuser.qzone.qq.com%%2F%s%%2Fmood%%2F%s.1&begin_uin=0&query_count=100&if_first_page=1" \
+                "&g_tk=%s"
+
+
 headers = {"User_Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                          "(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36",
            "Referer": "https://qzs.qq.com/qzone/app/mood_v6/html/index.html"}
@@ -116,10 +125,19 @@ class QzoneSpider:
                         item.pictures.append(pic_url)
                 if "source_name" in emotion.keys():
                     item.source_name = emotion["source_name"]  # 设备信息
-                if emotion["lbs"]["idname"] != "":
+                if emotion["lbs"]["idname"] != "":      # 有位置信息
                     item.location = emotion["lbs"]["idname"]
-                elif "story_info" in emotion.keys():
+                elif "story_info" in emotion.keys():    # 照片含有位置信息
                     item.location = emotion["story_info"]["lbs"]["idname"]
+                like_url = like_base_url % (self.qq, qq, item.id, self.gtk)
+                like_response_content = requests.get(like_url, cookies=self.cookie, headers=headers).content  # 请求获取点赞列表
+                like_response = json.loads(like_response_content.decode("utf-8")[10:-3])
+                if like_response["code"] == 0 and like_response["data"]["total_number"] > 0:   # 请求成功且有人点赞
+                    for like in like_response["data"]["like_uin_info"]:
+                        liker_item = QzoneUserItem()
+                        liker_item.qq = like["fuin"]
+                        liker_item.name = like["nick"]
+                        item.likers.append(liker_item)
                 if emotion["cmtnum"] > 0:  # 有评论
                     if emotion["commentlist"] is None or emotion["cmtnum"] > len(emotion["commentlist"]):     # 评论未加载完毕
                         comment_url = comment_base_url % (qq, emotion["tid"], emotion["cmtnum"], self.gtk)
@@ -159,6 +177,7 @@ class QzoneSpider:
                 emotion_list.append(item)
         for item in emotion_list:
             print(item)
+        return emotion_list
 
     def save_cookie(self):
         if self.cookie == {} or self.gtk is None:
@@ -166,7 +185,8 @@ class QzoneSpider:
         file_cookie = open('./cookie.txt', 'w')
         for key in self.cookie:
             file_cookie.write(key + '=' + str(self.cookie[key]) + '\n')
-        file_cookie.write("g_tk=" + str(self.gtk))
+        file_cookie.write("g_tk=" + str(self.gtk) + "\n")
+        file_cookie.write("qq=" + str(self.qq))
         file_cookie.close()
 
     def load_cookie(self):
@@ -178,6 +198,8 @@ class QzoneSpider:
             lst = line.strip().split('=')
             if lst[0] == "g_tk":
                 self.gtk = int(lst[1])
+            elif lst[0] == "qq":
+                self.qq = lst[1]
             else:
                 self.cookie[lst[0]] = lst[1]
         file_cookie.close()
@@ -187,7 +209,7 @@ class QzoneSpider:
 
 
 if __name__ == "__main__":
-    spider = QzoneSpider("******", "******")
+    spider = QzoneSpider("690147660", "XJL970928qqa")
     try:
         # spider.login()
         # spider.save_cookie()

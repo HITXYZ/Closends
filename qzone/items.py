@@ -26,7 +26,6 @@ class EmotionItem:
         self.pictures = []
         self.source_name = None
         self.location = None
-        self.visit_times = 0
         self.likers = []
         self.comments = []
 
@@ -38,7 +37,6 @@ class EmotionItem:
         string += "Pictures: " + str(self.pictures) + "\n"
         string += "Source Name: " + str(self.source_name) + "\n"
         string += "Location: " + str(self.location) + "\n"
-        string += "Visit Times: " + str(self.visit_times) + "\n"
         string += "Like Number: " + str(len(self.likers)) + "\n"
         string += "Comment Number: " + str(len(self.comments)) + "\n"
         return string
