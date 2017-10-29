@@ -60,7 +60,7 @@ class RepostEmotionItem(EmotionItem):
         return string
 
     def __hash__(self):
-        return hash(str(self.content) + str(self.repost_reason))
+        return hash(self.id)
 
 
 class CommentItem:
@@ -93,6 +93,41 @@ class CommentReplyItem:
 
     def __str__(self):
         return str(self.replier.name) + " reply to " + str(self.replyto.name) + ": " + str(self.content)
+
+    def __hash__(self):
+        return hash(self.content)
+
+
+class MessageItem:
+    def __init__(self):
+        self.id = None
+        self.owner = QzoneUserItem()
+        self.poster = QzoneUserItem()
+        self.time = None
+        self.content = None
+        self.replies = []
+
+    def __str__(self):
+        string = ""
+        string += "Owner: " + str(self.owner) + "\n"
+        string += "Poster: " + str(self.poster) + "\n"
+        string += "Time: " + str(self.time) + "\n"
+        string += "Content: " + str(self.content) + "\n"
+        string += "Reply Number: " + str(len(self.replies)) + "\n"
+        return string
+
+    def __hash__(self):
+        return hash(self.id)
+
+
+class MessageReplyItem:
+    def __init__(self):
+        self.replier = QzoneUserItem()
+        self.time = None
+        self.content = None
+
+    def __str__(self):
+        return str(self.replier.name) + "replied: " + str(self.content)
 
     def __hash__(self):
         return hash(self.content)
