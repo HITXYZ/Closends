@@ -10,25 +10,25 @@ import requests
 import time
 import traceback
 
-from gzip import GzipFile
-from io import StringIO
 from selenium import webdriver
 
 from qzone.items import *
 
 
 emotion_base_url = "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=%s" \
-                           "&ftype=0&sort=0&pos=%d&num=20&replynum=100&g_tk=%s&callback=_preloadCallback&code_version=1" \
-                           "&format=jsonp&need_private_comment=1"
+                           "&ftype=0&sort=0&pos=%d&num=20&replynum=100&g_tk=%s&callback=_preloadCallback" \
+                   "&code_version=1&format=jsonp&need_private_comment=1"
 
 comment_base_url = "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msgdetail_v6?uin=%s" \
                    "&tid=%s&ftype=0&sort=0&pos=0&num=%d&g_tk=%s&callback=_preloadCallback&code_version=1" \
                    "&format=jsonp&need_private_comment=1"
 
 like_base_url = "https://user.qzone.qq.com/proxy/domain/users.qzone.qq.com/cgi-bin/likes/get_like_list_app?uin=%s&" \
-                "unikey=http%%3A%%2F%%2Fuser.qzone.qq.com%%2F%s%%2Fmood%%2F%s.1&begin_uin=0&query_count=100&if_first_page=1" \
-                "&g_tk=%s"
+                "unikey=http%%3A%%2F%%2Fuser.qzone.qq.com%%2F%s%%2Fmood%%2F%s.1&begin_uin=0&query_count=100&" \
+                "if_first_page=1&g_tk=%s"
 
+visitor_base_url = "https://h5.qzone.qq.com/proxy/domain/g.qzone.qq.com/cgi-bin/friendshow/cgi_get_visitor_single?" \
+                   "uin=%s&appid=311&blogid=%s&param=%s&ref=qzfeeds&beginNum=1&needFriend=1&num=500&g_tk=%s"
 
 headers = {"User_Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                          "(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36",
@@ -131,6 +131,19 @@ class QzoneSpider:
                 elif "story_info" in emotion.keys():    # 照片含有位置信息
                     item.location = emotion["story_info"]["lbs"]["idname"]
 
+                visitor_url = visitor_base_url % (qq, item.id, item.id, self.gtk)
+                visitor_response_text = requests.get(visitor_url, cookies=self.cookie, headers=headers).text
+                if visitor_response_text[10:-2][-1] == '}':
+                    visitor_response = json.loads(visitor_response_text[10:-2])
+                else:
+                    visitor_response = json.loads(visitor_response_text[10:-3])
+                if visitor_response["code"] == 0 and visitor_response["data"]["totalNum"] > 0:  # 有权访问说说访客且有人访问说说
+                    for visitor in visitor_response["data"]["list"]:
+                        visitor_item = QzoneUserItem()
+                        visitor_item.qq = visitor["uin"]
+                        visitor_item.name = visitor["name"]
+                        item.visitors.append(visitor_item)
+
                 like_url = like_base_url % (self.qq, qq, item.id, self.gtk)
                 like_response_content = requests.get(like_url, cookies=self.cookie, headers=headers).content  # 请求获取点赞列表
                 like_response = json.loads(like_response_content.decode("utf-8")[10:-3])
@@ -212,10 +225,10 @@ class QzoneSpider:
 
 
 if __name__ == "__main__":
-    spider = QzoneSpider("******", "******")
+    spider = QzoneSpider("690147660", "XJL970928qqa")
     try:
-        spider.login()
-        spider.save_cookie()
+        # spider.login()
+        # spider.save_cookie()
         spider.load_cookie()
         spider.scrape_emotion("1844338962")
     except:
