@@ -5,12 +5,20 @@
 """
 
 
-class WeiboError(Exception):
+class ScraperError(Exception):
     pass
 
 
-class LoginError(WeiboError):
+class LoginError(ScraperError):
     def __init__(self, value="Login failed!"):
+        self.info = value
+
+    def __str__(self):
+        return repr(self.info)
+
+
+class SpiderInitError(ScraperError):
+    def __init__(self, value="Spider initialization failed!"):
         self.info = value
 
     def __str__(self):

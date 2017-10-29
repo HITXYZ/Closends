@@ -44,14 +44,26 @@ def get_gtk(p_skey):
 
 
 class QzoneSpider:
-    def __init__(self, qq, password):
-        self.qq = qq
-        self.password = password
-        self.driver = webdriver.PhantomJS(executable_path="../phantomjs")
-        self.cookie = {}
-        self.gtk = None
+    def __init__(self, qq=None, password=None, cookie=None):
+        if cookie is None:
+            if qq is None or password is None:
+                from exceptions import SpiderInitError
+                raise SpiderInitError()
+            self.qq = qq
+            self.password = password
+            self.driver = webdriver.PhantomJS(executable_path="../phantomjs")
+            self.cookie = {}
+            self.gtk = None
+            self.login(qq=self.qq, password=self.password)
+        else:
+            if not os.path.exists(cookie):
+                from exceptions import SpiderInitError
+                raise SpiderInitError()
+            self.load_cookie(path=cookie)
 
-    def login(self):
+    def login(self, qq=None, password=None):
+        if qq is None or password is None:
+            qq, password = self.qq, self.password
         self.driver.maximize_window()
         self.driver.get("https://qzone.qq.com")
         self.driver.implicitly_wait(5)
@@ -60,9 +72,9 @@ class QzoneSpider:
         self.driver.switch_to.frame("login_frame")
         self.driver.find_element_by_id("switcher_plogin").click()
         self.driver.find_element_by_id("u").clear()
-        self.driver.find_element_by_id("u").send_keys(self.qq)
+        self.driver.find_element_by_id("u").send_keys(qq)
         self.driver.find_element_by_id("p").clear()
-        self.driver.find_element_by_id("p").send_keys(self.password)
+        self.driver.find_element_by_id("p").send_keys(password)
         self.driver.find_element_by_id("login_button").click()
 
         time.sleep(5)
@@ -100,7 +112,7 @@ class QzoneSpider:
             emotion_response_text = requests.get(emotion_url, cookies=self.cookie, headers=headers).text
             print(emotion_response_text)
             emotion_response = json.loads(emotion_response_text[17:-2])
-            pos += 20   # 每发出一次请求获取接下来20条说说
+            pos += 20       # 每发出一次请求获取接下来20条说说
             if emotion_response["msglist"] is None:     # 所有说说已读取完毕
                 break
 
@@ -120,12 +132,12 @@ class QzoneSpider:
                 item.owner.name = emotion["name"]
                 item.time = emotion["createTime"]
 
-                if "pic" in emotion.keys():  # 带图说说
+                if "pic" in emotion.keys():         # 带图说说
                     for pic in emotion["pic"]:
                         pic_url = pic["pic_id"].replace("\/", "/")
                         item.pictures.append(pic_url)
                 if "source_name" in emotion.keys():
-                    item.source_name = emotion["source_name"]  # 设备信息
+                    item.source_name = emotion["source_name"]       # 设备信息
                 if emotion["lbs"]["idname"] != "":      # 有位置信息
                     item.location = emotion["lbs"]["idname"]
                 elif "story_info" in emotion.keys():    # 照片含有位置信息
@@ -154,7 +166,7 @@ class QzoneSpider:
                         liker_item.name = like["nick"]
                         item.likers.append(liker_item)
 
-                if emotion["cmtnum"] > 0:  # 有评论
+                if emotion["cmtnum"] > 0:       # 有评论
                     if emotion["commentlist"] is None or emotion["cmtnum"] > len(emotion["commentlist"]):     # 评论未加载完毕
                         comment_url = comment_base_url % (qq, emotion["tid"], emotion["cmtnum"], self.gtk)
                         comments_response_text = requests.get(comment_url, cookies=self.cookie, headers=headers).text
@@ -195,21 +207,21 @@ class QzoneSpider:
             print(item)
         return emotion_list
 
-    def save_cookie(self):
+    def save_cookie(self, path="./cookie.txt"):
         if self.cookie == {} or self.gtk is None:
             return
-        file_cookie = open('./cookie.txt', 'w')
+        file_cookie = open(path, 'w')
         for key in self.cookie:
             file_cookie.write(key + '=' + str(self.cookie[key]) + '\n')
         file_cookie.write("g_tk=" + str(self.gtk) + "\n")
         file_cookie.write("qq=" + str(self.qq))
         file_cookie.close()
 
-    def load_cookie(self):
-        if not os.path.exists('./cookie.txt'):
+    def load_cookie(self, path="./cookie.txt"):
+        if not os.path.exists(path):
             return
         self.cookie = {}
-        file_cookie = open('./cookie.txt', 'r')
+        file_cookie = open(path, 'r')
         for line in file_cookie:
             lst = line.strip().split('=')
             if lst[0] == "g_tk":
@@ -225,13 +237,11 @@ class QzoneSpider:
 
 
 if __name__ == "__main__":
-    spider = QzoneSpider("690147660", "XJL970928qqa")
+    from exceptions import SpiderInitError
+    spider = QzoneSpider(cookie="./cookie.txt")
     try:
-        # spider.login()
-        # spider.save_cookie()
-        spider.load_cookie()
         spider.scrape_emotion("1844338962")
-    except:
+    except SpiderInitError:
         traceback.print_exc()
     finally:
         spider.quit()
