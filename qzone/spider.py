@@ -113,7 +113,7 @@ class QzoneSpider:
         response_text = requests.get(emotion_pre_url, cookies=self.cookie).text
         response = json.loads(response_text[17:-2])
 
-        if int(response["code"]) < 0:           # 没有空间访问权限
+        if response["code"] < 0:           # 没有空间访问权限
             logging.warning("No access to the qzone of %s." % qq)
             return []
         total = response["total"]               # 获取说说总数
@@ -235,7 +235,7 @@ class QzoneSpider:
         response_text = requests.get(message_pre_url, cookies=self.cookie).text
         response = json.loads(response_text[10:-2])
 
-        if int(response["code"]) < 0:       # 没有空间访问权限
+        if response["code"] < 0:       # 没有空间访问权限
             logging.warning("No access to the qzone of %s." % qq)
             return []
         total = response["data"]["total"]      # 获取留言总数
@@ -252,10 +252,10 @@ class QzoneSpider:
             message_text = requests.get(message_url, cookies=self.cookie, headers=headers).text
             message_response = json.loads(message_text[10:-2])
             pos += 10
-            if message_response["commentList"] is None:     # 所有留言已抓取完毕
+            if message_response["data"]["commentList"] is None:     # 所有留言已抓取完毕
                 break
 
-            for message in message_response["commentList"]:
+            for message in message_response["data"]["commentList"]:
                 logging.info("Scraping message: %s" % message["id"])
                 item = MessageItem()
                 item.id = message["id"]
@@ -307,14 +307,17 @@ class QzoneSpider:
 
     def quit(self):
         logging.info("Stop scrapping.")
-        self.driver.quit()
+        if hasattr(self, "driver"):
+            self.driver.quit()
 
 
 if __name__ == "__main__":
     from exceptions import SpiderInitError
     spider = QzoneSpider(cookie="./cookie.txt")
     try:
-        spider.scrape_emotion("1844338962")
+        messages = spider.scrape_message("1844338962")
+        for message in messages:
+            print(message)
     except SpiderInitError:
         traceback.print_exc()
     finally:
