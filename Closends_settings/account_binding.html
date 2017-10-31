@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>账号绑定 Closends-特别的关注，送给特别的TA</title>
+    <link rel="icon" href="img/closends.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="img/closends.ico" type="image/x-icon"/>
+    <link rel="bookmark" href="img/closends.ico" type="image/x-icon"/>
+
+    <link href="css/top_public.css" type="text/css" rel="stylesheet"/>
+    <link href="css/account_binding.css" type="text/css" rel="stylesheet" />
+
+</head>
+<body class="B_bind">
+    <div id="weibo_top_public">
+        <!--spec start-->
+        <!--简易顶部导航拼页面用-->
+        <div class="WB_global_nav WB_global_nav_v2 WB_global_nav_alpha ">
+            <script>
+                function show_topmenulist() {
+                    document.getElementById("accountLayer").style.display="block";
+                }
+                function hide_topmenulist() {
+                    document.getElementById("accountLayer").style.display="none";
+                }
+            </script>
+            <div class="gn_header clearfix">
+                <!-- logo -->
+                <div class="gn_logo">
+                    <a class="box">
+                        <span class="logo"></span>
+                    </a>
+                </div>
+                <!-- logo -->
+                <!-- 搜索    -->
+                <div class=" gn_search_v2">
+                    <span class=" placeholder"></span>
+                    <input type="text" autocomplete="off" value="" class="W_input">
+                    <a href="javascript:void(0);" title="搜索" class="W_ficon ficon_search S_ficon" target="_top">f</a>
+                </div>
+                <!-- 搜索    -->
+                <div class="gn_position">
+                    <div class="gn_nav">
+                        <ul class="gn_nav_list">
+                            <li>
+                                <a href="#" class="S_txt1" target="_top">
+                                    <em class="W_ficon ficon_home S_ficon"></em><em class="S_txt1">首页</em><em class="W_new" style="display: none"></em>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="gn_name" target="_top">
+                                    <em class="W_ficon ficon_user S_ficon"></em><em class="S_txt1">Neil_YU</em>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="gn_set S_line1">
+                        <div class="gn_set_list">
+                            <a href="javascript:void(0);" id="msg" target="_top">
+                                <em class="W_ficon ficon_mail S_ficon">message</em>
+                            </a>
+                            <div class="gn_topmenulist gn_topmenulist_notice" id="msgLayer" style="display:none"></div>
+                            <div class="gn_topmenulist_tips" style="display:none" id="tips"></div>
+                        </div>
+                        <div class="gn_set_list">
+                            <a href="javascript:void(0);" id="account" target="_top" class=" " onmouseover = "show_topmenulist()"  onmouseout = "hide_topmenulist()" >
+                                <em class="W_ficon ficon_set S_ficon">account</em>
+                            </a>
+                            <div class="gn_topmenulist gn_topmenulist_set " id="accountLayer" style="display:none" onmouseover = "show_topmenulist()"  onmouseout = "hide_topmenulist()" ><!--data start-->
+                                <ul>
+                                    <li class="gn_func"><a target="_top" href="#" >个人设置</a></li>
+                                    <li class="gn_func"><a target="_top" href="#" >账号绑定</a></li>
+                                    <li class="gn_func"><a target="_top" href="#" >密友管理</a></li>
+                                    <li class="line S_line1"></li>
+                                    <li class="gn_func"><a target="_top" href="#">退出</a></li>
+                                </ul>
+                                <div class="W_layer_arrow">
+                                    <span class="W_arrow_bor W_arrow_bor_t">
+                                        <i class="S_line3"></i>
+                                        <em class="S_bg2_br"></em>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--下拉层-->
+
+                        <!--/下拉层-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/简易顶部导航拼页面用-->
+        <!--spec end-->
+    </div>
+
+    <div class="W_miniblog">
+        <div class="W_miniblog_fb">
+            <div class="W_main">
+                <div class="W_main_bg clearfix">
+                    <div class="W_main_l">
+                        <!--首页左导 -->
+                        <div class="WB_left_nav">
+                            <div class="level_1_Box">
+                                <form class="left_nav_line">
+                                    <fieldset class="S_line3">
+                                        <legend class="tit S_txt3">帐号设置</legend>
+                                    </fieldset>
+                                </form>
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/index"><i class="W_ico20 ico_account ico_personinfo"></i>我的信息</a></div>
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/photo"><i class="W_ico20 ico_account ico_avater"></i>头像</a></div>
+                                <form class="left_nav_line left_nav_lineborder">
+                                    <fieldset class="S_line1"></fieldset>
+                                </form>
+                            </div>
+                            <div class="level_1_Box">
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/privacy"><i class="W_ico20 ico_account ico_privacy"></i>隐私设置</a></div>
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/message"><i class="W_ico20 ico_account ico_message"></i>消息设置</a></div>
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/shield"><i class="W_ico20 ico_account ico_shield"></i>屏蔽设置</a></div>
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/prefer"><i class="W_ico20 ico_account ico_prefer"></i>偏好设置</a></div>
+                                <form class="left_nav_line left_nav_lineborder">
+                                    <fieldset class="S_line1"></fieldset>
+                                </form>
+                            </div>
+                            <div class="level_1_Box">
+                                <div class="lev"><a class="S_txt1 lev_curr" href="//account.weibo.com/set/bindsns/index"><i class="W_ico20 ico_account ico_accbind"></i>帐号绑定</a></div>
+                                <form class="left_nav_line left_nav_lineborder">
+                                    <fieldset class="S_line1"></fieldset>
+                                </form>
+                            </div>
+                            <div class="level_1_Box">
+                                <div class="lev"><a class="S_txt1" href="//account.weibo.com/set/badge"><i class="W_ico20 ico_account ico_mymedal"></i>我的勋章</a></div>
+                                <!--<div class="lev"><a class="S_txt1 " href=""><i class="W_ico20 ico_account ico_mylevel"></i>我的等级</a></div>-->
+                            </div>
+                        </div>
+                        <!--/首页左导-->
+                    </div>
+                    <div class="W_main_a">
+                        <div class="W_follow_bg S_bg4">
+                            <div class="group_read">
+                                <div class="title">帐号绑定              </div>
+                            </div>
+                            <div class="W_account_envent">
+                                <div class="account_fold SW_fun_bg">
+                                    <ul action-type="jump" action-data="url=/set/bindsns/bindtaobao" class="account_title clearfix">
+                                        <li class="title_name W_fb"><i class="bind_ico ico_taobao_bound"></i>绑定淘宝帐号</li>
+                                        <li class="title_content S_txt2">已绑定</li>
+                                        <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">修改</a></li>
+                                    </ul>
+                                </div>            	<div class="account_fold SW_fun_bg">
+                                <ul action-type="jump" action-data="url=/set/bindsns/bindqq" class="account_title clearfix">
+                                    <li class="title_name W_fb"><i class="bind_ico ico_qq"></i>绑定QQ帐号</li>
+                                    <li class="title_content S_txt2">未绑定</li>
+                                    <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">绑定</a></li>
+                                </ul>
+                            </div>            	<div class="account_fold SW_fun_bg">
+                                <ul action-type="jump" action-data="url=/set/bindsns/bindbaidu" class="account_title clearfix">
+                                    <li class="title_name W_fb"><i class="bind_ico ico_baidu_bound"></i>绑定百度帐号</li>
+                                    <li class="title_content S_txt2">已绑定</li>
+                                    <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">修改</a></li>
+                                </ul>
+                            </div>            	<div id="pl_bind_bind360" class="account_fold SW_fun_bg">
+                                <ul action-type="jump" action-data="url=/set/bindsns/bind360" class="account_title clearfix">
+                                    <li class="title_name W_fb"><i class="bind_ico ico_360"></i>绑定360安全中心</li>
+                                    <li class="title_content S_txt2">未绑定</li>
+                                    <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">绑定</a></li>
+                                </ul>
+                            </div>                <div class="account_fold SW_fun_bg">
+                                <ul action-type="jump" action-data="url=/set/bindsns/bindtelecom" class="account_title clearfix">
+                                    <li class="title_name W_fb"><i class="bind_ico ico_10000"></i>绑定189天翼帐号</li>
+                                    <li class="title_content S_txt2">未绑定</li>
+                                    <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">绑定</a></li>
+                                </ul>
+                            </div>                <div class="account_fold SW_fun_bg">
+                                <ul action-type="jump" action-data="url=/set/bindsns/bindunicom" class="account_title clearfix">
+                                    <li class="title_name W_fb"><i class="bind_ico ico_10010"></i>绑定联通手机邮箱</li>
+                                    <li class="title_content S_txt2">未绑定</li>
+                                    <li class="title_option W_tr"><a class="set_opt" href="javascript:void(0);">绑定</a></li>
+                                </ul>
+                            </div>                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--footer-->
+            <!--footer-->
+            <div class="global_footer S_bg4">
+                <div class="clearfix">
+                    <dl class="list">
+                        <dt>找找感兴趣的人</dt>
+                        <dd><a href="http://verified.weibo.com/?bottomnav=1">名人堂</a><a href="http://vip.weibo.com/home?bottomnav=1">微博会员</a></dd>
+                        <dd><a href="http://club.weibo.com?bottomnav=1">微博达人</a></dd>
+                        <dd><a href="http://verified.e.weibo.com/media?bottomnav=1">媒体</a><a href="http://verified.e.weibo.com/brand?bottomnav=1">企业</a><a href="http://gov.weibo.com/government/index.php?bottomnav=1">政府</a></dd>
+                    </dl>
+                    <dl class="list">
+                        <dt>精彩内容</dt>
+                        <dd><a href="http://huati.weibo.com/?bottomnav=1">微话题</a><a href="http://data.weibo.com/top?bottomnav=1">风云榜</a></dd>
+                        <dd><a href="http://talk.weibo.com?bottomnav=1">微访谈</a></dd>
+                        <dd><a href="http://hot.plaza.weibo.com/?bottomnav=1&type=re&act=day">热门微博</a></dd>
+                    </dl>
+                    <dl class="list">
+                        <dt>热门应用</dt>
+                        <dd><a href="http://weiba.weibo.com?bottomnav=1">微吧</a><a href="http://gongyi.weibo.com/?bottomnav=1">微公益</a></dd>
+                        <dd><a href="http://photo.weibo.com?bottomnav=1">相册</a><a href="http://music.weibo.com/t/index.php?bottomnav=1">微音乐</a></dd>
+                        <dd><a href="http://vote.weibo.com?bottomnav=1">投票</a><a href="http://game.weibo.com?bottomnav=1">微游戏</a></dd>
+                    </dl>
+                    <dl class="list">
+                        <dt>手机玩微博</dt>
+                        <dd><a href="http://m.weibo.com/web/cellphone.php?bottomnav=1">WAP版</a><a href="http://m.weibo.com/web/cellphone.php?bottomnav=1#msg">短彩发微博</a></dd>
+                        <dd><a href="http://m.weibo.com/web/cellphone.php?bottomnav=1#iphone">iPhone客户端</a><a href="http://m.weibo.com/web/cellphone.php?bottomnav=1#ipad">iPad客户端</a></dd>
+                        <dd><a href="http://m.weibo.com/web/cellphone.php?bottomnav=1#android">Android客户端</a></dd>
+                    </dl>
+                    <dl class="list list_right">
+                        <dt>认证&合作</dt>
+                        <dd><a href="http://verified.weibo.com/verify?bottomnav=1">申请认证</a><a href="http://open.weibo.com/?bottomnav=1">开放平台</a></dd>
+                        <dd><a href="http://e.weibo.com/introduce/introduce?bottomnav=1">企业微博</a><a href="http://open.weibo.com/connect?bottomnav=1">连接网站</a></dd>
+                        <dd><a href="http://weibo.com/static/logo?bottomnav=1">微博标识</a><a href="http://tui.weibo.com?bottomnav=1">广告服务</a></dd>
+                    </dl>
+                </div>
+                <div class="other_link S_line2 clearfix">
+                    <div class="help_link">
+                        <p><a href="http://ir.weibo.com/?bottomnav=1&wvr=5" class="S_func1"><i class="W_ico16 ico_weibo"></i>关于微博</a>　<a href="http://help.weibo.com/?refer=didao&bottomnav=1" class="S_func1">微博帮助</a>　<a class="S_func1" href="http://weiba.weibo.com/wanzhuanweibo?bottomnav=1">意见反馈</a>　<a class="S_func1" href="http://open.weibo.com/?bottomnav=1">开放平台</a>　<a class="S_func1" href="http://hr.weibo.com?bottomnav=1">微博招聘</a>　<a class="S_func1" href="http://news.sina.com.cn/guide/?bottomnav=1">新浪网导航</a>　<a class="S_func1" href="http://service.account.weibo.com/?bottomnav=1" target="__blank">社区管理中心</a>　<a class="S_func1" href="http://service.account.weibo.com/roles/gongyue?bottomnav=1" target="__blank">微博社区公约</a></p>
+                        <p></p>
+                        <p class="S_txt2">北京微梦创科网络技术有限公司&emsp;<a class="S_func1" href="//weibo.com/aj/static/jww.html?_wv=5">京网文[2011]0398-130号</a>&emsp;<a class="S_func1" href="http://www.miibeian.gov.cn" target="_blank">京ICP备12002058号</a></p>
+                    </div>
+                    <div class="copy">
+                        <p class="W_linkb">
+                            <select id="pl_account_changeLanguage">
+                                <option value="zh-cn" selected="selected">中文(简体)</option>
+                                <option value="zh-tw"  >中文(台湾)</option>
+                                <option value="zh-hk"  >中文(香港)</option>
+                                <option value="en"  >English</option>
+                            </select></p>
+                        <p class="S_txt2">Copyright &copy; 2009-2017 WEIBO </p>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="//tjs.sjs.sinajs.cn/open/analytics/js/suda.js"></script>
+            <!--/footer-->    <!--/footer-->
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
