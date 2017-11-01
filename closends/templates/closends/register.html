@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    {% load static %}
+    <title>Closends-注册</title>
+    <meta charset="UTF-8"/>
+
+    <link href="{% static '/closends/img/closends.ico' %}" rel="icon" type="image/x-icon">
+    <link href="{% static '/closends/img/closends.ico' %}" rel="shortcut icon" type="image/x-icon">
+    <link href="{% static '/closends/img/closends.ico' %}" rel="bookmark" type="image/x-icon">
+
+    <link href="{% static '/closends/css/register.css' %}" rel="stylesheet">
+    <script src="{% static 'closends/js/jquery.min.js' %}"></script>
+</head>
+
+<body onload="load()">
+    <p class="logo">密友</p>
+    <div class="side" id="sideshow" style="background-image: url('/static/closends/img/register_bg.jpg')"></div>
+
+    <div class="top">
+        <div class="item feedback" tabindex="2">
+            <a href="javascript:void(0)">意见反馈</a>
+        </div>
+        <div class="item language-entry" tabindex="1">
+            <a href="{% url 'closends:to_login' %}" target="_parent">已有账号？账号密码登录</a>
+        </div>
+    </div>
+
+    <div class="main-wrapper" id="main-wrapper" style="margin-left: 480px">
+        <div class="main">
+            <div class="form" id="sign_up_form" style="display:block">
+                <div>
+                    <div class="welcome">邮箱帐号注册Closends</div>
+                    <div class="header">邮箱登录，便于记忆</div>
+                </div>
+                <div class="input-area">
+                    <div class="input-flags">
+                        <div class="input-ok" id="mail-ok" style="display: none"></div>
+                    </div>
+                    <label class="input-placeholder" id="mail-tips" for="mail" style="display: block">邮箱</label>
+                    <div class="input-outer">
+                        <input autocomplete="off" type="text" id="mail" class="mail" tabindex="3">
+                    </div>
+                    <div class="error-tips-wrap" id="mail-error" style="display: none">
+                        <div class="error-tips">邮箱格式不正确(不能包含中文)</div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="input-flags">
+                        <div class="input-ok" id="nickname-ok" style="display: none"></div>
+                    </div>
+                    <label class="input-placeholder" id="nickname-tips" for="nickname" style="display: block">昵称</label>
+                    <div class="input-outer">
+                        <input autocomplete="off" type="text" id="nickname" class="nickname" minlength="1" maxlength="16"
+                               tabindex="4">
+                    </div>
+                    <div class="error-tips-wrap" id="nickname-error" style="display: none">
+                        <div class="error-tips">昵称不能为空且不超过12个字符、不能包含特殊字符(下划线"_"除外)</div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="input-flags">
+                        <div class="input-ok" id="password1-ok" style="display: none"></div>
+                    </div>
+                    <label class="input-placeholder" id="password1-tips" for="password1" style="display: block">密码</label>
+                    <div class="input-outer">
+                        <input autocomplete="off" type="password" id="password1" class="password" minlength="8"
+                               maxlength="16" tabindex="5">
+                    </div>
+                    <div class="error-tips-wrap" id="password1-error" style="display: none">
+                        <div class="error-tips">密码格式不正确(只能包含数字、字母且长度为8~16位)</div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="input-flags">
+                        <div class="input-ok" id="password2-ok" style="display: none"></div>
+                    </div>
+                    <label class="input-placeholder" id="password2-tips" for="password2" style="display: block">确认密码</label>
+                    <div class="input-outer">
+                        <input autocomplete="off" type="password" id="password2" class="password" minlength="8"
+                               maxlength="16" tabindex="6">
+                    </div>
+                    <div class="error-tips-wrap" id="password2-error" style="display: none">
+                        <div class="error-tips">两次密码输入不一致</div>
+                    </div>
+                </div>
+                <div>
+                    <input id="get_acc" type="submit" class="submit" value="立即注册" tabindex="7">
+                </div>
+            </div>
+            <div class="error" id="sign_up_error" style="display:none">
+                <div class="error-logo"></div>
+                <div class="error-msg" data-bind="text: errorMsg">注册失败，该邮箱已被注册</div>
+                <div class="error-link">
+                    <a onclick="backtoSignUp()">返回</a>|
+                    <a href="javascript:void(0)">联系我们</a>
+                </div>
+            </div>
+            <div class="succ" id="sign_up_succ" style="display:none">
+                <div class="succ-logo"></div>
+                <div class="reg-succ">注册成功<br><br>开启属于你的特别关注</div>
+                <div>
+                    <a href="login.html" target="_blank">
+                        <button class="login">立即登录</button>
+                    </a>
+                </div>
+            </div>
+            <br>
+            <div class="footer">Copyright <span>©</span> 2017 Closends All Rights Reserved</div>
+            <div class="footer">Designed by <a href="http://neilyu.cn" target="_blank" tabindex="8">Neil.YU</a>
+                from <a href="https://github.com/HITXYZ" target="_blank" tabindex="9">XYZ</a></div>
+        </div>
+    </div>
+
+    <script>
+        function load() {
+            let window_width = document.documentElement.clientWidth;
+            if (window_width <= 1000) {
+                document.getElementById("sideshow").style.display = "none";
+                $("#main-wrapper").css("marginLeft", 0);
+            } else if (window_width <= 1200) {
+                document.getElementById("sideshow").style.display = "block";
+                document.getElementById("sideshow").style.width = "240px";
+                $("#main-wrapper").css("marginLeft", 240);
+            } else {
+                document.getElementById("sideshow").style.display = "block";
+                document.getElementById("sideshow").style.width = "480px";
+                $("#main-wrapper").css("marginLeft", 480);
+            }
+        }
+
+        function backtoSignUp() {
+            document.getElementById("sign_up_error").style.display = "none";
+            document.getElementById("sign_up_form").style.display = "block";
+        }
+
+        let flag = {
+            "nickname": false,
+            "password": false,
+            "mail": false,
+        };
+
+        $(function () {
+            //窗口大小变化实时监测
+            $(window).resize(function () {
+                let window_width = document.documentElement.clientWidth;
+                if (window_width <= 1000) {
+                    document.getElementById("sideshow").style.display = "none";
+                    $("#main-wrapper").css("marginLeft", 0);
+                } else if (window_width <= 1200) {
+                    document.getElementById("sideshow").style.display = "block";
+                    document.getElementById("sideshow").style.width = "240px";
+                    $("#main-wrapper").css("marginLeft", 240);
+                } else {
+                    document.getElementById("sideshow").style.display = "block";
+                    document.getElementById("sideshow").style.width = "480px";
+                    $("#main-wrapper").css("marginLeft", 480);
+                }
+            });
+
+            // mail验证
+            $("#mail").focus(function () {
+                document.getElementById("mail-tips").style.display = "none";
+                document.getElementById("mail-error").style.display = "none";
+                document.getElementById("mail-ok").style.display = "none";
+            })
+                .blur(function () {
+                    let mail = $(this).val();
+                    let pattern = /\b(^['_A-Za-z0-9-]+(\.['_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)\b/;
+                    if (!pattern.test(mail)) {
+                        document.getElementById("mail-error").style.display = "block";
+                        document.getElementById("mail-ok").style.display = "none";
+                    } else {
+                        document.getElementById("mail-error").style.display = "none";
+                        document.getElementById("mail-ok").style.display = "block";
+                        flag.mail = true;
+                    }
+                    if (mail.length === 0) {
+                        document.getElementById("mail-tips").style.display = "block";
+                        flag.mail = false;
+                    }
+                });
+
+            // 用户名校验
+            $("#nickname").focus(function () {
+                document.getElementById("nickname-tips").style.display = "none";
+                document.getElementById("nickname-error").style.display = "none";
+                document.getElementById("nickname-ok").style.display = "none";
+            })
+                .blur(function () {
+                    let nickname = $(this).val();
+                    // 校验规则，可调整
+                    let pattern = /^[\u4e00-\u9fff\w]{1,12}$/;
+                    if (!pattern.test(nickname)) {
+                        document.getElementById("nickname-error").style.display = "block";
+                        document.getElementById("nickname-ok").style.display = "none";
+                        flag.nickname = false;
+                    }
+                    else {
+                        document.getElementById("nickname-error").style.display = "none";
+                        document.getElementById("nickname-ok").style.display = "block";
+                        flag.nickname = true;
+                    }
+                    if (nickname.length === 0) {
+                        document.getElementById("nickname-tips").style.display = "block";
+                    }
+                });
+
+            // 密码校验
+            $("#password1").focus(function () {
+                document.getElementById("password1-tips").style.display = "none";
+                document.getElementById("password1-error").style.display = "none";
+                document.getElementById("password1-ok").style.display = "none";
+            })
+                .blur(function () {
+                    let password1 = $(this).val();
+                    let pattern = /\b(^['A-Za-z0-9]{8,16}$)\b/;
+                    if (!pattern.test(password1)) {
+                        document.getElementById("password1-error").style.display = "block";
+                        document.getElementById("password1-ok").style.display = "none";
+                    } else {
+                        document.getElementById("password1-error").style.display = "none";
+                        document.getElementById("password1-ok").style.display = "block";
+                        //flag.password=true;
+                    }
+                    if (password1.length === 0) {
+                        document.getElementById("password2-ok").style.display = "none";
+                        document.getElementById("password1-tips").style.display = "block";
+                    }
+                    //更新确认密码栏状态
+                    let password2 = $("#password2").val();
+                    if (password2 !== $("#password1").val()) {
+                        if (password1.length !== 0 && password2.length !== 0) {
+                            document.getElementById("password2-error").style.display = "block";
+                            document.getElementById("password2-ok").style.display = "none";
+                        }
+                        flag.password = false;
+                    }
+                    else {
+                        document.getElementById("password2-error").style.display = "none";
+                        if (password1.length !== 0 && pattern.test(password1)) {
+                            document.getElementById("password2-ok").style.display = "block";
+                        }
+                        flag.password = true;
+                    }
+                });
+
+            // 密码重复校验
+            $("#password2").focus(function () {
+                document.getElementById("password2-tips").style.display = "none";
+                document.getElementById("password2-error").style.display = "none";
+                document.getElementById("password2-ok").style.display = "none";
+            })
+                .blur(function () {
+
+                    let password2 = $(this).val();
+                    let pattern = /\b(^['A-Za-z0-9]{8,16}$)\b/;
+                    if (password2 !== $("#password1").val()) {
+                        document.getElementById("password2-error").style.display = "block";
+                        document.getElementById("password2-ok").style.display = "none";
+                        flag.password = false;
+                    }
+                    else {
+                        document.getElementById("password2-error").style.display = "none";
+                        if ($("#password1").val().length !== 0 && pattern.test($("#password1").val())) {
+                            document.getElementById("password2-ok").style.display = "block";
+                        }
+                        flag.password = true;
+                    }
+                    if (password2.length === 0) {
+                        document.getElementById("password2-tips").style.display = "block";
+                    }
+                });
+
+            $("#form").submit(function () {
+                return flag.nickname && flag.password && flag.mail;
+            });
+        });
+    </script>
+</body>
+</html>
