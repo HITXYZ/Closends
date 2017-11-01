@@ -1,0 +1,4 @@
+migrations/
+collected_static/
+.idea/
+*.pyc
