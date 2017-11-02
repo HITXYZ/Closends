@@ -1,0 +1,736 @@
+html {
+    font-size: 62.5%;
+    font-family: Tahoma
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset,
+form, label, legend, input, button, textarea, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section,
+summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0
+}
+
+body {
+    line-height: 1.333;
+    font-size: 12px;
+    font-size: 1.2rem
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%
+}
+
+input, textarea, select, button {
+    font-size: 12px;
+    font-weight: normal;
+    font-family: inherit
+}
+
+input[type="button"], input[type="submit"], select, button {
+    cursor: pointer
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+address, caption, cite, code, dfn, em, th, var {
+    font-style: normal;
+    font-weight: normal
+}
+
+li {
+    list-style: none
+}
+
+caption, th {
+    text-align: left
+}
+
+q:before, q:after {
+    content: ''
+}
+
+abbr, acronym {
+    border: 0;
+    font-variant: normal
+}
+
+sup {
+    vertical-align: text-top
+}
+
+sub {
+    vertical-align: text-bottom
+}
+
+fieldset, img, a img, iframe {
+    border-width: 0;
+    border-style: none
+}
+
+iframe {
+    overflow: hidden
+}
+
+img {
+    -ms-interpolation-mode: bicubic
+}
+
+textarea {
+    resize: vertical;
+    overflow-y: auto
+}
+
+legend {
+    color: #000
+}
+
+a {
+    text-decoration: none
+}
+
+hr {
+    height: 0
+}
+
+label {
+    cursor: pointer
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block
+}
+
+.os_mac {
+    font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Hiragino Sans GB", "Hiragino Sans GB W3"
+}
+
+.ui_icon {
+    display: inline-block;
+    zoom: 1
+}
+
+.ui_sep_line {
+    margin: 0 10px;
+    color: #888
+}
+
+.icon_closends_logo {
+    width: 251px;
+    height: 98px;
+    background-image: url(/static/closends/img/closends-login-logo.32.png);
+}
+
+.ui_hide {
+    visibility: hidden
+}
+
+.ui_btn {
+    border: 0 none;
+    background-color: transparent;
+    overflow: hidden
+}
+
+.clearfix {
+    zoom: 1
+}
+
+.clearfix:after {
+    content: ".";
+    clear: both;
+    line-height: 0;
+    display: block;
+    height: 0;
+    overflow: hidden
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Microsoft Yahei";
+    background-image: url(/static/closends/img/login_bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.lay_wrap {
+    color: #ffffff;
+    height: 100%;
+    position: relative;
+    min-height: 600px;
+    z-index: 2
+}
+
+.lay_wrap a {
+    color: #ffffff
+}
+
+.lay_wrap a:hover {
+    text-decoration: underline
+}
+
+.lay_wrap .lay_inner {
+    width: 750px;
+    margin: 0 auto;
+    position: relative
+}
+
+.lay_wrap .lay_main {
+    color: #ffffff;
+    position: absolute;
+    top: 10%;
+    width: 100%
+}
+
+.lay_wrap .lay_main a {
+    color: #ffffff
+}
+
+.lay_wrap .lay_main .login_head a {
+    color: #4b4a4a
+}
+
+.lay_wrap .lay_main .login_head a:focus {
+    border: 0 none;
+    outline: 0
+}
+
+.lay_wrap .lay_main .login_head .linwei-logo {
+    margin-left: 24px;
+    width: 188px;
+    height: 50px
+}
+
+.lay_wrap .lay_main .login_wrap {
+    width: 265px;
+    position: absolute;
+    right: 0
+}
+
+.lay_wrap .lay_main .login_wrap .login_option {
+}
+
+.lay_wrap .lay_main .login_wrap .option_item {
+    margin-bottom: 18px;
+    overflow: hidden;
+    zoom: 1
+}
+
+.lay_wrap .lay_main .login_wrap .option_item a {
+    float: left;
+    margin-right: 10px
+}
+
+.lay_wrap .lay_main .login_wrap .option_item .ui_sep_line {
+    float: left;
+    margin-left: 0
+}
+
+.lay_wrap .lay_main .login_wrap .login_fast {
+    margin-bottom: 7px
+}
+
+.lay_wrap .lay_main .login_form .form_item {
+    margin-bottom: 19px;
+    position: relative
+}
+
+.lay_wrap .lay_main .login_form .form_item .ui_placeholder {
+    position: absolute;
+    left: 2px;
+    top: 0;
+    height: 18px;
+    padding: 12px 10px;
+    line-height: 18px;
+    font-size: 16px;
+    cursor: text;
+    color: #979797
+}
+
+.lay_wrap .lay_main .login_form .form_item_error {
+    color: #F48C12;
+    margin-bottom: 10px;
+    border: 1px solid #FCEFB7;
+    background: #FFFDE5;
+    line-height: 20px;
+    padding: 3px 10px
+}
+
+.lay_wrap .lay_main .login_form .form_item_error a {
+    color: #4b4a4a
+}
+
+.lay_wrap .lay_main .login_form .form_item_code {
+    padding-bottom: 15px
+}
+
+.lay_wrap .lay_main .login_form .item_code_wrap {
+    display: inline-block;
+    height: 44px;
+    vertical-align: top;
+    position: relative;
+    width: 130px;
+    margin-left: 10px
+}
+
+.lay_wrap .lay_main .login_form .item_code_wrap .code_img {
+    width: 130px;
+    height: 44px;
+    vertical-align: top
+}
+
+.lay_wrap .lay_main .login_form .item_code_wrap .code_refresh {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    height: 20px;
+    line-height: 20px
+}
+
+.lay_wrap .lay_foot {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    z-index: 2
+}
+
+.lay_wrap .lay_foot .login_device {
+    margin: 0 auto 20px;
+    text-align: center
+}
+
+.lay_wrap .lay_foot .login_device:after {
+    content: ".";
+    clear: both;
+    line-height: 0;
+    display: block;
+    height: 0;
+    overflow: hidden
+}
+
+.lay_wrap .lay_foot .login_device li {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    width: 60px;
+    text-align: center;
+    vertical-align: top;
+    margin: 0 5px
+}
+
+.lay_wrap .lay_foot .login_device li.ui_line {
+    width: 1px;
+    height: 21px;
+    background-color: rgba(255, 255, 255, .4);
+    margin: 10px 25px
+}
+
+.lay_wrap .lay_foot .login_device li a {
+    display: block;
+    text-decoration: none;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    position: relative;
+    z-index: 10;
+    top: 0
+}
+
+.lay_wrap .lay_foot .login_device li a:hover {
+    top: -10px
+}
+
+.lay_wrap .lay_foot .login_device li .ui_icon {
+    vertical-align: top
+}
+
+.lay_wrap .lay_foot .login_device li span {
+    display: block;
+    padding-top: 5px
+}
+
+.lay_wrap .lay_foot .copyright {
+    text-align: center
+}
+
+.lay_wrap .lay_foot .copyright p {
+    line-height: 22px
+}
+
+.lay_wrap_v2 {
+}
+
+.lay_wrap_v2 .lay_main {
+    top: 95px
+}
+
+.linwei-login .lay_main {
+    top: 84px
+}
+
+.lay_wrap_v2 .lay_inner {
+    width: 880px
+}
+
+.linwei-login .lay_inner {
+    width: 992px
+}
+
+.linwei-login .lay_inner .login_head {
+    margin-bottom: 34px
+}
+
+.linwei-login .icon_closends_logo {
+    width: 183px;
+    height: 50px;
+    background-image: url(/static/closends/img/closends-ad-login-logo.32.png);
+}
+
+.lay_wrap_v2 .lay_main .login_wrap {
+    overflow: hidden;
+    width: 418px;
+    height: auto;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 2px 2px rgba(255, 255, 255, .1);
+    top: 95px;
+    zoom: 1
+}
+
+.linwei-login .linwei-wrap {
+    position: relative;
+    z-index: 3
+}
+
+.linwei-wrap .linwei-area {
+    position: relative
+}
+
+.linwei-wrap .linwei-area img {
+    display: block;
+    width: 570px;
+    height: 320px
+}
+
+.linwei-login .lay_main .login_wrap {
+    top: 0
+}
+
+.linwei-wrap .linwei-area {
+    width: 570px;
+    height: 320px
+}
+
+.linwei-wrap .linwei-area .linwei-txt {
+    position: absolute;
+    color: #fff;
+    background-color: #ffffff;
+    background-color: rgb(255, 255, 255);
+    bottom: 10px;
+    left: 10px;
+    width: 30px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=rgb(255, 255, 255), endColorstr=#66000000)
+}
+
+.dark-linwei .linwei-area .linwei-txt {
+    color: #fff
+}
+
+.linwei-wrap .linwei-area .check-more {
+    width: 116px;
+    height: 48px;
+    line-height: 48px;
+    display: block;
+    position: absolute;
+    bottom: 14px;
+    right: 0;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 99px 0 0 99px;
+    background-color: rgba(255, 255, 255, .5);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=rgba(255, 255, 255, 0.5), endColorstr=#ffffff)
+}
+
+.linwei-wrap .linwei-area .check-more b {
+    display: inline-block;
+    width: 14px;
+    height: 22px
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+    .icon_closends_logo {
+        background-image: url(/static/closends/img/closends-login-logo.32@2x.png)
+    }
+
+    .linwei-login .icon_closends_logo {
+        background-image: url(/static/closends/img/closends-ad-login-logo.32@2x.png)
+    }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.25), only screen and (min-resolution: 120dpi), only screen and (min-resolution: 1.25dppx) {
+    .icon_closends_logo {
+        background-image: url(/static/closends/img/closends-login-logo.32@2x.png);
+        background-size: 251px 98px
+    }
+
+    .linwei-login .icon_closends_logo {
+        background-image: url(/static/closends/img/closends-ad-login-logo.32@2x.png);
+        background-size: 183px 50px
+    }
+}
+
+#CssGaga {
+    content: "160520135044,jan,334"
+}
+
+/*sign_frame.css*/
+
+html {
+    height: 100%;
+    width: 100%;
+    font-family: -apple-system, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    transition: all .2s
+}
+
+body, ul {
+    margin: 0;
+    height: 100%
+}
+
+body, html {
+    text-align: center;
+}
+
+a {
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+input::-ms-clear, input::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0
+}
+
+input:focus {
+    outline: 0
+}
+
+ul {
+    padding: 0
+}
+
+ul li {
+    list-style-type: none
+}
+
+.title {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 20px
+}
+
+.login_form {
+    width: 272px;
+    margin: 0 auto
+}
+
+.login_form .input-area {
+    position: relative
+}
+
+.login_form .input-area .input-flags {
+    position: absolute;
+    right: 0;
+    height: 52px;
+    z-index: 1
+}
+
+.login_form .input-area .input-flags .input-ok {
+    background: url(/static/closends/img/tick.png) no-repeat;
+    width: 20px;
+    height: 15px;
+    display: block;
+    float: right;
+    margin: 18.5px 10px
+}
+
+.login_form .input-area .input-placeholder {
+    position: absolute;
+    font-size: 16px;
+    line-height: 16px;
+    padding: 13px 16px;
+    background: #fff;
+    z-index: -1;
+    font-weight: lighter;
+    color: #aaa
+}
+
+.login_form .input-area .input-outer {
+    background: 0 0;
+    margin: 18px 0 0
+}
+
+.login_form .input-area .input-outer input {
+    border: 1px #aaa solid;
+    border-radius: 4px;
+    background: 0 0;
+    text-align: left;
+    font-size: 16px;
+    width: 230px;
+    height: 40px;
+    line-height: 20px;
+    padding: 0 20px
+}
+
+.login_form .input-area .input-outer input:hover {
+    border-color: #777
+}
+
+.login_form .input-area .input-outer input:focus {
+    border-color: #549df8
+}
+
+.login_form .input-area .input-outer input.error {
+    color: #ff5b5b;
+    border-color: #ff5b5b
+}
+
+.login_form .password-tips-group {
+    height: 78px;
+    line-height: 1;
+    overflow: hidden
+}
+
+.login_form .password-tips-group .password-tips {
+    padding: 0 0 0 24px;
+    font-size: 14px;
+    line-height: 18px;
+    margin: 8px 0 8px
+}
+
+.login_form .error-tips-wrap {
+    padding-top: 8px;
+    height: 12px;
+    overflow: hidden;
+    position: relative;
+    line-height: 1
+}
+
+.login_form .error-tips-wrap .error-tips {
+    background: url(/static/closends/img/error2.png) no-repeat;
+    background-image: image-set("/static/closends/img/error2.png" 1x, "/static/closends/img/error2@2x.png" 2x);
+    padding: 0 0 0 14px;
+    color: #ff5b5b;
+    font-size: 10.5px;
+    line-height: 12px;
+    height: 12px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0
+}
+
+.login_form .error-tips-wrap .error-tips .slideup {
+    top: -28px
+}
+
+.login_form .input-tips-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 14px;
+    line-height: 1
+}
+
+.login_form .input-tips-wrap .input-tips {
+    font-size: 14px;
+    height: 14px;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0
+}
+
+.submit {
+    position: relative;
+    height: 40px;
+    background-color: #86ce2f
+}
+
+.login_button {
+    position: absolute;
+    left: 0;
+    outline: 0;
+    width: 100%
+}
+
+.login_button .btn {
+    width: 100%;
+    height: 40px;
+    line-height: 35px;
+    border: none;
+    font-size: 17px;
+    font-weight: 400;
+    font-family: "Microsoft Yahei", "微软雅黑", SimHei, "黑体", "Hiragino Sans GB", STHeiTi, sans-serif;
+    color: #fff;
+    background: 0 0;
+    cursor: pointer
+}
+
+.login_button:hover .btn {
+    background-position: -116px -90px
+}
+
+.login_button:hover {
+    text-decoration: none
+}
+
+.bottom {
+    right: 10px
+}
+
+.bottom {
+    height: 16px;
+    margin-bottom: 8px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+    font-size: 12px
+}
+
+.bottom .link {
+    color: #666
+}
+
+.bottom .dotted {
+    color: #bfbfbf;
+    margin: 0 5px
+}

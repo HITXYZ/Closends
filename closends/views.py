@@ -20,5 +20,9 @@ def page_error(request):
 
 
 @csrf_exempt
-def index(request):
-    return render(request, "closends/index.html")
+def to_login(request):
+    return render(request, 'closends/login.html')
+
+@csrf_exempt
+def to_register(request):
+    return render(request, 'closends/register.html')
