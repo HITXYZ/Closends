@@ -3,7 +3,7 @@
     @date: 1997/10/27
     @desc: Items of qzone scraping
 """
-from items import ScrapeItem
+from baseitem import ScrapeItem
 
 
 class QzoneItem(ScrapeItem):

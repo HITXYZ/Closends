@@ -3,7 +3,7 @@
     @date: 2017/10/23
     @desc: Items of weibo scraping
 """
-from items import ScrapeItem
+from baseitem import ScrapeItem
 
 
 class WeiboItem(ScrapeItem):
