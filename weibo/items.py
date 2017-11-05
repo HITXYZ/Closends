@@ -11,16 +11,15 @@ class WeiboItem(ScrapeItem):
 
 
 class WeiboUserItem(WeiboItem):
-    def __init__(self):
-        self.id = None
-        self.name = None
-        self.sex = None
-        self.address = None
-        self.birthday = None
-        self.synopsis = None
-        self.weibo_number = 0
-        self.follow_number = 0
-        self.fans_number = 0
+    id = None
+    name = None
+    sex = None
+    address = None
+    birthday = None
+    synopsis = None
+    weibo_number = 0
+    follow_number = 0
+    fans_number = 0
 
     def __str__(self):
         string = ''
@@ -40,11 +39,10 @@ class WeiboUserItem(WeiboItem):
 
 
 class WeiboContentItem(WeiboItem):
-    def __init__(self):
-        self.owner = None
-        self.time = None
-        self.content = None
-        self.images = []
+    owner = None
+    time = None
+    content = None
+    images = []
 
     def __str__(self):
         string = ''
@@ -58,10 +56,11 @@ class WeiboContentItem(WeiboItem):
 
 
 class WeiboRepostContentItem(WeiboContentItem):
+    repost_source = None
+    repost_reason = None
+
     def __init__(self):
         WeiboContentItem.__init__(self)
-        self.repost_source = None
-        self.repost_reason = None
 
     def __str__(self):
         string = WeiboContentItem.__str__(self)

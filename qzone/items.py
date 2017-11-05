@@ -11,9 +11,8 @@ class QzoneItem(ScrapeItem):
 
 
 class QzoneUserItem(QzoneItem):
-    def __init__(self):
-        self.qq = None
-        self.name = None
+    qq = None
+    name = None
 
     def __str__(self):
         return 'QQ: ' + str(self.qq) + '; Name: ' + str(self.name)
@@ -23,17 +22,16 @@ class QzoneUserItem(QzoneItem):
 
 
 class QzoneEmotionItem(QzoneItem):
-    def __init__(self):
-        self.id = None
-        self.owner = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.pictures = []
-        self.source_name = None
-        self.location = None
-        self.visitors = []
-        self.likers = []
-        self.comments = []
+    id = None
+    owner = QzoneUserItem()
+    time = None
+    content = None
+    pictures = []
+    source_name = None
+    location = None
+    visitors = []
+    likers = []
+    comments = []
 
     def __str__(self):
         string = ''
@@ -53,10 +51,11 @@ class QzoneEmotionItem(QzoneItem):
 
 
 class QzoneRepostEmotionItem(QzoneEmotionItem):
+    repost_source = QzoneUserItem()
+    repost_reason = None
+
     def __init__(self):
         QzoneEmotionItem.__init__(self)
-        self.repost_source = QzoneUserItem()
-        self.repost_reason = None
 
     def __str__(self):
         string = QzoneEmotionItem.__str__(self)
@@ -69,12 +68,11 @@ class QzoneRepostEmotionItem(QzoneEmotionItem):
 
 
 class QzoneCommentItem(QzoneItem):
-    def __init__(self):
-        self.commenter = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.pictures = []
-        self.replies = []
+    commenter = QzoneUserItem()
+    time = None
+    content = None
+    pictures = []
+    replies = []
 
     def __str__(self):
         string = ''
@@ -90,11 +88,10 @@ class QzoneCommentItem(QzoneItem):
 
 
 class QzoneCommentReplyItem(QzoneItem):
-    def __init__(self):
-        self.replier = QzoneUserItem()
-        self.replyto = QzoneUserItem()
-        self.time = None
-        self.content = None
+    replier = QzoneUserItem()
+    replyto = QzoneUserItem()
+    time = None
+    content = None
 
     def __str__(self):
         return str(self.replier.name) + ' reply to ' + str(self.replyto.name) + ': ' + str(self.content)
@@ -104,13 +101,12 @@ class QzoneCommentReplyItem(QzoneItem):
 
 
 class QzoneMessageItem(QzoneItem):
-    def __init__(self):
-        self.id = None
-        self.owner = QzoneUserItem()
-        self.poster = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.replies = []
+    id = None
+    owner = QzoneUserItem()
+    poster = QzoneUserItem()
+    time = None
+    content = None
+    replies = []
 
     def __str__(self):
         string = ''
@@ -126,10 +122,9 @@ class QzoneMessageItem(QzoneItem):
 
 
 class QzoneMessageReplyItem(QzoneItem):
-    def __init__(self):
-        self.replier = QzoneUserItem()
-        self.time = None
-        self.content = None
+    replier = QzoneUserItem()
+    time = None
+    content = None
 
     def __str__(self):
         return str(self.replier.name) + 'replied: ' + str(self.content)
