@@ -3,21 +3,26 @@
     @date: 1997/10/27
     @desc: Items of qzone scraping
 """
+from items import ScrapeItem
 
 
-class QzoneUserItem:
+class QzoneItem(ScrapeItem):
+    pass
+
+
+class QzoneUserItem(QzoneItem):
     def __init__(self):
         self.qq = None
         self.name = None
 
     def __str__(self):
-        return "QQ: " + str(self.qq) + "; Name: " + str(self.name)
+        return 'QQ: ' + str(self.qq) + '; Name: ' + str(self.name)
 
     def __hash__(self):
         return hash(self.qq)
 
 
-class EmotionItem:
+class QzoneEmotionItem(QzoneItem):
     def __init__(self):
         self.id = None
         self.owner = QzoneUserItem()
@@ -31,39 +36,39 @@ class EmotionItem:
         self.comments = []
 
     def __str__(self):
-        string = ""
-        string += "Owner: " + str(self.owner) + "\n"
-        string += "Time: " + str(self.time) + "\n"
-        string += "Content: " + str(self.content) + "\n"
-        string += "Pictures: " + str(self.pictures) + "\n"
-        string += "Source Name: " + str(self.source_name) + "\n"
-        string += "Location: " + str(self.location) + "\n"
-        string += "Visitor Number: " + str(len(self.visitors)) + '\n'
-        string += "Like Number: " + str(len(self.likers)) + "\n"
-        string += "Comment Number: " + str(len(self.comments)) + "\n"
+        string = ''
+        string += 'Owner: ' + str(self.owner) + '\n'
+        string += 'Time: ' + str(self.time) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Pictures: ' + str(self.pictures) + '\n'
+        string += 'Source Name: ' + str(self.source_name) + '\n'
+        string += 'Location: ' + str(self.location) + '\n'
+        string += 'Visitor Number: ' + str(len(self.visitors)) + '\n'
+        string += 'Like Number: ' + str(len(self.likers)) + '\n'
+        string += 'Comment Number: ' + str(len(self.comments)) + '\n'
         return string
 
     def __hash__(self):
         return hash(self.id)
 
 
-class RepostEmotionItem(EmotionItem):
+class QzoneRepostEmotionItem(QzoneEmotionItem):
     def __init__(self):
-        EmotionItem.__init__(self)
+        QzoneEmotionItem.__init__(self)
         self.repost_source = QzoneUserItem()
         self.repost_reason = None
 
     def __str__(self):
-        string = EmotionItem.__str__(self)
-        string += "Repost Source: " + str(self.repost_source) + "\n"
-        string += "Repost Reason: " + str(self.repost_reason) + "\n"
+        string = QzoneEmotionItem.__str__(self)
+        string += 'Repost Source: ' + str(self.repost_source) + '\n'
+        string += 'Repost Reason: ' + str(self.repost_reason) + '\n'
         return string
 
     def __hash__(self):
         return hash(self.id)
 
 
-class CommentItem:
+class QzoneCommentItem(QzoneItem):
     def __init__(self):
         self.commenter = QzoneUserItem()
         self.time = None
@@ -72,19 +77,19 @@ class CommentItem:
         self.replies = []
 
     def __str__(self):
-        string = ""
-        string += "Commenter: " + str(self.commenter) + "\n"
-        string += "Time: " + str(self.time) + "\n"
-        string += "Content: " + str(self.content) + "\n"
-        string += "Pictures: " + str(self.pictures) + "\n"
-        string += "Reply Number: " + str(len(self.replies)) + "\n"
+        string = ''
+        string += 'Commenter: ' + str(self.commenter) + '\n'
+        string += 'Time: ' + str(self.time) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Pictures: ' + str(self.pictures) + '\n'
+        string += 'Reply Number: ' + str(len(self.replies)) + '\n'
         return string
 
     def __hash__(self):
         return hash(self.content)
 
 
-class CommentReplyItem:
+class QzoneCommentReplyItem(QzoneItem):
     def __init__(self):
         self.replier = QzoneUserItem()
         self.replyto = QzoneUserItem()
@@ -92,13 +97,13 @@ class CommentReplyItem:
         self.content = None
 
     def __str__(self):
-        return str(self.replier.name) + " reply to " + str(self.replyto.name) + ": " + str(self.content)
+        return str(self.replier.name) + ' reply to ' + str(self.replyto.name) + ': ' + str(self.content)
 
     def __hash__(self):
         return hash(self.content)
 
 
-class MessageItem:
+class QzoneMessageItem(QzoneItem):
     def __init__(self):
         self.id = None
         self.owner = QzoneUserItem()
@@ -108,26 +113,26 @@ class MessageItem:
         self.replies = []
 
     def __str__(self):
-        string = ""
-        string += "Owner: " + str(self.owner) + "\n"
-        string += "Poster: " + str(self.poster) + "\n"
-        string += "Time: " + str(self.time) + "\n"
-        string += "Content: " + str(self.content) + "\n"
-        string += "Reply Number: " + str(len(self.replies)) + "\n"
+        string = ''
+        string += 'Owner: ' + str(self.owner) + '\n'
+        string += 'Poster: ' + str(self.poster) + '\n'
+        string += 'Time: ' + str(self.time) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Reply Number: ' + str(len(self.replies)) + '\n'
         return string
 
     def __hash__(self):
         return hash(self.id)
 
 
-class MessageReplyItem:
+class QzoneMessageReplyItem(QzoneItem):
     def __init__(self):
         self.replier = QzoneUserItem()
         self.time = None
         self.content = None
 
     def __str__(self):
-        return str(self.replier.name) + "replied: " + str(self.content)
+        return str(self.replier.name) + 'replied: ' + str(self.content)
 
     def __hash__(self):
         return hash(self.content)

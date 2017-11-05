@@ -11,10 +11,8 @@ import re
 import requests
 import time
 import traceback
-
 from math import ceil
 from selenium import webdriver
-
 from qzone.items import *
 
 
@@ -40,7 +38,7 @@ headers = {"User_Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
                          "(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36",
            "Referer": "https://qzs.qq.com/qzone/app/mood_v6/html/index.html"}
 
-log_file = "qzone-log-%s.log" % (datetime.date.today())
+log_file = "../logs/qzone/qzone-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
@@ -136,13 +134,13 @@ class QzoneSpider:
             for emotion in emotion_response["msglist"]:
                 logging.info("Scraping emotion: %s." % emotion["tid"])
                 if "rt_tid" in emotion.keys():     # 转发说说
-                    item = RepostEmotionItem()
+                    item = QzoneRepostEmotionItem()
                     item.content = emotion["rt_con"]["content"]
                     item.repost_source.qq = emotion["rt_uin"]
                     item.repost_source.name = emotion["rt_uinname"]
                     item.repost_reason = emotion["content"]
                 else:       # 原创说说
-                    item = EmotionItem()
+                    item = QzoneEmotionItem()
                     item.content = emotion["content"]
 
                 item.id = emotion["tid"]
@@ -196,14 +194,14 @@ class QzoneSpider:
                         emotion_list.append(item)
                         continue
                     for comment in comments:
-                        comment_item = CommentItem()
+                        comment_item = QzoneCommentItem()
                         comment_item.commenter.qq = comment["uin"]
                         comment_item.commenter.name = comment["name"]
                         comment_item.time = comment["createTime2"]
                         comment_item.content = comment["content"]
                         if "list_3" in comment.keys():      # 评论有回复
                             for reply in comment["list_3"]:
-                                reply_item = CommentReplyItem()
+                                reply_item = QzoneCommentReplyItem()
                                 reply_item.replier.qq = reply["uin"]
                                 reply_item.replier.name = reply["name"]
                                 reply_content = reply["content"]
@@ -257,7 +255,7 @@ class QzoneSpider:
 
             for message in message_response["data"]["commentList"]:
                 logging.info("Scraping message: %s" % message["id"])
-                item = MessageItem()
+                item = QzoneMessageItem()
                 item.id = message["id"]
                 item.owner.qq = qq
                 item.time = message["pubtime"]
@@ -266,7 +264,7 @@ class QzoneSpider:
                     item.poster.name = message["nickname"]
                     item.content = message["ubbContent"]
                     for reply in message["replyList"]:
-                        reply_item = MessageReplyItem()
+                        reply_item = QzoneMessageReplyItem()
                         reply_item.replier.qq = reply["uin"]
                         reply_item.replier.name = reply["nick"]
                         reply_item.time = reply["time"]
