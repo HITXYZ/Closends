@@ -42,10 +42,12 @@ class ZhihuSpider:
             return None
         print(user_url.format(user=user, include=user_query))
         response = requests.get(user_url.format(user=user, include=user_query), headers=headers)
-        if response.status_code == 404:     # 账号被封禁
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             return None
         result = response.json()
         print(result)
+        if result.get('error') is not None: # 身份未经过验证
+            return None
         item = ZhihuUserItem()
         item.id = result.get('id')
         item.name = result.get('name')
@@ -67,29 +69,36 @@ class ZhihuSpider:
         item.following_column_count = result.get('following_columns_count')
         item.following_question_count = result.get('following_question_count')
         item.following_favlist_count = result.get('following_favlists_count')
-        for education in result.get('educations'):
-            edu_item = ZhihuEducationItem()
-            edu_item.school = education.get('school').get('name')
-            if 'major' in education.keys():
-                edu_item.major = education.get('major').get('name')
-            item.educations.append(edu_item)
-        for employment in result.get('employments'):
-            emp_item = ZhihuEmploymentItem()
-            emp_item.company = employment.get('company')
-            emp_item.job = employment.get('job')
-            item.employments.append(emp_item)
-        for location in result.get('locations'):
-            item.locations.append(location.get('name'))
+        educations = result.get('educations')
+        if educations is not None:
+            for education in educations:
+                edu_item = ZhihuEducationItem()
+                edu_item.school = education.get('school').get('name')
+                if 'major' in education.keys():
+                    edu_item.major = education.get('major').get('name')
+                item.educations.append(edu_item)
+        employments = result.get('employments')
+        if employments is not None:
+            for employment in employments:
+                emp_item = ZhihuEmploymentItem()
+                emp_item.company = employment.get('company')
+                emp_item.job = employment.get('job')
+                item.employments.append(emp_item)
+        locations = result.get('locations')
+        if locations is not None:
+            for location in locations:
+                item.locations.append(location.get('name'))
         return item
 
     def scrape_follows(self, user=None, number=None):
         if user is None:
             return []
         print(follows_url.format(user=user, include=follows_query, offset=0, limit=20))
-        result = requests.get(follows_url.format(user=user, include=follows_query, offset=0, limit=20), headers=headers).json()
-        print(result)
-        if result is None:
+        response = requests.get(follows_url.format(user=user, include=follows_query, offset=0, limit=20), headers=headers)
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             return []
+        result = response.json()
+        print(result)
         total = result.get('paging').get('totals')
         if number is None or number <= 0:
             need_count = 10
@@ -123,10 +132,11 @@ class ZhihuSpider:
         if user is None:
             return []
         print(followers_url.format(user=user, include=followers_query, offset=0, limit=20))
-        result = requests.get(followers_url.format(user=user, include=followers_query, offset=0, limit=20), headers=headers).json()
-        print(result)
-        if result is None:
+        response = requests.get(followers_url.format(user=user, include=followers_query, offset=0, limit=20), headers=headers)
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             return []
+        result = response.json()
+        print(result)
         total = result.get('paging').get('totals')
         if number is None or number <= 0:
             need_count = 10
@@ -161,6 +171,9 @@ if __name__ == '__main__':
     spider = ZhihuSpider()
     info = spider.scrape_info(user='excited-vczh')
     print(info)
+    follows = spider.scrape_follows(user='secited-vczh', number=50)
+    for follow in follows:
+        print(follow)
     followers = spider.scrape_followers(user='excited-vczh', number=50)
     for follower in followers:
         print(follower)
