@@ -3,7 +3,7 @@
     @date: 2017/11/04
     @desc: Items of zhihu scraping
 """
-from items import ScrapeItem
+from baseitem import ScrapeItem
 
 
 class ZhihuItem(ScrapeItem):
@@ -12,29 +12,37 @@ class ZhihuItem(ScrapeItem):
 
 class ZhihuUserItem(ZhihuItem):
     def __init__(self):
-        self.id = id
-        self.name = None
-        self.avatar_url = None
-        self.business = None
-        self.headline = None
-        self.description = None
-        self.question_count = 0
-        self.answer_count = 0
-        self.article_count = 0
-        self.following_count = 0
-        self.follower_count = 0
-        self.vote_to_count = 0
-        self.vote_from_count = 0
-        self.thank_to_count = 0
-        self.thank_from_count = 0
-        self.educations = []
-        self.employments = []
-        self.locations = []
+        self.id = id                        # 用户ID
+        self.name = None                    # 用户名
+        self.gender = 0                     # 性别 0为女 1为男
+        self.avatar_url = None              # 头像链接
+        self.business = None                # 所在领域
+        self.headline = None                # 简介
+        self.description = None             # 个人介绍
+        self.question_count = 0             # 提问数
+        self.answer_count = 0               # 回答数
+        self.article_count = 0              # 文章数
+        self.voteup_count = 0               # 得到的赞同数
+        self.thanked_count = 0              # 得到的感谢数
+        self.favorited_count = 0            # 得到的收藏数
+        self.following_count = 0            # 关注数
+        self.follower_count = 0             # 粉丝数
+        self.following_topic_count = 0      # 关注的话题数
+        self.following_column_count = 0     # 关注的专栏数
+        self.following_question_count = 0   # 关注的问题数
+        self.following_favlist_count = 0    # 关注的收藏夹数
+        self.educations = []                # 教育经历
+        self.employments = []               # 工作经历
+        self.locations = []                 # 所在地
 
     def __str__(self):
         string = ''
         string += 'ID: ' + str(self.id) + '\n'
         string += 'Name: ' + str(self.name) + '\n'
+        if self.gender == 0:
+            string += 'Gender: female' + '\n'
+        else:
+            string += 'Gender: male' + '\n'
         string += 'Avatar Url: ' + str(self.avatar_url) + '\n'
         string += 'Business: ' + str(self.business) + '\n'
         string += 'Headline: ' + str(self.headline) + '\n'
@@ -42,12 +50,15 @@ class ZhihuUserItem(ZhihuItem):
         string += 'Question Count: ' + str(self.question_count) + '\n'
         string += 'Answer Count: ' + str(self.answer_count) + '\n'
         string += 'Article Count: ' + str(self.article_count) + '\n'
+        string += 'Vote-up Count: ' + str(self.voteup_count) + '\n'
+        string += 'Thanked Count: ' + str(self.thanked_count) + '\n'
+        string += 'Favorited Count: ' + str(self.favorited_count) + '\n'
         string += 'Following Count: ' + str(self.following_count) + '\n'
         string += 'Follower Count: ' + str(self.follower_count) + '\n'
-        string += 'Vote-to Count: ' + str(self.vote_to_count) + '\n'
-        string += 'Vote-from Count: ' + str(self.vote_from_count) + '\n'
-        string += 'Thank-to Count: ' + str(self.thank_to_count) + '\n'
-        string += 'Thank-from Count: ' + str(self.thank_from_count) + '\n'
+        string += 'Following Topic Count:' + str(self.following_topic_count) + '\n'
+        string += 'Following Column Count: ' + str(self.following_column_count) + '\n'
+        string += 'Following Question Count: ' + str(self.following_question_count) + '\n'
+        string += 'Following Favlist Count: ' + str(self.following_favlist_count) + '\n'
         return string
 
     def __hash__(self):
