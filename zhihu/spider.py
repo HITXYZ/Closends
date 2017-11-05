@@ -14,7 +14,7 @@ user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
 
 follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}'
 
-followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?include={include}&offset={offset}&limit={limit}'
+followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?include={include}'
 
 user_query = 'locations,employments,gender,educations,business,voteup_count,thanked_Count,follower_count,' \
              'following_count,cover_url,following_topic_count,following_question_count,following_favlists_count,' \
@@ -75,11 +75,79 @@ class ZhihuSpider:
             item.locations.append(location.get('name'))
         return item
 
-    @staticmethod
-    def scrape_follows(self, user=None, number = 10):
+    def scrape_follows(self, user=None, number=None):
         if user is None:
             return []
-        response = requests.get(follows_url)
+        response = requests.get(follows_url.format(user=user, include=user_query))
+        if response is None:
+            return []
+        result = json.loads(response.text)
+        total = result.get('paging').get('totals')
+        if number is None or number <= 0:
+            need_count = 10
+        else:
+            need_count = number if number < total else total
+        finish_count = 0
+        url_tokens = []
+        for data in result.get('data'):
+            if finish_count >= need_count:
+                break
+            url_tokens.append(data.get('url_token'))
+            finish_count += 1
+        if finish_count < need_count:
+            while not result.get('paging').get('is_end'):
+                if finish_count >= need_count:
+                    break
+                next_page = result.get('paging').get('next')
+                response = requests.get(next_page)
+                result = json.loads(response.text)
+                for data in result.get('data'):
+                    if finish_count >= need_count:
+                        break
+                    url_tokens.append(data.get('url_token'))
+                    finish_count += 1
+        follows = []
+        for url_token in url_tokens:
+            item = self.scrape_info(self, user=url_token)
+            follows.append(item)
+        return follows
+
+    def scrape_followers(self, user=None, number=None):
+        if user is None:
+            return []
+        response = requests.get(followers_url.format(user=user, include=user_query))
+        if response is None:
+            return []
+        result = json.loads(response.text)
+        total = result.get('paging').get('totals')
+        if number is None or number <= 0:
+            need_count = 10
+        else:
+            need_count = number if number < total else total
+        finish_count = 0
+        url_tokens = []
+        for data in result.get('data'):
+            if finish_count >= need_count:
+                break
+            url_tokens.append(data.get('url_token'))
+            finish_count += 1
+        if finish_count < need_count:
+            while not result.get('paging').get('is_end'):
+                if finish_count >= need_count:
+                    break
+                next_page = result.get('paging').get('next')
+                response = requests.get(next_page)
+                result = json.loads(response.text)
+                for data in result.get('data'):
+                    if finish_count >= need_count:
+                        break
+                    url_tokens.append(data.get('url_token'))
+                    finish_count += 1
+        followers = []
+        for url_token in url_tokens:
+            item = self.scrape_info(self, user=url_token)
+            followers.append(item)
+        return followers
 
 
 if __name__ == '__main__':
