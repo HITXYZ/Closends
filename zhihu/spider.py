@@ -40,14 +40,16 @@ class ZhihuSpider:
     def scrape_info(user=None):
         if user is None:
             return None
-        print(user_url.format(user=user, include=user_query))
+        logging.info('Scraping info of zhihu user: %s...' % user)
         response = requests.get(user_url.format(user=user, include=user_query), headers=headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
+            logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return None
         result = response.json()
-        print(result)
         if result.get('error') is not None: # 身份未经过验证
+            logging.warning('Your identity hasn\'t been confirmed.')
             return None
+
         item = ZhihuUserItem()
         item.id = result.get('id')
         item.name = result.get('name')
@@ -88,17 +90,18 @@ class ZhihuSpider:
         if locations is not None:
             for location in locations:
                 item.locations.append(location.get('name'))
+        logging.info('Succeed in scraping zhihu user: %s.' % user)
         return item
 
     def scrape_follows(self, user=None, number=None):
         if user is None:
             return []
-        print(follows_url.format(user=user, include=follows_query, offset=0, limit=20))
+        logging.info('Scraping follows of zhihu user: %s...' % user)
         response = requests.get(follows_url.format(user=user, include=follows_query, offset=0, limit=20), headers=headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
+            logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
         result = response.json()
-        print(result)
         total = result.get('paging').get('totals')
         if number is None or number <= 0:
             need_count = 10
@@ -126,17 +129,18 @@ class ZhihuSpider:
         for url_token in url_tokens:
             item = self.scrape_info(user=url_token)
             follows.append(item)
+        logging.info('Succeed in scraping follows of zhihu user: %s.' % user)
         return follows
 
     def scrape_followers(self, user=None, number=None):
         if user is None:
             return []
-        print(followers_url.format(user=user, include=followers_query, offset=0, limit=20))
+        logging.info('Scraping followers of zhihu user: %s...' % user)
         response = requests.get(followers_url.format(user=user, include=followers_query, offset=0, limit=20), headers=headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
+            logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
         result = response.json()
-        print(result)
         total = result.get('paging').get('totals')
         if number is None or number <= 0:
             need_count = 10
@@ -164,6 +168,7 @@ class ZhihuSpider:
         for url_token in url_tokens:
             item = self.scrape_info(user=url_token)
             followers.append(item)
+        logging.info('Succeed in scraping followers of zhihu user: %s.' % user)
         return followers
 
 
