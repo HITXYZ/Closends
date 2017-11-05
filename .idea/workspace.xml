@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="312a3ff6-4464-414d-a95d-6e75730f6b5c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/qzone/spider.py" afterPath="$PROJECT_DIR$/qzone/spider.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,20 +14,21 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/SocialMediaCrawler$launch.coverage" NAME="launch Coverage Results" MODIFIED="1508331072519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SocialMediaCrawler" />
-    <SUITE FILE_PATH="coverage/SocialMediaScraper$spider__1_.coverage" NAME="spider (1) Coverage Results" MODIFIED="1509360763903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/qzone" />
+    <SUITE FILE_PATH="coverage/SocialMediaScraper$spider__1_.coverage" NAME="spider (1) Coverage Results" MODIFIED="1509361690488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/qzone" />
     <SUITE FILE_PATH="coverage/SocialMediaCrawler$test.coverage" NAME="test Coverage Results" MODIFIED="1508295842044" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SocialMediaCrawler" />
     <SUITE FILE_PATH="coverage/SocialMediaScraper$items.coverage" NAME="items Coverage Results" MODIFIED="1509010804735" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/weibo" />
     <SUITE FILE_PATH="coverage/SocialMediaCrawler$weibo_login.coverage" NAME="weibo_login Coverage Results" MODIFIED="1508324599328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SocialMediaCrawler/spiders" />
+    <SUITE FILE_PATH="coverage/SocialMediaScraper$spider__2_.coverage" NAME="spider (2) Coverage Results" MODIFIED="1509788504653" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/zhihu" />
     <SUITE FILE_PATH="coverage/SocialMediaCrawler$weibo_spider.coverage" NAME="weibo_spider Coverage Results" MODIFIED="1508749439515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/weibo" />
     <SUITE FILE_PATH="coverage/SocialMediaScraper$spider.coverage" NAME="spider Coverage Results" MODIFIED="1509021536323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/weibo" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file leaf-file-name="spider.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/qzone/spider.py">
+        <entry file="file://$PROJECT_DIR$/zhihu/spider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="281" column="49" lean-forward="true" selection-start-line="281" selection-start-column="49" selection-end-line="281" selection-end-column="49" />
+            <state relative-caret-position="1130">
+              <caret line="153" column="26" lean-forward="true" selection-start-line="153" selection-start-column="26" selection-end-line="153" selection-end-column="26" />
               <folding>
                 <element signature="e#81#96#0" expanded="true" />
               </folding>
@@ -35,10 +37,10 @@
         </entry>
       </file>
       <file leaf-file-name="items.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/qzone/items.py">
+        <entry file="file://$PROJECT_DIR$/zhihu/items.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1284">
-              <caret line="112" column="53" lean-forward="false" selection-start-line="112" selection-start-column="53" selection-end-line="112" selection-end-column="53" />
+            <state relative-caret-position="338">
+              <caret line="63" column="21" lean-forward="false" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -59,11 +61,17 @@
       <find>repost_from</find>
       <find>emotion_item</find>
       <find>repost_reason</find>
+      <find>&quot;</find>
+      <find>RepostWeiboItem</find>
+      <find>WeiboItem</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;</replace>
       <replace>repost_source</replace>
       <replace>emotion</replace>
+      <replace>'</replace>
+      <replace>WeiboRepostContentItem</replace>
+      <replace>WeiboContentItem</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -81,12 +89,15 @@
         <option value="$PROJECT_DIR$/SocialMediaCrawler/spiders/weibo_spider.py" />
         <option value="$PROJECT_DIR$/weibo/weibo_items.py" />
         <option value="$PROJECT_DIR$/weibo/weibo_spider.py" />
-        <option value="$PROJECT_DIR$/weibo/items.py" />
         <option value="$PROJECT_DIR$/weibo/exception.py" />
-        <option value="$PROJECT_DIR$/weibo/spider.py" />
         <option value="$PROJECT_DIR$/exceptions.py" />
+        <option value="$PROJECT_DIR$/items.py" />
+        <option value="$PROJECT_DIR$/zhihu/items.py" />
         <option value="$PROJECT_DIR$/qzone/items.py" />
         <option value="$PROJECT_DIR$/qzone/spider.py" />
+        <option value="$PROJECT_DIR$/weibo/spider.py" />
+        <option value="$PROJECT_DIR$/weibo/items.py" />
+        <option value="$PROJECT_DIR$/zhihu/spider.py" />
       </list>
     </option>
   </component>
@@ -141,12 +152,18 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
               <item name="SocialMediaScraper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SocialMediaScraper" type="462c0819:PsiDirectoryNode" />
+              <item name="logs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
@@ -160,13 +177,17 @@
             </path>
             <path>
               <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SocialMediaScraper" type="462c0819:PsiDirectoryNode" />
+              <item name="zhihu" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SocialMediaScraper" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -191,7 +212,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.spider (1)">
+  <component name="RunManager" selected="Python.spider (2)">
     <configuration default="true" type="PyBehaveRunConfigurationType" factoryName="Behave">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -369,6 +390,24 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
+    <configuration name="spider (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/zhihu" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="SocialMediaScraper" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/zhihu/spider.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <configuration name="spider" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -387,16 +426,18 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.spider" />
       <item index="1" class="java.lang.String" itemvalue="Python.items" />
       <item index="2" class="java.lang.String" itemvalue="Python.spider (1)" />
+      <item index="3" class="java.lang.String" itemvalue="Python.spider (2)" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.spider (1)" />
-        <item index="1" class="java.lang.String" itemvalue="Python.spider" />
-        <item index="2" class="java.lang.String" itemvalue="Python.items" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Python.spider (2)" />
+        <item index="1" class="java.lang.String" itemvalue="Python.spider (1)" />
+        <item index="2" class="java.lang.String" itemvalue="Python.spider" />
+        <item index="3" class="java.lang.String" itemvalue="Python.items" />
       </list>
     </recent_temporary>
   </component>
@@ -420,11 +461,11 @@
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18240343" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18508583" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32687926" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32687926" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -452,31 +493,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/weibo/items.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2178">
-          <caret line="99" column="35" lean-forward="true" selection-start-line="99" selection-start-column="35" selection-end-line="99" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exceptions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="20" column="29" lean-forward="true" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/qzone/spider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding>
-            <element signature="e#81#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/weibo/weibo_spider.py" />
     <entry file="file://$PROJECT_DIR$/SocialMediaCrawler/spiders/weibo_spider.py" />
     <entry file="file://$PROJECT_DIR$/SocialMediaCrawler/items.py" />
@@ -538,25 +554,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/weibo/items.py">
+    <entry file="file://$PROJECT_DIR$/exceptions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="57" column="33" lean-forward="true" selection-start-line="57" selection-start-column="33" selection-end-line="57" selection-end-column="33" />
+        <state relative-caret-position="198">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/weibo/spider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="20" column="22" lean-forward="false" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
-          <folding>
-            <element signature="e#86#95#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exceptions.py">
+    <entry file="file://$PROJECT_DIR$/qzone/qzone-log-2017-10-30.log" />
+    <entry file="file://$PROJECT_DIR$/items.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
@@ -566,24 +573,52 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/qzone/items.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1284">
-          <caret line="112" column="53" lean-forward="false" selection-start-line="112" selection-start-column="53" selection-end-line="112" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/qzone/qzone-log-2017-10-30.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="258" column="0" lean-forward="true" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
+        <state relative-caret-position="184">
+          <caret line="114" column="22" lean-forward="true" selection-start-line="114" selection-start-column="22" selection-end-line="114" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/qzone/spider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="281" column="49" lean-forward="true" selection-start-line="281" selection-start-column="49" selection-end-line="281" selection-end-column="49" />
+        <state relative-caret-position="1746">
+          <caret line="322" column="0" lean-forward="true" selection-start-line="322" selection-start-column="0" selection-end-line="322" selection-end-column="0" />
+          <folding>
+            <element signature="e#81#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/weibo/items.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1320">
+          <caret line="60" column="23" lean-forward="true" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/weibo/spider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1466">
+          <caret line="243" column="45" lean-forward="true" selection-start-line="243" selection-start-column="45" selection-end-line="243" selection-end-column="45" />
+          <folding>
+            <element signature="e#86#95#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zhihu/items.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="63" column="21" lean-forward="false" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zhihu/spider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1130">
+          <caret line="153" column="26" lean-forward="true" selection-start-line="153" selection-start-column="26" selection-end-line="153" selection-end-column="26" />
           <folding>
             <element signature="e#81#96#0" expanded="true" />
           </folding>
