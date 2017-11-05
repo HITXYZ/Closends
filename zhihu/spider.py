@@ -90,7 +90,7 @@ class ZhihuSpider:
         if locations is not None:
             for location in locations:
                 item.locations.append(location.get('name'))
-        logging.info('Succeed in scraping zhihu user: %s.' % user)
+        logging.info('Succeed in scraping info of zhihu user: %s.' % user)
         return item
 
     def scrape_follows(self, user=None, number=None):
@@ -174,11 +174,11 @@ class ZhihuSpider:
 
 if __name__ == '__main__':
     spider = ZhihuSpider()
-    info = spider.scrape_info(user='excited-vczh')
+    info = spider.scrape_info(user='qing-shen-jue-qian')
     print(info)
-    follows = spider.scrape_follows(user='secited-vczh', number=50)
+    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=50)
     for follow in follows:
         print(follow)
-    followers = spider.scrape_followers(user='excited-vczh', number=50)
+    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=50)
     for follower in followers:
         print(follower)
