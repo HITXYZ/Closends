@@ -10,7 +10,7 @@ class ScraperError(Exception):
 
 
 class LoginError(ScraperError):
-    def __init__(self, value="Login failed!"):
+    def __init__(self, value='Login failed!'):
         self.info = value
 
     def __str__(self):
@@ -18,8 +18,16 @@ class LoginError(ScraperError):
 
 
 class SpiderInitError(ScraperError):
-    def __init__(self, value="Spider initialization failed!"):
+    def __init__(self, value='Spider initialization failed!'):
         self.info = value
 
+    def __str__(self):
+        return repr(self.info)
+
+
+class SpiderItemError(ScraperError):
+    def __init__(self, value='Invalid item!'):
+        self.info = value
+    
     def __str__(self):
         return repr(self.info)
