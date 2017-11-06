@@ -34,16 +34,18 @@ logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(leveln
 
 
 class ZhihuSpider:
-    info = None
-    follows = None
-    followers = None
-    follows_user = None
-    followers_user = None
+    def __init__(self):
+        self.info = None
+        self.follows = None
+        self.followers = None
+        self.follows_user = None
+        self.followers_user = None
 
     def scrape_info(self, user=None):
         if user is None:
             return None
         logging.info('Scraping info of zhihu user: %s...' % user)
+        print(user_url.format(user=user, include=user_query))
         response = requests.get(user_url.format(user=user, include=user_query), headers=headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -86,8 +88,10 @@ class ZhihuSpider:
         if employments is not None:
             for employment in employments:
                 emp_item = ZhihuEmploymentItem()
-                emp_item.company = employment.get('company')
-                emp_item.job = employment.get('job')
+                if 'company' in employment.keys():
+                    emp_item.company = employment.get('company').get('name')
+                if 'job' in employment.keys():
+                    emp_item.job = employment.get('job').get('name')
                 item.employments.append(emp_item)
         locations = result.get('locations')
         if locations is not None:

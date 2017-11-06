@@ -11,28 +11,29 @@ class ZhihuItem(ScrapeItem):
 
 
 class ZhihuUserItem(ZhihuItem):
-    id = id                        # ID
-    name = None                    # 用户名
-    gender = 0                     # 性别 0为女 1为男 -1为未知
-    avatar_url = None              # 头像链接
-    business = None                # 行业
-    headline = None                # 一句话描述
-    description = None             # 个人介绍
-    question_count = 0             # 提问数
-    answer_count = 0               # 回答数
-    article_count = 0              # 文章数
-    voteup_count = 0               # 得到的赞同数
-    thanked_count = 0              # 得到的感谢数
-    favorited_count = 0            # 得到的收藏数
-    following_count = 0            # 关注数
-    follower_count = 0             # 粉丝数
-    following_topic_count = 0      # 关注的话题数
-    following_column_count = 0     # 关注的专栏数
-    following_question_count = 0   # 关注的问题数
-    following_favlist_count = 0    # 关注的收藏夹数
-    educations = []                # 教育经历
-    employments = []               # 职业经历
-    locations = []                 # 居住地
+    def __init__(self):
+        self.id = id                        # ID
+        self.name = None                    # 用户名
+        self.gender = 0                     # 性别 0为女 1为男 -1为未知
+        self.avatar_url = None              # 头像链接
+        self.business = None                # 行业
+        self.headline = None                # 一句话描述
+        self.description = None             # 个人介绍
+        self.question_count = 0             # 提问数
+        self.answer_count = 0               # 回答数
+        self.article_count = 0              # 文章数
+        self.voteup_count = 0               # 得到的赞同数
+        self.thanked_count = 0              # 得到的感谢数
+        self.favorited_count = 0            # 得到的收藏数
+        self.following_count = 0            # 关注数
+        self.follower_count = 0             # 粉丝数
+        self.following_topic_count = 0      # 关注的话题数
+        self.following_column_count = 0     # 关注的专栏数
+        self.following_question_count = 0   # 关注的问题数
+        self.following_favlist_count = 0    # 关注的收藏夹数
+        self.educations = []                # 教育经历
+        self.employments = []               # 职业经历
+        self.locations = []                 # 居住地
 
     def __str__(self):
         string = ''
@@ -70,8 +71,9 @@ class ZhihuUserItem(ZhihuItem):
 
 
 class ZhihuEducationItem(ZhihuItem):
-    school = None
-    major = None
+    def __init__(self):
+        self.school = None      # 学校
+        self.major = None       # 专业
 
     def __str__(self):
         string = 'School: ' + str(self.school) + ', Major:' + str(self.major)
@@ -82,8 +84,9 @@ class ZhihuEducationItem(ZhihuItem):
 
 
 class ZhihuEmploymentItem(ZhihuItem):
-    company = None
-    job = None
+    def __init__(self):
+        self.company = None
+        self.job = None
 
     def __str__(self):
         string = 'Company: ' + str(self.company) + ', Job: ' + str(self.job)
