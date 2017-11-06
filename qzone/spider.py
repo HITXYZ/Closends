@@ -38,7 +38,7 @@ headers = {"User_Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
                          "(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36",
            "Referer": "https://qzs.qq.com/qzone/app/mood_v6/html/index.html"}
 
-log_file = "../logs/qzone/qzone-log-%s.log" % (datetime.date.today())
+log_file = "./logs/qzone-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 

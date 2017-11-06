@@ -38,7 +38,7 @@ followers_query = 'data[*].answer_count,articles_count,gender,follower_count,is_
 question_query = 'comment_count,follower_count,visit_count,topics'
 answer_query = 'voteup_count,comment_count'
 
-log_file = "../logs/zhihu/zhihu-log-%s.log" % (datetime.date.today())
+log_file = "./logs/zhihu-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
