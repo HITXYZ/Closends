@@ -11,8 +11,8 @@ class Website(models.Model):
     def username(self):
         return self.user.username
 
-    choice_in_type = (('1', 'QQ'), ('2', '微信'), ('3', '微博'))
-    type = models.CharField(max_length=1, default='1', choices=choice_in_type)
+    choice_in_type = (('QQ', 'QQ'), ('微信', '微信'), ('微博', '微博'))
+    type = models.CharField(max_length=2, default='QQ', choices=choice_in_type)
     authcode = models.CharField(max_length=20)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

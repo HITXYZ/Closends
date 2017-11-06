@@ -6,108 +6,428 @@
     <title>Closends-注册</title>
     <meta charset="UTF-8"/>
 
-    <link href="{% static '/closends/img/closends.ico' %}" rel="icon" type="image/x-icon">
-    <link href="{% static '/closends/img/closends.ico' %}" rel="shortcut icon" type="image/x-icon">
-    <link href="{% static '/closends/img/closends.ico' %}" rel="bookmark" type="image/x-icon">
+    <link href="/static/closends/img/closends.ico" rel="shortcut icon">
+    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="{% static '/closends/css/register.css' %}" rel="stylesheet">
-    <script src="{% static 'closends/js/jquery.min.js' %}"></script>
+    <script src="/static/closends/js/jquery.min.js"></script>
+    <script src="/static/closends/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            transition: all .2s
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            font-family: -apple-system, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            min-width: 560px
+        }
+
+        a {
+            outline: 0;
+            text-decoration: none;
+            color: #359eff
+        }
+
+        a:hover {
+            color: #2b72ff
+        }
+
+        a:focus {
+            outline: 0
+        }
+
+        input::-ms-clear, input::-ms-reveal {
+            display: none;
+            width: 0;
+            height: 0
+        }
+
+        input:focus {
+            outline: 0
+        }
+
+        .logo {
+            position: fixed;
+            _position: absolute;
+            top: 0;
+            left: 0;
+            background-repeat: no-repeat;
+            background-size: 36px 40px;
+            background-image: image-set("/static/closends/img/logo_36-40.png" 1x, "/static/closends/img/logo_36-40.png" 2x);
+
+            z-index: 2;
+            height: 43px;
+            line-height: 43px;
+            padding-left: 46px;
+            margin-left: 30px;
+            margin-top: 18px;
+            font-size: 30px;
+            display: block;
+            color: #000
+        }
+
+        .side {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 480px;
+            float: left;
+            overflow: hidden;
+            background-image: url('/static/closends/img/register_bg.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover
+        }
+
+        .top {
+            min-width: 560px;
+            top: 0;
+            left: 0;
+            text-align: right;
+            position: relative;
+            z-index: 1
+        }
+
+        .top .item {
+            float: right;
+            margin: 20px 40px 0 0;
+            font-size: 16px;
+            color: rgba(0, 0, 0, .902);
+            padding: 10px 0 0;
+            line-height: 24px
+        }
+
+        .top .item a {
+            display: inline-block;
+            color: #000
+        }
+
+        .main-wrapper {
+            position: relative;
+            height: 100%;
+        }
+
+        .main {
+            position: absolute;
+            padding-bottom: 10px;
+            top: 100px;
+            width: 100%
+        }
+
+        .main .form {
+            position: relative;
+            margin: 0 auto;
+            width: 480px
+        }
+
+        .main .form .welcome {
+            font-size: 44px;
+            margin-bottom: 20px;
+            margin-left: 30%;
+        }
+
+        .main .form .input-area {
+            position: relative
+        }
+
+        .main .form .input-area .input-flags {
+            position: absolute;
+            right: 0;
+            height: 52px;
+            z-index: 1
+        }
+
+        .main .form .input-area .input-flags .input-ok {
+            background: url(/static/closends/img/tick.png) no-repeat;
+            width: 20px;
+            height: 15px;
+            display: block;
+            float: right;
+            margin: 18px 10px
+        }
+
+        .main .form .input-area .input-placeholder {
+            position: absolute;
+            font-size: 20px;
+            line-height: 20px;
+            padding: 16px 20px;
+            background: #fff;
+            z-index: -1;
+            font-weight: lighter;
+            color: #aaa
+        }
+
+        .main .form .input-area .input-outer {
+            background: 0 0;
+            margin: 23px 0 0
+        }
+
+        .main .form .input-area .input-outer input {
+            border: 1px #aaa solid;
+            border-radius: 4px;
+            background: 0 0;
+            text-align: left;
+            font-size: 20px;
+            width: 438px;
+            height: 50px;
+            line-height: 50px;
+            padding: 0 20px
+        }
+
+        .main .form .input-area .input-outer input:hover {
+            border-color: #777
+        }
+
+        .main .form .input-area .input-outer input:focus {
+            border-color: #549df8
+        }
+
+        .main .form .input-area .input-outer input.error {
+            color: #ff5b5b;
+            border-color: #ff5b5b
+        }
+
+        .main .form .error-tips-wrap {
+            padding-top: 8px;
+            height: 21px;
+            overflow: hidden;
+            position: relative;
+            line-height: 1
+        }
+
+        .main .form .error-tips-wrap .error-tips {
+            background: url(/static/closends/img/error.png) no-repeat;
+            background-image: image-set("/static/closends/img/error.png" 1x, "/static/closends/img/error@2x.png" 2x);
+            padding: 0 0 0 26px;
+            color: #ff5b5b;
+            font-size: 15px;
+            line-height: 21px;
+            height: 21px;
+            overflow: hidden;
+            position: absolute;
+            bottom: 0
+        }
+
+        .main .form .input-area.phone-area .input-outer {
+            margin: 0
+        }
+
+        .main .form .submit {
+            border: 1px #3083ff solid;
+            border-radius: 4px;
+            background-color: #3487ff;
+            box-shadow: 0 5px 8px 0 rgba(24, 95, 255, .1);
+            color: #fff;
+            text-align: center;
+            font-weight: lighter;
+            background-image: linear-gradient(0deg, #398bff, #3083ff);
+            width: 438px;
+            height: 60px;
+            margin: 40px 0 8px;
+            font-size: 24px
+        }
+
+        .main .form .submit:focus, .main .form .submit:hover {
+            background-color: #3580eb;
+            background-image: linear-gradient(0deg, #3580eb, #2c79eb)
+        }
+
+        .main .footer {
+            font-size: 14px;
+            color: #bbb;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: lighter
+        }
+
+        .main .error {
+            text-align: center;
+            margin: 120px auto;
+            position: relative
+        }
+
+        .main .error .error-logo {
+            width: 80px;
+            height: 80px;
+            background: url(/static/closends/img/alert.png) no-repeat;
+            background-image: image-set("/static/closends/img/alert.png" 1x, "/static/closends/img/alert@2x.png" 2x);
+            background-size: 80px 80px;
+            font-size: 34px;
+            color: #000;
+            margin: 0 auto
+        }
+
+        .main .error .error-msg {
+            font-size: 28px;
+            color: #000;
+            padding: 60px 0 70px
+        }
+
+        .main .error .error-link {
+            padding-top: 20px;
+            font-size: 18px;
+            color: #aaa
+        }
+
+        .main .error .error-link a {
+            padding: 0 10px
+        }
+
+        .main .succ {
+            position: relative;
+            margin: 90px auto;
+            text-align: center
+        }
+
+        .main .succ .succ-logo {
+            background: url(/static/closends/img/succ.png) no-repeat;
+            background-image: image-set(url("/static/closends/img/succ.png") 1x, url("/static/closends/img/succ@2x.png") 2x);
+            background-size: 80px 80px;
+            margin: 20px auto;
+            width: 80px;
+            height: 80px
+        }
+
+        .main .succ .reg-succ {
+            padding-top: 16px;
+            font-size: 28px;
+            line-height: 1;
+            color: #000;
+            margin-bottom: 20px
+        }
+
+        .main .succ .login {
+            border: 1px #3083ff solid;
+            border-radius: 4px;
+            background-color: #3487ff;
+            box-shadow: 0 5px 8px 0 rgba(24, 95, 255, .1);
+            color: #fff;
+            text-align: center;
+            font-weight: lighter;
+            background-image: linear-gradient(0deg, #398bff, #3083ff);
+            font-size: 24px;
+            width: 400px;
+            height: 62px;
+            margin: 56px auto 0 auto
+        }
+
+        .main .succ .login:focus, .main .succ .login:hover {
+            background-color: #3580eb;
+            background-image: linear-gradient(0deg, #3580eb, #2c79eb)
+        }
+    </style>
 </head>
 
 <body onload="load()">
     <p class="logo">密友</p>
-    <div class="side" id="sideshow" style="background-image: url('/static/closends/img/register_bg.jpg')"></div>
+
+    <div id="sideshow" class="side"></div>
 
     <div class="top">
-        <div class="item feedback" tabindex="2">
+        <div class="item feedback">
             <a href="javascript:void(0)">意见反馈</a>
         </div>
-        <div class="item language-entry" tabindex="1">
-            <a href="{% url 'closends:to_login' %}" target="_parent">已有账号？账号密码登录</a>
+
+        <div class="item language-entry">
+            <a href="{% url 'closends:to_login' %}">登录</a>
         </div>
     </div>
 
     <div class="main-wrapper" id="main-wrapper" style="margin-left: 480px">
         <div class="main">
-            <div class="form" id="sign_up_form" style="display:block">
-                <div>
-                    <div class="welcome">邮箱帐号注册Closends</div>
-                    <div class="header">邮箱登录，便于记忆</div>
-                </div>
-                <div class="input-area">
-                    <div class="input-flags">
-                        <div class="input-ok" id="mail-ok" style="display: none"></div>
-                    </div>
-                    <label class="input-placeholder" id="mail-tips" for="mail" style="display: block">邮箱</label>
-                    <div class="input-outer">
-                        <input autocomplete="off" type="text" id="mail" class="mail" tabindex="3">
-                    </div>
-                    <div class="error-tips-wrap" id="mail-error" style="display: none">
-                        <div class="error-tips">邮箱格式不正确(不能包含中文)</div>
-                    </div>
-                </div>
+
+            <form class="form" id="sign_up_form" style="display:block">
+                <div class="welcome">帐号注册</div>
+
                 <div class="input-area">
                     <div class="input-flags">
                         <div class="input-ok" id="nickname-ok" style="display: none"></div>
                     </div>
                     <label class="input-placeholder" id="nickname-tips" for="nickname" style="display: block">昵称</label>
                     <div class="input-outer">
-                        <input autocomplete="off" type="text" id="nickname" class="nickname" minlength="1" maxlength="16"
-                               tabindex="4">
+                        <input id="username" type="text" name="username" class="nickname" minlength="1" maxlength="16" tabindex="4">
                     </div>
                     <div class="error-tips-wrap" id="nickname-error" style="display: none">
                         <div class="error-tips">昵称不能为空且不超过12个字符、不能包含特殊字符(下划线"_"除外)</div>
                     </div>
                 </div>
+
+                <div class="input-area">
+                    <div class="input-flags">
+                        <div class="input-ok" id="mail-ok" style="display: none"></div>
+                    </div>
+                    <label class="input-placeholder" id="mail-tips" for="email" style="display: block">邮箱</label>
+                    <div class="input-outer">
+                        <input id="email" type="email" name="email" class="mail" tabindex="3">
+                    </div>
+                    <div class="error-tips-wrap" id="mail-error" style="display: none">
+                        <div class="error-tips">邮箱格式不正确(不能包含中文)</div>
+                    </div>
+                </div>
+
                 <div class="input-area">
                     <div class="input-flags">
                         <div class="input-ok" id="password1-ok" style="display: none"></div>
                     </div>
                     <label class="input-placeholder" id="password1-tips" for="password1" style="display: block">密码</label>
                     <div class="input-outer">
-                        <input autocomplete="off" type="password" id="password1" class="password" minlength="8"
-                               maxlength="16" tabindex="5">
+                        <input id="password1" type="password" name="password1" class="password" minlength="8" maxlength="16" tabindex="5">
                     </div>
                     <div class="error-tips-wrap" id="password1-error" style="display: none">
                         <div class="error-tips">密码格式不正确(只能包含数字、字母且长度为8~16位)</div>
                     </div>
                 </div>
+
                 <div class="input-area">
                     <div class="input-flags">
                         <div class="input-ok" id="password2-ok" style="display: none"></div>
                     </div>
                     <label class="input-placeholder" id="password2-tips" for="password2" style="display: block">确认密码</label>
                     <div class="input-outer">
-                        <input autocomplete="off" type="password" id="password2" class="password" minlength="8"
-                               maxlength="16" tabindex="6">
+                        <input id="password2" name="password2" type="password" class="password" minlength="8" maxlength="16" tabindex="6">
                     </div>
                     <div class="error-tips-wrap" id="password2-error" style="display: none">
                         <div class="error-tips">两次密码输入不一致</div>
                     </div>
                 </div>
+
                 <div>
-                    <input id="get_acc" type="submit" class="submit" value="立即注册" tabindex="7">
+                    <input id="register" type="button" class="submit" value="立即注册" tabindex="7">
                 </div>
-            </div>
-            <div class="error" id="sign_up_error" style="display:none">
+            </form>
+
+            <div id="sign_up_error" class="error" style="display:none">
                 <div class="error-logo"></div>
-                <div class="error-msg" data-bind="text: errorMsg">注册失败，该邮箱已被注册</div>
+                <div id="error_message" class="error-msg" data-bind="text: errorMsg"></div>
                 <div class="error-link">
                     <a onclick="backtoSignUp()">返回</a>|
                     <a href="javascript:void(0)">联系我们</a>
                 </div>
             </div>
-            <div class="succ" id="sign_up_succ" style="display:none">
+
+            <div id="sign_up_succ" class="succ" style="display:none">
                 <div class="succ-logo"></div>
                 <div class="reg-succ">注册成功<br><br>开启属于你的特别关注</div>
                 <div>
-                    <a href="login.html" target="_blank">
+                    <a href="{% url 'closends:to_login' %}">
                         <button class="login">立即登录</button>
                     </a>
                 </div>
-            </div>
-            <br>
+            </div><br>
+
             <div class="footer">Copyright <span>©</span> 2017 Closends All Rights Reserved</div>
+
             <div class="footer">Designed by <a href="http://neilyu.cn" target="_blank" tabindex="8">Neil.YU</a>
                 from <a href="https://github.com/HITXYZ" target="_blank" tabindex="9">XYZ</a></div>
         </div>
@@ -135,14 +455,14 @@
             document.getElementById("sign_up_form").style.display = "block";
         }
 
+        //submit when pass all test
         let flag = {
             "nickname": false,
             "password": false,
             "mail": false,
         };
 
-        $(function () {
-            //窗口大小变化实时监测
+        $(document).ready(function () {
             $(window).resize(function () {
                 let window_width = document.documentElement.clientWidth;
                 if (window_width <= 1000) {
@@ -159,8 +479,7 @@
                 }
             });
 
-            // mail验证
-            $("#mail").focus(function () {
+            $("#email").focus(function () {
                 document.getElementById("mail-tips").style.display = "none";
                 document.getElementById("mail-error").style.display = "none";
                 document.getElementById("mail-ok").style.display = "none";
@@ -182,8 +501,7 @@
                     }
                 });
 
-            // 用户名校验
-            $("#nickname").focus(function () {
+            $("#username").focus(function () {
                 document.getElementById("nickname-tips").style.display = "none";
                 document.getElementById("nickname-error").style.display = "none";
                 document.getElementById("nickname-ok").style.display = "none";
@@ -207,7 +525,6 @@
                     }
                 });
 
-            // 密码校验
             $("#password1").focus(function () {
                 document.getElementById("password1-tips").style.display = "none";
                 document.getElementById("password1-error").style.display = "none";
@@ -246,7 +563,6 @@
                     }
                 });
 
-            // 密码重复校验
             $("#password2").focus(function () {
                 document.getElementById("password2-tips").style.display = "none";
                 document.getElementById("password2-error").style.display = "none";
@@ -273,8 +589,32 @@
                     }
                 });
 
-            $("#form").submit(function () {
-                return flag.nickname && flag.password && flag.mail;
+            $("#register").on("click", function () {
+                if(flag['password'] && flag['mail'] && flag['nickname']){
+                    let user_info = $('#sign_up_form').serialize();
+                    $.ajax({
+                        url: "{% url 'closends:register' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: user_info,
+                        async: false,
+                        success: function (ret) {
+                            $("#sign_up_form").css("display", "none");
+                            if (ret.status === "success") {
+                                $("#sign_up_succ").css("display", "block");
+                            }
+                            else {
+                                $("#sign_up_error").css("display", "block");
+                                if(ret.error_message === "username_exist")
+                                    $("#error_message").text("用户名已经注册！");
+                                else if(ret.error_message === "email_exist")
+                                    $("#error_message").text("邮箱已经注册！");
+                                else{
+                                }
+                            }//else
+                        }//success
+                    })//ajax
+                }//if
             });
         });
     </script>

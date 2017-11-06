@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import Website, Friend, Identifier, Content, Image
+from .models import *
 
 class WebsiteInline(admin.StackedInline):
     model = Website
@@ -21,10 +21,6 @@ class ImageInline(admin.StackedInline):
 class WebsiteAdmin(admin.ModelAdmin):
     list_display = ('type', 'authcode', 'username')
 
-class MyUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_staff')
-    inlines = (WebsiteInline, FriendInline)
-
 class FriendAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'username')
     inlines = (IdentifierInline, )
@@ -37,8 +33,6 @@ class ContentAdmin(admin.ModelAdmin):
     list_display = ("content", 'publish_date', 'identifier')
     inlines = (ImageInline, )
 
-admin.site.unregister(User)
-admin.site.register(User, MyUserAdmin)
 admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Friend, FriendAdmin)
 admin.site.register(Identifier, IdentifierAdmin)

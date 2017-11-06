@@ -74,6 +74,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'closends.backends.email_backend',
+)
+
 TIME_ZONE = 'Asia/Shanghai'
 
 LANGUAGE_CODE = 'en-us'

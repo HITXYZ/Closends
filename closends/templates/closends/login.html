@@ -5,82 +5,171 @@
     {% load static %}
     <title>Closends-特别的关注，送给特别的TA</title>
     <meta charset="UTF-8"/>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="theme-color" content="#FFC028">
 
-    <link href="{% static '/closends/img/closends.ico' %}" rel="icon" type="image/x-icon"/>
-    <link href="{% static '/closends/img/closends.ico' %}" rel="shortcut icon" type="image/x-icon"/>
-    <link href="{% static '/closends/img/closends.ico' %}" rel="bookmark" type="image/x-icon"/>
+    <link href="{% static '/closends/img/closends.ico' %}" rel="shortcut icon">
+    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/closends/js/jquery.min.js"></script>
+    <script src="/static/closends/js/bootstrap.min.js"></script>
 
-    <link href="{% static '/closends/css/login.css' %}" rel="stylesheet"/>
-    <script src="{% static 'closends/js/jquery.min.js' %}"></script>
+    <style>
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-image: url({% static '/closends/img/login_bg.jpg' %});
+            background-size: cover;
+            line-height: 1.333;
+        }
+
+        .ui_icon {
+            display: inline-block;
+            zoom: 1
+        }
+
+        .icon_closends_logo {
+            width: 251px;
+            height: 98px;
+            background-image: url(/static/closends/img/closends-login-logo.32.png);
+        }
+
+        .lay_main {
+            color: #ffffff;
+            height: 100%;
+            min-height: 600px;
+            z-index: 2
+        }
+
+        .lay_main .lay_head {
+            top: 95px;
+            width: 750px;
+            margin: 0 auto;
+            position: relative
+        }
+
+        .lay_main .lay_body{
+            background-color: white;
+            width: 25%;
+            height: 40%;
+            margin-left: 50%;
+        }
+
+        .lay_main .lay_body .nav{
+            margin-left: 20%;
+            margin-top: 5%;
+        }
+
+        .lay_main .lay_body form{
+            color: black;
+            width:60%;
+            margin-top: 5%;
+            margin-left: 20%;
+        }
+
+        .lay_main .lay_body .tab-content .checkbox{
+            margin-left: 20%;
+        }
+
+        .lay_main .lay_body .tab-content .btn{
+            width: 115%;
+            margin-left: -8%;
+            margin-top: 5%;
+            background-color: #3487ff;
+        }
+
+        .lay_main .lay_body .bottom{
+            margin-top: 10%;
+            margin-left: 40%;
+        }
+
+        .lay_main .lay_foot {
+            position: absolute;
+            bottom: 5%;
+            left: 0;
+            width: 100%;
+            z-index: 2
+        }
+
+        .lay_main .lay_foot a {
+            color: white;
+            text-decoration: none
+        }
+
+        .lay_main .lay_foot .copyright {
+            text-align: center
+        }
+
+        .lay_main .lay_foot .copyright p {
+            line-height: 24px;
+            font-size: 12px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="lay_wrap lay_wrap_v2" id="lay">
-        <div class="lay_main clearfix" style="z-index: 999">
-            <div class="lay_inner">
-                <div class="login_head">
-                    <br><br>
-                    <h1><i class="ui_icon icon_closends_logo"></i></h1>
-                </div>
-                <div class="web_login" id="web_login">
-                    <br><br>
-                    <div class="title">账号密码登录</div>
-                    <div class="login_form">
-                        <form id="login_form" autocomplete="off" name="login_form" action="" method="post" target="_self"
-                              style="margin: 0px">
-                            {% csrf_token %}
-                            <div class="input-area">
-                                <label class="input-placeholder" id="mail-tips" for="emailInput" style="display: block">支持邮箱登录</label>
-                                <div class="input-outer">
-                                    <input autocomplete="off" type="email" id="emailInput" class="mail" tabindex="1">
-                                </div>
-                                <div class="error-tips-wrap" id="mail-error" style="display: none">
-                                    <div class="error-tips">请检查邮箱格式（提示：不能包含中文）</div>
-                                </div>
-                            </div>
-                            <div class="input-area">
-                                <label class="input-placeholder" id="password-tips" for="passwordInput"
-                                       style="display: block">密码</label>
-                                <div class="input-outer">
-                                    <input autocomplete="off" type="password" id="passwordInput" class="password"
-                                           minlength="8" maxlength="16" tabindex="2">
-                                </div>
-                                <div class="error-tips-wrap" id="password-error" style="display: none">
-                                    <div class="error-tips">密码提示：只能包含数字、字母且长度为8~16位</div>
-                                </div>
-                            </div>
-                            <br/>
-                            <div class="submit">
-                                <p class="login_button">
-                                    <input type="button" value="登 录" class="btn" id="login_button" tabindex="3">
-                                </p>
-                            </div>
-                            <div id="sign_in_error" style="display:none;font-size:14px">
-                                <br>
-                                <p style="color:red">邮箱账号不存在或密码错误</p>
-                            </div>
-                        </form>
+    <div class="lay_main" id="lay">
+
+        <div class="lay_head">
+            <h1><i class="ui_icon icon_closends_logo"></i></h1>
+        </div>
+
+        <div class="lay_body container">
+
+            <ul class="nav nav-pills">
+                <li class="active"><a href="#username_login_form" data-toggle="tab">用户名登录</a></li>
+                <li><a href="#email_login_form" data-toggle="tab">邮箱登录</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <form id="username_login_form" class="form-horizontal tab-pane active">
+                    <div class="form-group">
+                        <input id="username" type="text" name="username" class="form-control"  placeholder="Username" autocomplete>
                     </div>
-                    <div class="bottom" id="bottom_web">
-                        <a href="#" class="link" id="forgetpwd" target="_blank">忘了密码？</a>
-                        <span class="dotted">|</span>
-                        <a href="{% url 'closends:to_register' %}" class="link" target="_parent">注册新帐号</a>
-                        <span class="dotted">|</span>
-                        <a href="#" class="link" id="feedback_web" target="_blank">意见反馈</a>
+
+                    <div class="form-group">
+                        <input id="password" type="password" name="password" class="form-control" placeholder="Password" autocomplete>
                     </div>
-                </div>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="remember_me"> 记住密码</label>
+                    </div>
+
+                    <button id="username_login" type="button" class="btn btn-default">Submit</button>
+                </form>
+                <form id="email_login_form" class="form-horizontal tab-pane">
+                    <div class="form-group">
+                        <input id="email" type="email" name="email" class="form-control"  placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                    </div>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="remember_me"> 记住密码</label>
+                    </div>
+                    <button id="email_login" type="button" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+
+            <div class="bottom">
+                <a href="#">忘记密码</a>
+                <a href="{% url 'closends:to_register' %}">注册新账号</a>
+                <a href="#">意见反馈</a>
             </div>
         </div>
+
         <div class="lay_foot">
             <div class="lay_inner">
                 <div class="copyright">
-                    <p class="copyright_link">
-                        <a href="http://www.cnmooc.org/portal/course/3361/6231.mooc" target="_blank">Software Engineering,
-                            School of Computer Science and Technology, Harbin Institute of Technology</a>
-                    </p>
+                    <p><a href="#" target="_blank">Software Engineering, School of Computer Science and Technology, Harbin Institute of Technology</a></p>
                     <p class="copyright_en">Copyright &copy; 2017 Closends - 特别的关注，送给特别的TA </p>
                     <p class="copyright_cn">Designed by <a href="http://neilyu.cn" target="_blank">Neil.YU</a> from <a
                             href="https://github.com/HITXYZ" target="_blank">XYZ</a></p>
@@ -89,66 +178,106 @@
         </div>
     </div>
 
-<script>
-    let flag = {
-        "email":false,
-        "password":false
-    };
+    <script>
+        let flag = {
+            "username": false,
+            "email": false,
+            "password": false
+        };
 
-    $(function () {
-        // 邮箱输入初判断
-        $("#emailInput").focus(function () {
-            document.getElementById("mail-tips").style.display="none";
-            document.getElementById("mail-error").style.display="none";
-            document.getElementById("sign_in_error").style.display="none";
-        });
+        $(document).ready(function () {
+            $("#email").focus(function () {
+                document.getElementById("mail-tips").style.display = "none";
+                document.getElementById("mail-error").style.display = "none";
+                document.getElementById("sign_in_error").style.display = "none";
+            });
 
-        $("#emailInput").blur(function () {
-            let email = $("#emailInput").val();
-            let pattern_email=/\b(^['_A-Za-z0-9-]+(\.['_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)\b/;
-            if(!pattern_email.test(email))
-            {
-                document.getElementById("mail-error").style.display="block";
-                flag.email = false;
-            }else{
-                document.getElementById("mail-error").style.display="none";
-                flag.email = true;
-            }
-            if(email.length === 0){
-                document.getElementById("mail-tips").style.display="block";
-                flag.email = false;
-            }
-        });
+            $("#email").blur(function () {
+                let email = $("#email").val();
+                let pattern_email = /\b(^['_A-Za-z0-9-]+(\.['_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)\b/;
+                if (!pattern_email.test(email)) {
+                    document.getElementById("mail-error").style.display = "block";
+                    flag.email = false;
+                } else {
+                    document.getElementById("mail-error").style.display = "none";
+                    flag.email = true;
+                }
+                if (email.length === 0) {
+                    document.getElementById("mail-tips").style.display = "block";
+                    flag.email = false;
+                }
+            });
 
-        //密码输入初判断
-        $("#passwordInput").focus(function () {
-            document.getElementById("password-tips").style.display="none";
-            document.getElementById("password-error").style.display="none";
-            document.getElementById("sign_in_error").style.display="none";
-        });
+            $("#password").focus(function () {
+                document.getElementById("password-tips").style.display = "none";
+                document.getElementById("password-error").style.display = "none";
+                document.getElementById("sign_in_error").style.display = "none";
+            });
 
-        $("#passwordInput").blur(function () {
-            let password = $("#passwordInput").val();
-            let pattern_password = /\b(^['A-Za-z0-9]{8,16}$)\b/;
-            if (!pattern_password.test(password)) {
-                document.getElementById("password-error").style.display="block";
-                flag.password = false;
-            }else{
-                document.getElementById("password-error").style.display="none";
-                flag.password = true;
-            }
-            if(password.length === 0){
-                document.getElementById("password-tips").style.display="block";
-                flag.password = false;
-            }
-        });
+            $("#password").blur(function () {
+                let password = $("#password").val();
+                let pattern_password = /\b(^['A-Za-z0-9]{8,16}$)\b/;
+                if (!pattern_password.test(password)) {
+                    document.getElementById("password-error").style.display = "block";
+                    flag.password = false;
+                }
 
-        $("#form").submit(function(){
-            //综合判断
-            return !(flag.email && flag.password === false);
+                else {
+                    document.getElementById("password-error").style.display = "none";
+                    flag.password = true;
+                }
+
+                if (password.length === 0) {
+                    document.getElementById("password-tips").style.display = "block";
+                    flag.password = false;
+                }
+            });
+
+            $('#username_login').on('click', function () {
+                //if(flag['username'] && flag['password']){
+                    let user_info = $('#username_login_form').serialize();
+                    $.ajax({
+                    url: "{% url 'closends:username_lgoin' %}",
+                    type: "post",
+                    datatype: "json",
+                    data: user_info,
+                    async: false,
+                    success: function (ret) {
+                        if (ret.status === "success")
+                            window.location = '{% url 'closends:index' %}';
+                        else {
+                            $('#username_login_form').find('input').each(function () {
+                                $(this).val("");
+                            });
+                        }//else
+                    }//success
+                })//ajax
+                //}//if
+            });
+
+            $('#email_login').on('click', function () {
+                //if(flag['email'] && flag['password']) {
+                    let user_info = $('#email_login_form').serialize();
+                    $.ajax({
+                        url: "{% url 'closends:email_lgoin' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: user_info,
+                        async: false,
+                        success: function (ret) {
+                            if (ret.status === "success")
+                                window.location = '{% url 'closends:index' %}';
+                            else {
+                                $('#username_login_form').find('input').each(function () {
+                                    $(this).val("");
+                                });
+                            }//else
+                        }//success
+                    });//ajax
+                //}//if
+            });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>
