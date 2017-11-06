@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^email_login$', email_login, name='email_lgoin'),
     url(r'^register$', register, name='register'),
 
-    url(r'^index$', index, name="index"),
+    url(r'^index$', index, name='index'),
+    url(r'^logout$', user_logout, name='logout'),
 ]
