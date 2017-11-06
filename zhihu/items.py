@@ -94,3 +94,59 @@ class ZhihuEmploymentItem(ZhihuItem):
 
     def __hash__(self):
         return hash(self.__str__())
+
+
+class ZhihuQuestionItem(ZhihuItem):
+    def __init__(self):
+        self.id = 0
+        self.title = None
+        self.create_time = None
+        self.update_time = None
+        self.content = None
+        self.follower_count = 0
+        self.visit_count = 0
+        self.comment_count = 0
+        self.topics = []
+
+    def __str__(self):
+        string = ''
+        string += 'ID: ' + str(self.id) + '\n'
+        string += 'Title: ' + str(self.title) + '\n'
+        string += 'Create Time: ' + str(self.create_time) + '\n'
+        string += 'Update Time: ' + str(self.update_time) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Follower Count: ' + str(self.follower_count) + '\n'
+        string += 'Visit Count: ' + str(self.visit_count) + '\n'
+        string += 'Comment Count: ' + str(self.comment_count) + '\n'
+        string += 'Topics: ' + '; '.join([str(top) for top in self.topics]) + '\n'
+        return string
+
+    def __hash__(self):
+        return hash(self.id)
+
+
+class ZhihuAnswerItem(ZhihuItem):
+    def __init__(self):
+        self.id = 0
+        self.author = None
+        self.question_id = 0
+        self.create_time = None
+        self.update_time = None
+        self.content = None
+        self.voteup_count = None
+        self.comment_count = None
+
+    def __str__(self):
+        string = ''
+        string += 'ID: ' + str(self.id) + '\n'
+        string += 'Author: ' + str(self.author) + '\n'
+        string += 'Question ID: ' + str(self.question_id) + '\n'
+        string += 'Create Time: ' + str(self.create_time) + '\n'
+        string += 'Update Time: ' + str(self.update_time) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Vote-up Count: ' + str(self.voteup_count) + '\n'
+        string += 'Comment Count: ' + str(self.comment_count) + '\n'
+        return string
+
+    def __hash__(self):
+        return hash(self.id)

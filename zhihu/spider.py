@@ -4,10 +4,13 @@
     @desc: Scraper for zhihu
 """
 import csv
+import re
+import time
 import datetime
 import logging
 import requests
-from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem
+from bs4 import BeautifulSoup
+from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem, ZhihuQuestionItem, ZhihuAnswerItem
 from exceptions import SpiderItemError
 
 
@@ -20,6 +23,8 @@ headers = {
 user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
 follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
 followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?include={include}&offset={offset}&limit={limit}'
+question_url = 'https://www.zhihu.com/api/v4/questions/{id}?include={include}'
+answer_url = 'https://www.zhihu.com/api/v4/answers/{id}?include={include}'
 
 user_query = 'locations,employments,gender,educations,business,voteup_count,thanked_Count,follower_count,' \
              'following_count,following_topic_count,following_question_count,following_favlists_count,' \
@@ -27,6 +32,8 @@ user_query = 'locations,employments,gender,educations,business,voteup_count,than
              'sina_weibo_url,sina_weibo_name,show_sina_weibo,thanked_count,description'
 follows_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge'
 followers_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge'
+question_query = 'comment_count,follower_count,visit_count,topics'
+answer_query = 'voteup_count,comment_count'
 
 log_file = "../logs/zhihu/zhihu-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
@@ -101,7 +108,7 @@ class ZhihuSpider:
         self.info = item
         return item
 
-    def scrape_follows(self, user=None, number=None):
+    def scrape_follows(self, user=None, number=0):
         if user is None:
             return []
         logging.info('Scraping follows of zhihu user: %s...' % user)
@@ -111,7 +118,7 @@ class ZhihuSpider:
             return []
         result = response.json()
         total = result.get('paging').get('totals')
-        if number is None or number <= 0:
+        if number <= 0:
             need_count = 10
         else:
             need_count = number if number < total else total
@@ -142,7 +149,7 @@ class ZhihuSpider:
         self.follows_user = user
         return follows
 
-    def scrape_followers(self, user=None, number=None):
+    def scrape_followers(self, user=None, number=0):
         if user is None:
             return []
         logging.info('Scraping followers of zhihu user: %s...' % user)
@@ -152,7 +159,7 @@ class ZhihuSpider:
             return []
         result = response.json()
         total = result.get('paging').get('totals')
-        if number is None or number <= 0:
+        if number <= 0:
             need_count = 10
         else:
             need_count = number if number < total else total
@@ -182,6 +189,45 @@ class ZhihuSpider:
         self.followers = followers
         self.followers_user = user
         return followers
+
+    def scrape_question_by_id(self, id=0):
+        if id == 0:
+            return None
+        response = requests.get(question_url.format(id=id, include=question_query), headers=headers)
+        print(response.text)
+        if response.status_code == 404:
+            return None
+        result = response.json()
+        item = ZhihuQuestionItem()
+        item.id = result.get('id')
+        item.title = result.get('title')
+        item.create_time = time.ctime(result.get('created'))
+        item.update_time = time.ctime(result.get('updated_time'))
+        print('https://www.zhihu.com/question/%d' % id)
+        page = requests.get('https://www.zhihu.com/question/%d' % id, headers=headers)
+        bs = BeautifulSoup(page.text, 'lxml')
+        content_span = bs.find('div', {'class': 'QuestionRichText'}).div.span
+        content = re.search(r'<span.*?>(.*)</span>', str(content_span)).group(1)
+        item.content = content
+        item.follower_count = result.get('follower_count')
+        item.visit_count = result.get('visit_count')
+        item.comment_count = result.get('comment_count')
+        topics = result.get('topics')
+        for topic in topics:
+            item.topics.append(topic.get('name'))
+        return item
+
+    def scrape_questions_by_user(self, user=None, number=0):
+        pass
+
+    def scrape_answer_by_id(self, id=0):
+        pass
+
+    def scrape_answers_by_question(self, id=0, number=0):
+        pass
+
+    def scrape_answers_by_user(self, user=0, number=0):
+        pass
 
     def save_info(self, directory='./products/'):
         if not isinstance(self.info, ZhihuUserItem):
@@ -275,11 +321,13 @@ if __name__ == '__main__':
     info = spider.scrape_info(user='qing-shen-jue-qian')
     print(info)
     spider.save_info()
-    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=20)
+    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=1)
     for follow in follows:
         print(follow)
     spider.save_follows()
-    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=20)
+    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=1)
     for follower in followers:
         print(follower)
     spider.save_followers()
+    question = spider.scrape_question_by_id(67684166)
+    print(question)
