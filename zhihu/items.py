@@ -11,12 +11,12 @@ class ZhihuItem(ScrapeItem):
 
 
 class ZhihuUserItem(ZhihuItem):
-    id = id                        # 用户ID
+    id = id                        # ID
     name = None                    # 用户名
-    gender = 0                     # 性别 0为女 1为男
+    gender = 0                     # 性别 0为女 1为男 -1为未知
     avatar_url = None              # 头像链接
-    business = None                # 所在领域
-    headline = None                # 简介
+    business = None                # 行业
+    headline = None                # 一句话描述
     description = None             # 个人介绍
     question_count = 0             # 提问数
     answer_count = 0               # 回答数
@@ -31,8 +31,8 @@ class ZhihuUserItem(ZhihuItem):
     following_question_count = 0   # 关注的问题数
     following_favlist_count = 0    # 关注的收藏夹数
     educations = []                # 教育经历
-    employments = []               # 工作经历
-    locations = []                 # 所在地
+    employments = []               # 职业经历
+    locations = []                 # 居住地
 
     def __str__(self):
         string = ''
@@ -40,8 +40,10 @@ class ZhihuUserItem(ZhihuItem):
         string += 'Name: ' + str(self.name) + '\n'
         if self.gender == 0:
             string += 'Gender: female' + '\n'
-        else:
+        elif self.gender == 1:
             string += 'Gender: male' + '\n'
+        else:
+            string += 'Gender: unknown' + '\n'
         string += 'Avatar Url: ' + str(self.avatar_url) + '\n'
         string += 'Business: ' + str(self.business) + '\n'
         string += 'Headline: ' + str(self.headline) + '\n'
@@ -58,6 +60,9 @@ class ZhihuUserItem(ZhihuItem):
         string += 'Following Column Count: ' + str(self.following_column_count) + '\n'
         string += 'Following Question Count: ' + str(self.following_question_count) + '\n'
         string += 'Following Favlist Count: ' + str(self.following_favlist_count) + '\n'
+        string += 'Educations: ' + '; '.join([str(edu) for edu in self.educations]) + '\n'
+        string += 'Employments: ' + '; '.join([str(emp) for emp in self.employments]) + '\n'
+        string += 'Locations: ' + '; '.join([str(loc) for loc in self.locations]) + '\n'
         return string
 
     def __hash__(self):
@@ -69,7 +74,7 @@ class ZhihuEducationItem(ZhihuItem):
     major = None
 
     def __str__(self):
-        string = 'School: ' + str(self.school) + '; Major:' + str(self.major)
+        string = 'School: ' + str(self.school) + ', Major:' + str(self.major)
         return string
 
     def __hash__(self):
@@ -81,7 +86,7 @@ class ZhihuEmploymentItem(ZhihuItem):
     job = None
 
     def __str__(self):
-        string = 'Company: ' + str(self.company) + '; Job: ' + str(self.job)
+        string = 'Company: ' + str(self.company) + ', Job: ' + str(self.job)
         return string
 
     def __hash__(self):

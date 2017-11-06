@@ -3,10 +3,12 @@
     @date: 2017/11/01
     @desc: Scraper for zhihu
 """
+import csv
 import datetime
 import logging
 import requests
 from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem
+from exceptions import SpiderItemError
 
 
 headers = {
@@ -16,28 +18,29 @@ headers = {
 }
 
 user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
-
 follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
-
 followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?include={include}&offset={offset}&limit={limit}'
 
 user_query = 'locations,employments,gender,educations,business,voteup_count,thanked_Count,follower_count,' \
              'following_count,following_topic_count,following_question_count,following_favlists_count,' \
              'following_columns_count,answer_count,articles_count,question_count,favorited_count,is_bind_sina,' \
              'sina_weibo_url,sina_weibo_name,show_sina_weibo,thanked_count,description'
-
 follows_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge'
-
 followers_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge'
 
-log_file = "../logs/zhihu/qzone-log-%s.log" % (datetime.date.today())
+log_file = "../logs/zhihu/zhihu-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
 
 class ZhihuSpider:
-    @staticmethod
-    def scrape_info(user=None):
+    info = None
+    follows = None
+    followers = None
+    follows_user = None
+    followers_user = None
+
+    def scrape_info(self, user=None):
         if user is None:
             return None
         logging.info('Scraping info of zhihu user: %s...' % user)
@@ -91,6 +94,7 @@ class ZhihuSpider:
             for location in locations:
                 item.locations.append(location.get('name'))
         logging.info('Succeed in scraping info of zhihu user: %s.' % user)
+        self.info = item
         return item
 
     def scrape_follows(self, user=None, number=None):
@@ -130,6 +134,8 @@ class ZhihuSpider:
             item = self.scrape_info(user=url_token)
             follows.append(item)
         logging.info('Succeed in scraping follows of zhihu user: %s.' % user)
+        self.follows = follows
+        self.follows_user = user
         return follows
 
     def scrape_followers(self, user=None, number=None):
@@ -169,16 +175,107 @@ class ZhihuSpider:
             item = self.scrape_info(user=url_token)
             followers.append(item)
         logging.info('Succeed in scraping followers of zhihu user: %s.' % user)
+        self.followers = followers
+        self.followers_user = user
         return followers
+
+    def save_info(self, directory='./products/'):
+        if not isinstance(self.info, ZhihuUserItem):
+            raise SpiderItemError('\'self.info\' is not an instance of ZhihuUserItem!')
+        csv_file = open(directory + str(self.info.name) + '-info.csv', 'w')
+        writer = csv.writer(csv_file)
+        writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
+                         '文章数', '被赞同数', '被感谢数', '被收藏数', '关注数', '粉丝数', '关注话题数', '关注专栏数',
+                         '关注问题数', '关注收藏夹数', '教育经历', '职业经历', '居住地'))
+        info = self.info
+        if info.gender == 0:
+            gender = '女'
+        elif info.gender == 1:
+            gender = '男'
+        else:
+            gender = '未知'
+        writer.writerow((info.id, info.name, gender, info.avatar_url, info.business, info.headline,
+                         info.description, info.question_count, info.answer_count, info.article_count,
+                         info.voteup_count, info.thanked_count, info.favorited_count, info.following_count,
+                         info.follower_count, info.following_topic_count, info.following_column_count,
+                         info.following_question_count, info.following_favlist_count,
+                         '; '.join([str(edu) for edu in info.educations]),
+                         '; '.join([str(emp) for emp in info.employments]),
+                         '; '.join([str(loc) for loc in info.locations])))
+        csv_file.close()
+        logging.info('Succeed in saving info of zhihu user: %s.' % self.info.name)
+
+    def save_follows(self, directory='./products/'):
+        if not isinstance(self.follows, list):
+            raise SpiderItemError('\'self.follows\' is not a list!')
+        if self.follows_user is None:
+            raise SpiderItemError('Haven\'t scraped follows of any zhihu user!')
+        csv_file = open(directory + str(self.follows_user) + '-follows.csv', 'w')
+        writer = csv.writer(csv_file)
+        writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
+                         '文章数', '被赞同数', '被感谢数', '被收藏数', '关注数', '粉丝数', '关注话题数', '关注专栏数',
+                         '关注问题数', '关注收藏夹数', '教育经历', '职业经历', '居住地'))
+        for info in self.follows:
+            if not isinstance(info, ZhihuUserItem):
+                continue
+            if info.gender == 0:
+                gender = '女'
+            elif info.gender == 1:
+                gender = '男'
+            else:
+                gender = '未知'
+            writer.writerow((info.id, info.name, gender, info.avatar_url, info.business, info.headline,
+                             info.description, info.question_count, info.answer_count, info.article_count,
+                             info.voteup_count, info.thanked_count, info.favorited_count, info.following_count,
+                             info.follower_count, info.following_topic_count, info.following_column_count,
+                             info.following_question_count, info.following_favlist_count,
+                             '; '.join([str(edu) for edu in info.educations]),
+                             '; '.join([str(emp) for emp in info.employments]),
+                             '; '.join([str(loc) for loc in info.locations])))
+        csv_file.close()
+        logging.info('Succeed in saving follows of zhihu user: %s.' % self.follows_user)
+
+    def save_followers(self, directory='./products/'):
+        if not isinstance(self.followers, list):
+            raise SpiderItemError('\'self.followers\' is not a list!')
+        if self.followers_user is None:
+            raise SpiderItemError('Haven\'t scraped followers of any zhihu user!')
+        csv_file = open(directory + str(self.followers_user) + '-followers.csv', 'w')
+        writer = csv.writer(csv_file)
+        writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
+                         '文章数', '被赞同数', '被感谢数', '被收藏数', '关注数', '粉丝数', '关注话题数', '关注专栏数',
+                         '关注问题数', '关注收藏夹数', '教育经历', '职业经历', '居住地'))
+        for info in self.followers:
+            if not isinstance(info, ZhihuUserItem):
+                continue
+            if info.gender == 0:
+                gender = '女'
+            elif info.gender == 1:
+                gender = '男'
+            else:
+                gender = '未知'
+            writer.writerow((info.id, info.name, gender, info.avatar_url, info.business, info.headline,
+                             info.description, info.question_count, info.answer_count, info.article_count,
+                             info.voteup_count, info.thanked_count, info.favorited_count, info.following_count,
+                             info.follower_count, info.following_topic_count, info.following_column_count,
+                             info.following_question_count, info.following_favlist_count,
+                             '; '.join([str(edu) for edu in info.educations]),
+                             '; '.join([str(emp) for emp in info.employments]),
+                             '; '.join([str(loc) for loc in info.locations])))
+        csv_file.close()
+        logging.info('Succeed in saving followers of zhihu user: %s.' % self.followers_user)
 
 
 if __name__ == '__main__':
     spider = ZhihuSpider()
     info = spider.scrape_info(user='qing-shen-jue-qian')
     print(info)
-    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=50)
+    spider.save_info()
+    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=20)
     for follow in follows:
         print(follow)
-    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=50)
+    spider.save_follows()
+    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=20)
     for follower in followers:
         print(follower)
+    spider.save_followers()
