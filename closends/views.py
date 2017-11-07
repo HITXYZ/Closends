@@ -141,3 +141,6 @@ def user_binding(request):
 def friend_manage(request):
     return render(request, 'closends/friends_manage.html')
 
+@csrf_exempt
+def get_github_code(request, code):
+    pass

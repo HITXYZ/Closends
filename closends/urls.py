@@ -7,6 +7,10 @@ settingpatterns = [
     url(r'friend_manage$', friend_manage, name='friend_manage'),
 ]
 
+authcodepatterns = [
+    url(r'github_code/(?P<code>\w+)/$', get_github_code, name='get_github_code'),
+]
+
 app_name = 'closends'
 urlpatterns = [
     url(r'^$', to_login, name='to_login'),
@@ -20,4 +24,6 @@ urlpatterns = [
     url(r'^logout$', user_logout, name='logout'),
 
     url(r'^set/', include(settingpatterns, namespace='setting')),
+
+    url(r'^authcode/', include(authcodepatterns, namespace='authcode')),
 ]

@@ -2,32 +2,61 @@
 
 {% block style_load %}
     <style>
-        .content_box{
+        .content_box {
             background-color: whitesmoke;
             height: 500px;
             margin-top: 10%;
             margin-left: 2%;
         }
 
-        .content_box .content_line{
+        .content_box .content_line {
             width: 100%;
             height: 10%;
             margin-top: 2%;
             background-color: lightblue;
         }
 
-        .content_box .content_line .line_item{
+        .content_box .content_line .line_item {
             margin-top: 1%;
+        }
+
+        .content_box .content_line button{
+            margin-top: -2%;
+        }
+
+        .content_box .qq_binding {
+            margin-top: 5%;
+            margin-left: 35%;
+            width: 25%;
+            display: none;
+        }
+
+        .content_box .qq_binding .btn {
+            width: 40%;
+            margin-left: 30%;
         }
     </style>
 {% endblock %}
 
-{% block content_box%}
+{% block content_box %}
     <div class="col-md-8 content_box">
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">QQ</div>
             <div class="col-md-6 line_item">未绑定</div>
-            <div class="col-md-4 line_item"><a href="#">绑定</a></div>
+            <div class="col-md-4 line_item">
+                <button id="show_qq_binding_form" class="btn btn-primary">绑定</button>
+            </div>
+        </div>
+        <div class="qq_binding">
+            <form id="qq_binding_form" class="form-horizontal">
+                <div class="form-group">
+                    <input id="username" type="text" name="QQ" class="form-control" placeholder="QQ">
+                </div>
+                <div class="form-group">
+                    <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                </div>
+                <button id="binding_qq" type="button" class="btn btn-default">提交</button>
+            </form>
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">微博</div>
@@ -40,4 +69,17 @@
             <div class="col-md-4 line_item"><a href="#">绑定</a></div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#show_qq_binding_form").on("click", function () {
+                $(".qq_binding").css('display', 'block');
+            });
+            
+            $("#binding_qq").on("click", function () {
+                $(".qq_binding").css('display', 'none');
+                $("#show_qq_binding_form").attr('disabled', true);
+            })
+        })
+    </script>
 {% endblock %}
