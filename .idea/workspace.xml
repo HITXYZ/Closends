@@ -2,27 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0267ae0-b1a0-4ee5-832a-589f729b6c7f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/closends/img/icon_out-x2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/closends/img/icon_out.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/closends/img/logo-x2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/closends/backends.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/closends/templates/closends/base.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/closends/templates/closends/friends_manage.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/closends/templates/closends/user_binding.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/closends/templates/closends/user_info.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/closends/css/nav_bar.css" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/closends/css/login.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/closends/css/register.css" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/closends/img/logo.png" afterPath="$PROJECT_DIR$/static/closends/img/logo.png" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/css/bootstrap-responsive.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/css/bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/css/test.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/static/img/404.jpg" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/XYZ/settings.py" afterPath="$PROJECT_DIR$/XYZ/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/admin.py" afterPath="$PROJECT_DIR$/closends/admin.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/models.py" afterPath="$PROJECT_DIR$/closends/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/index.html" afterPath="$PROJECT_DIR$/closends/templates/closends/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/login.html" afterPath="$PROJECT_DIR$/closends/templates/closends/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/register.html" afterPath="$PROJECT_DIR$/closends/templates/closends/register.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/urls.py" afterPath="$PROJECT_DIR$/closends/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/views.py" afterPath="$PROJECT_DIR$/closends/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/friends_manage.html" afterPath="$PROJECT_DIR$/closends/templates/closends/friends_manage.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/user_binding.html" afterPath="$PROJECT_DIR$/closends/templates/closends/user_binding.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/closends/templates/closends/user_info.html" afterPath="$PROJECT_DIR$/closends/templates/closends/user_info.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,6 +31,11 @@
         <item name="" type="eadb38e5:DatabaseStructure$Root" />
         <item name="closends@localhost" type="e3449647:DbNodeDescriptor" />
       </path>
+      <path>
+        <item name="" type="eadb38e5:DatabaseStructure$Root" />
+        <item name="closends@localhost" type="e3449647:DbNodeDescriptor" />
+        <item name="closends" type="e3449647:DbNodeDescriptor" />
+      </path>
     </expand>
     <select />
   </component>
@@ -52,59 +44,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/XYZ/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="50" column="8" lean-forward="false" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__int__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/closends/migrations/__int__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="auth_user" pinned="false" current-in-tab="false">
-        <entry file="das://table:/c8742bd/6f210c0f-1cde-414e-98b6-7f8d8492d7ed/closends.auth_user">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="admin.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/closends/admin.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1110">
-              <caret line="74" column="18" lean-forward="false" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/closends/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding>
-                <marker date="1510043206000" expanded="true" signature="2921:2955" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/closends/views.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -115,11 +54,61 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/closends/templates/closends/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="4" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/closends/migrations/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="register.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/closends/templates/closends/register.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-8673">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user_binding.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/closends/templates/closends/user_binding.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="friends_manage.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/closends/templates/closends/friends_manage.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user_info.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/closends/templates/closends/user_info.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="14" lean-forward="false" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -149,6 +138,10 @@
         <option value="$PROJECT_DIR$/closends/admin.py" />
         <option value="$PROJECT_DIR$/closends/views.py" />
         <option value="$PROJECT_DIR$/closends/templates/closends/index.html" />
+        <option value="$PROJECT_DIR$/closends/templates/closends/login.html" />
+        <option value="$PROJECT_DIR$/closends/templates/closends/user_binding.html" />
+        <option value="$PROJECT_DIR$/closends/templates/closends/friends_manage.html" />
+        <option value="$PROJECT_DIR$/closends/templates/closends/user_info.html" />
       </list>
     </option>
   </component>
@@ -217,6 +210,13 @@
               <item name="XYZ" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="closends" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="XYZ" type="b2602c69:ProjectViewProjectNode" />
+              <item name="XYZ" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="closends" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="XYZ" type="b2602c69:ProjectViewProjectNode" />
@@ -342,72 +342,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/closends/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="123" column="49" lean-forward="false" selection-start-line="123" selection-start-column="49" selection-end-line="123" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/closends/apps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/closends/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/XYZ/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/closends/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/closends/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="22" lean-forward="false" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/XYZ/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="28" lean-forward="true" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6f210c0f-1cde-414e-98b6-7f8d8492d7ed/console.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -593,19 +527,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://table:/c8742bd/6f210c0f-1cde-414e-98b6-7f8d8492d7ed/closends.auth_user">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/closends/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="268">
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="19" selection-end-column="22" />
           <folding>
-            <marker date="1510043206000" expanded="true" signature="2921:2955" ph="..." />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -614,14 +541,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/closends/migrations/__int__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -719,28 +638,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/closends/models.py">
+    <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <marker date="1510043206000" expanded="true" signature="2921:2955" ph="..." />
-          </folding>
+        <state relative-caret-position="330">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/migrations/__int__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/XYZ/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="50" column="8" lean-forward="false" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
+        <state relative-caret-position="13">
+          <caret line="20" column="14" lean-forward="true" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+    <entry file="das://table:/c8742bd/6f210c0f-1cde-414e-98b6-7f8d8492d7ed/closends.auth_user">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
         </state>
       </provider>
     </entry>
@@ -754,6 +678,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/closends/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/closends/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="627">
@@ -762,10 +696,135 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/closends/templates/closends/index.html">
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="76" column="18" lean-forward="true" selection-start-line="74" selection-start-column="4" selection-end-line="76" selection-end-column="18" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8673">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/closends/css/nav_bar.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="16" lean-forward="true" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="167" column="0" lean-forward="true" selection-start-line="167" selection-start-column="0" selection-end-line="167" selection-end-column="0" />
+          <folding>
+            <element signature="e#444#558#0#HTML" expanded="false" />
+            <element signature="e#573#833#0#HTML" expanded="false" />
+            <element signature="e#852#918#0#HTML" expanded="false" />
+            <element signature="e#948#1095#0#HTML" expanded="false" />
+            <element signature="e#1115#1234#0#HTML" expanded="false" />
+            <element signature="e#1264#1383#0#HTML" expanded="false" />
+            <element signature="e#1412#1539#0#HTML" expanded="false" />
+            <element signature="e#1573#1642#0#HTML" expanded="false" />
+            <element signature="e#1676#1794#0#HTML" expanded="false" />
+            <element signature="e#1846#1887#0#HTML" expanded="false" />
+            <element signature="e#1934#2067#0#HTML" expanded="false" />
+            <element signature="e#2104#2174#0#HTML" expanded="false" />
+            <element signature="e#2204#2340#0#HTML" expanded="false" />
+            <element signature="e#2372#2443#0#HTML" expanded="false" />
+            <element signature="e#2484#2526#0#HTML" expanded="false" />
+            <element signature="e#2569#2640#0#HTML" expanded="false" />
+            <element signature="n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#ul#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#form#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#form#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#form#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#form#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#form#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#form#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#form#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#form#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#p#2;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#a#1;n#p#2;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="e#5555#5655#0#HTML" expanded="false" />
+            <element signature="e#5696#9782#0#HTML" expanded="false" />
+            <element signature="e#5740#5991#0#HTML" expanded="false" />
+            <element signature="e#6036#6792#0#HTML" expanded="false" />
+            <element signature="e#6308#6450#0#HTML" expanded="false" />
+            <element signature="e#6456#6596#0#HTML" expanded="false" />
+            <element signature="e#6637#6778#0#HTML" expanded="false" />
+            <element signature="e#6841#7100#0#HTML" expanded="false" />
+            <element signature="e#7148#7852#0#HTML" expanded="false" />
+            <element signature="e#7326#7475#0#HTML" expanded="false" />
+            <element signature="e#7498#7645#0#HTML" expanded="false" />
+            <element signature="e#7690#7838#0#HTML" expanded="false" />
+            <element signature="e#7913#8786#0#HTML" expanded="false" />
+            <element signature="e#8077#8741#0#HTML" expanded="false" />
+            <element signature="e#8330#8714#0#HTML" expanded="false" />
+            <element signature="e#8491#8686#0#HTML" expanded="false" />
+            <element signature="e#8578#8658#0#HTML" expanded="false" />
+            <element signature="e#8742#8748#0#HTML" expanded="false" />
+            <element signature="e#8844#9770#0#HTML" expanded="false" />
+            <element signature="e#9003#9724#0#HTML" expanded="false" />
+            <element signature="e#9277#9693#0#HTML" expanded="false" />
+            <element signature="e#9450#9661#0#HTML" expanded="false" />
+            <element signature="e#9541#9629#0#HTML" expanded="false" />
+            <element signature="e#9726#9732#0#HTML" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/migrations/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/user_info.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="14" lean-forward="false" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/friends_manage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/closends/templates/closends/user_binding.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
           <folding />
         </state>
       </provider>
