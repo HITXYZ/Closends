@@ -1,5 +1,161 @@
-{% extends 'closends/base.html' %}
+{% extends 'closends/setting_base.html' %}
 
-{% block content_body %}
+{% block style_load %}
+{#    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">#}
+    <style>
+        .content_box{
+            background-color: whitesmoke;
+            height: 500px;
+            margin-top: 10%;
+            margin-left: 2%;
+        }
 
+        .content_box nav{
+            margin-left: 40%;
+        }
+
+        .content_box .person_box{
+            background-color: #bfbfbf;
+            width: 30%;
+            height: 120px;
+            margin-top: 2%;
+            margin-left: 2.5%;
+        }
+
+        .content_box .person_box img{
+            width: 50px;
+            height: 50px;
+            margin-top: 50px;
+        }
+
+        .content_box .person_box .person_info{
+            background-color: lightblue;
+            height: 120px;
+        }
+
+        .friend_list{
+            margin-top: 10px;
+        }
+
+        .friend_list div{
+            list-style-type:none;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 5%;
+        }
+
+        .friend_list button{
+            width: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block group_list %}
+    <div class="friend_list">
+        <div><a href="#"><button class="btn">分组1</button></a></div>
+        <div><a href="#"><button class="btn">分组2</button></a></div>
+        <div><a href="#"><button class="btn">分组3</button></a></div>
+        <div><a href="#"><button class="btn">分组4</button></a></div>
+        <div><a href="#"><button class="btn">分组5</button></a></div>
+        <div><a href="#"><button class="btn">更多分组</button></a></div>
+    </div>
+{% endblock %}
+
+{% block content_box %}
+    <div class="col-md-8 content_box">
+        <div class="row">
+            <div class="col-md-4 person_box">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-circle" src="/media/head/index_01.jpg">
+                    </div>
+                    <div class="col-md-8 person_info"></div>
+                </div>
+            </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_02.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_03.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 person_box">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-circle" src="/media/head/index_01.jpg">
+                    </div>
+                    <div class="col-md-8 person_info"></div>
+                </div>
+            </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_02.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_03.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 person_box">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-circle" src="/media/head/index_01.jpg">
+                    </div>
+                    <div class="col-md-8 person_info"></div>
+                </div>
+            </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_02.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+            <div class="col-md-4 person_box">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-circle" src="/media/head/index_03.jpg">
+                </div>
+                <div class="col-md-8 person_info"></div>
+            </div>
+        </div>
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">上一页</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">下一页</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 {% endblock %}

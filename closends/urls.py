@@ -1,6 +1,12 @@
 from .views import *
 from django.conf.urls import url, include
 
+settingpatterns = [
+    url(r'user_info$', user_info, name='user_info'),
+    url(r'user_binding$', user_binding, name='user_binding'),
+    url(r'friend_manage$', friend_manage, name='friend_manage'),
+]
+
 app_name = 'closends'
 urlpatterns = [
     url(r'^$', to_login, name='to_login'),
@@ -12,4 +18,6 @@ urlpatterns = [
 
     url(r'^index$', index, name='index'),
     url(r'^logout$', user_logout, name='logout'),
+
+    url(r'^set/', include(settingpatterns, namespace='setting')),
 ]

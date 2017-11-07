@@ -1,0 +1,60 @@
+{% extends 'closends/base.html' %}
+
+{% block css_load %}
+    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .sidebar_box{
+            background-color: whitesmoke;
+            width: 150px;
+            height: 500px;
+            margin-top: 10%;
+        }
+
+        .sidebar_box .setting_bar{
+            margin-top: 10%;
+        }
+
+        .sidebar_box .setting_bar .btn{
+            width:100%;
+            background-color: lightblue;
+        }
+    </style>
+
+    {% block style_load %}
+
+    {% endblock %}
+{% endblock %}
+
+s{% block content_body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 sidebar_box">
+                <div class="setting_bar text-center">用户设置</div>
+
+                <div class="setting_bar">
+                    <a href="{% url 'closends:setting:user_info' %}">
+                        <button class="btn btn-default">个人信息</button>
+                    </a>
+                </div>
+                <div class="setting_bar">
+                    <a href="{% url 'closends:setting:user_binding' %}">
+                        <button class="btn btn-default">账户绑定</button>
+                    </a>
+                </div>
+                <div class="setting_bar">
+                    <a href="{% url 'closends:setting:friend_manage' %}">
+                        <button class="btn btn-default">密友管理</button>
+                    </a>
+                </div>
+                {% block group_list %}
+
+                {% endblock %}
+            </div>
+
+            {% block content_box %}
+
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

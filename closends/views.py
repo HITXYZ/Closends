@@ -122,3 +122,22 @@ def index(request):
     user = request.user
     print(user.username, user.email)
     return render(request, 'closends/index.html')
+
+
+@csrf_exempt
+@login_required
+def user_info(request):
+    return render(request, 'closends/user_info.html')
+
+
+@csrf_exempt
+@login_required
+def user_binding(request):
+    return render(request, 'closends/user_binding.html')
+
+
+@csrf_exempt
+@login_required
+def friend_manage(request):
+    return render(request, 'closends/friends_manage.html')
+

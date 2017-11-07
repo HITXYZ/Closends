@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    {% load static %}
     <meta charset="UTF-8"/>
-    <title>账号绑定 Closends-特别的关注，送给特别的TA</title>
 
     <link href="/static/closends/img/closends.ico" rel="shortcut icon">
     <link href="/static/closends/css/nav_bar.css" rel="stylesheet"/>
-    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/static/closends/js/bootstrap.min.js"></script>
+    {% block css_load %}
+
+    {% endblock %}
 </head>
 
 <body>
@@ -59,9 +60,9 @@
                             <div class="gn_topmenulist gn_topmenulist_set " id="accountLayer" style="display:none"
                                  onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
                                 <ul>
-                                    <li class="gn_func"><a target="_top" href="#">个人信息</a></li>
-                                    <li class="gn_func"><a target="_top" href="#">账号绑定</a></li>
-                                    <li class="gn_func"><a target="_top" href="#">密友管理</a></li>
+                                    <li class="gn_func"><a target="_top" href="{% url 'closends:setting:user_info' %}">个人信息</a></li>
+                                    <li class="gn_func"><a target="_top" href="{% url 'closends:setting:user_binding' %}">账号绑定</a></li>
+                                    <li class="gn_func"><a target="_top" href="{% url 'closends:setting:friend_manage' %}">密友管理</a></li>
                                     <li class="gn_func"><a target="_top" href="{% url 'closends:logout' %}">退出</a></li>
                                 </ul>
                             </div>
@@ -84,6 +85,8 @@
             document.getElementById("accountLayer").style.display = "none";
         }
     </script>
+
+    <script src="/static/closends/js/bootstrap.min.js"></script>
 </body>
 
 </html>
