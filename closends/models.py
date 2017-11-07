@@ -1,62 +1,105 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 
-marks = {'1': 'QQ', '2': '微信', '3': '微博'}
+marks = {'QQ': 'QQ', '微博': '微博', '知乎': '知乎'}
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+class UserInfo(models.Model):
+    def __str__(self):
+        return self.user.username
+
+    user = models.OneToOneField(User)
+    head_img = models.ImageField(blank=True, upload_to=BASE_DIR+'/media/head')
+
 
 class Website(models.Model):
     """用户各网站授权码"""
+
     def __str__(self):
-        return marks[self.type]
+        return marks[self.site]
 
     def username(self):
-        return self.user.username
+        return self.user.user.username
 
-    choice_in_type = (('1', 'QQ'), ('2', '微信'), ('3', '微博'))
-    type = models.CharField(max_length=1, default='1', choices=choice_in_type)
+    site_choices = (('QQ', 'QQ'), ('微博', '微博'), ('知乎', '知乎'))
+    site = models.CharField(max_length=2, default='QQ', choices=site_choices)
     authcode = models.CharField(max_length=20)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+
 
 class Friend(models.Model):
     """用户好友"""
+
     def __str__(self):
-        return self.name
+        return self.nickname
 
     def username(self):
-        return self.user.username
+        return self.user.user.username
 
-    group_choices = (('1', '未分组'), ('2', '家人'), ('3', '好友'))
-    name = models.CharField(max_length=30)
-    group = models.CharField(max_length=2, default='1', choices=group_choices)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_choices = (('未分组', '未分组'), ('家人', '家人'), ('好友', '好友'), ('同学', '同学'))
+    nickname = models.CharField(max_length=30)
+    group = models.CharField(max_length=3, default='未分组', choices=group_choices)
+    qq_mark = models.CharField(max_length=11)
+    weibo_mark = models.CharField(max_length=20)
+    zhihu_mark = models.CharField(max_length=20)
+    user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
-class Identifier(models.Model):
-    """用户好友各网站标识"""
-    def __str__(self):
-        return marks[self.website] + '_' + self.identifier
 
-    def friend_name(self):
-        return self.friend.name
+class QQContent(models.Model):
+    """QQ动态"""
 
-    choice_in_type = (('1', 'QQ'), ('2', '微信'), ('3', '微博'))
-    website = models.CharField(max_length=1, default='1', choices=choice_in_type)
-    identifier = models.CharField(max_length=30)
-    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
-
-class Content(models.Model):
-    """所有网站动态内容"""
     def __str__(self):
         return self.content[:20]
 
-    content = models.TextField(max_length=200)
-    video_url = models.URLField(max_length=50, default="http://")
+    def nickname(self):
+        return self.friend.nickname
+
+    content = models.TextField()
+    video_url = models.URLField(default="http://")
     publish_date = models.DateField('date published')
-    identifier = models.ForeignKey(Identifier, on_delete=models.CASCADE)
+    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
+
+
+class WeiboContent(models.Model):
+    """微博动态"""
+
+    def __str__(self):
+        return self.content[:20]
+
+    def nickname(self):
+        return self.friend.nickname
+
+    content = models.TextField()
+    video_url = models.URLField(default="http://")
+    publish_date = models.DateField('date published')
+    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
+
+
+class ZhihuContent(models.Model):
+    """微博动态"""
+
+    def __str__(self):
+        return self.content[:20]
+
+    def nickname(self):
+        return self.friend.nickname
+
+    content = models.TextField()
+    video_url = models.URLField(default="http://")
+    publish_date = models.DateField('date published')
+    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
+
 
 class Image(models.Model):
     """所有动态的图片及链接"""
+
     def __str__(self):
         return self.image_url
 
     image = models.ImageField()
     image_url = models.URLField(max_length=50, default="http://")
-    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    content_qq = models.ForeignKey(QQContent, on_delete=models.CASCADE)
+    content_weibo = models.ForeignKey(WeiboContent, on_delete=models.CASCADE)
+    content_zhihu = models.ForeignKey(ZhihuContent, on_delete=models.CASCADE)

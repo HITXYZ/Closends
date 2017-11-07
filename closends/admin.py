@@ -1,46 +1,81 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import Website, Friend, Identifier, Content, Image
+from .models import *
+
+
+class UserInfoInline(admin.StackedInline):
+    model = UserInfo
+
 
 class WebsiteInline(admin.StackedInline):
     model = Website
 
+
 class FriendInline(admin.StackedInline):
     model = Friend
 
-class IdentifierInline(admin.StackedInline):
-    model = Identifier
-
-class ContentInline(admin.StackedInline):
-    model = Content
 
 class ImageInline(admin.StackedInline):
     model = Image
 
-class WebsiteAdmin(admin.ModelAdmin):
-    list_display = ('type', 'authcode', 'username')
+
+class QQContentInline(admin.StackedInline):
+    model = QQContent
+
+
+class WeiboContentInline(admin.StackedInline):
+    model = WeiboContent
+
+
+class ZhihuContentInline(admin.StackedInline):
+    model = ZhihuContent
+
 
 class MyUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_staff')
+    listdisplay = ('username', 'email', 'isstaff')
+    inlines = (UserInfoInline,)
+
+
+class UserInfoAdmin(admin.ModelAdmin):
+    list_display = ('__str__', )
     inlines = (WebsiteInline, FriendInline)
 
+
+class WebsiteAdmin(admin.ModelAdmin):
+    listdisplay = ('username', 'site', 'authcode')
+
+
 class FriendAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'username')
-    inlines = (IdentifierInline, )
+    listdisplay = ('username', 'nickname', 'group')
+    inlines = (QQContentInline, WeiboContentInline, ZhihuContentInline,)
 
-class IdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'website', 'friend_name')
-    inlines = (ContentInline, )
 
-class ContentAdmin(admin.ModelAdmin):
-    list_display = ("content", 'publish_date', 'identifier')
-    inlines = (ImageInline, )
+class QQContentAdmin(admin.ModelAdmin):
+    listdisplay = ('nickname', 'content', 'publishdate')
+    inlines = (ImageInline,)
+
+
+class WeiboContentAdmin(admin.ModelAdmin):
+    listdisplay = ('nickname', 'content', 'publishdate')
+    inlines = (ImageInline,)
+
+
+class ZhihuContentAdmin(admin.ModelAdmin):
+    listdisplay = ('nickname', 'content', 'publishdate')
+    inlines = (ImageInline,)
+
+
+class ImageAdmin(admin.ModelAdmin):
+    pass
+
 
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
+
+admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Friend, FriendAdmin)
-admin.site.register(Identifier, IdentifierAdmin)
-admin.site.register(Content, ContentAdmin)
-admin.site.register(Image)
+admin.site.register(QQContent, QQContentAdmin)
+admin.site.register(WeiboContent, WeiboContentAdmin)
+admin.site.register(ZhihuContent, ZhihuContentAdmin)
+admin.site.register(Image, ImageAdmin)
