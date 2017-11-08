@@ -25,7 +25,7 @@ class SpiderInitError(ScraperError):
         return repr(self.info)
 
 
-class SpiderItemError(ScraperError):
+class MethodParamError(ScraperError):
     def __init__(self, value='Invalid item!'):
         self.info = value
     
