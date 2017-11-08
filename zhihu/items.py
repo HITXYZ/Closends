@@ -3,7 +3,7 @@
     @date: 2017/11/04
     @desc: Items of zhihu scraping
 """
-from baseitem import ScrapeItem
+from base_item import ScrapeItem
 
 
 class ZhihuItem(ScrapeItem):

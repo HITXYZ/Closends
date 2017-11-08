@@ -11,7 +11,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem, ZhihuQuestionItem, ZhihuAnswerItem
-from exceptions import SpiderItemError
+from exceptions import MethodParamError
 
 
 headers = {
@@ -407,7 +407,7 @@ class ZhihuSpider:
 
         info = self.scraped_infos.get(user)
         if not isinstance(info, ZhihuUserItem):
-            raise SpiderItemError('\'info\' isn\'t an instance of ZhihuUserItem.')
+            raise MethodParamError('\'info\' isn\'t an instance of ZhihuUserItem.')
         csv_file = open(directory + str(info.name) + '-info.csv', 'w')
         writer = csv.writer(csv_file)
         writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
@@ -436,7 +436,7 @@ class ZhihuSpider:
             return
         infos = self.scraped_follows.get(user)
         if not isinstance(infos, list):
-            raise SpiderItemError('Haven\'t scraped follows of zhihu user: %s' % user)
+            raise MethodParamError('Haven\'t scraped follows of zhihu user: %s' % user)
         csv_file = open(directory + str(user) + '-follows.csv', 'w')
         writer = csv.writer(csv_file)
         writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
@@ -468,7 +468,7 @@ class ZhihuSpider:
             return
         infos = self.scraped_followers.get(user)
         if not isinstance(infos, list):
-            raise SpiderItemError('Haven\'t scraped followers of zhihu user: %s' % user)
+            raise MethodParamError('Haven\'t scraped followers of zhihu user: %s' % user)
         csv_file = open(directory + str(user) + '-followers.csv', 'w')
         writer = csv.writer(csv_file)
         writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
