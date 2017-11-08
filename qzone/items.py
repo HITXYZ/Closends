@@ -3,10 +3,10 @@
     @date: 1997/10/27
     @desc: Items of qzone scraping
 """
-from baseitem import ScrapeItem
+from base_item import SocialMediaItem
 
 
-class QzoneItem(ScrapeItem):
+class QzoneItem(SocialMediaItem):
     pass
 
 
