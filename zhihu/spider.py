@@ -12,6 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem, ZhihuQuestionItem, ZhihuAnswerItem
 from exceptions import MethodParamError
+from base_spider import SocialMediaSpider
 
 
 headers = {
@@ -43,7 +44,7 @@ logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(leveln
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
 
-class ZhihuSpider:
+class ZhihuSpider(SocialMediaSpider):
     def __init__(self):
         self.scraped_infos = {}
         self.scraped_follows = {}
