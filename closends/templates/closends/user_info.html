@@ -1,7 +1,6 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
-
     <style>
         .content_box{
             background-color: whitesmoke;
@@ -32,12 +31,12 @@
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">用户名</div>
-            <div class="col-md-6 line_item">gzhang</div>
+            <div class="col-md-6 line_item">{{ user.user.username }}</div>
             <div class="col-md-4 line_item"><a href="#">更改</a></div>
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">邮箱</div>
-            <div class="col-md-6 line_item">zg_hit2015@163.com</div>
+            <div class="col-md-6 line_item">{{ user.user.email }}</div>
             <div class="col-md-4 line_item"><a href="#">更改</a></div>
         </div>
         <div class="btn col-md-14 text-center content_line">
