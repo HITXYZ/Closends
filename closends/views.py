@@ -6,6 +6,7 @@ from django.shortcuts import render, render_to_response, HttpResponse, HttpRespo
 
 import json
 from .models import *
+from .user_binding import *
 
 
 @csrf_exempt
@@ -133,13 +134,113 @@ def user_info(request):
 @csrf_exempt
 @login_required
 def user_binding(request):
-    return render(request, 'closends/user_binding.html')
+    sites = request.user.userinfo.website_set.all()
+    binding_sites = {}
+    for site in sites:
+        binding_sites[site.site] = site.account
+    print(binding_sites)
+    binding_sites = {'binding_sites': binding_sites}
+    return render(request, 'closends/user_binding.html', binding_sites)
+
+
+@csrf_exempt
+@login_required
+def qq_binding(request):
+    if request.method == 'POST':
+        qq = request.POST['qq']
+        password = request.POST['password']
+        status = qq_login(qq, password)
+        # print(qq, password, status)
+        if status:
+            user = request.user.userinfo
+            user.website_set.create(site='qq', account=qq, authcode=password)
+            result = {'status': 'success'}
+        else:
+            result = {'status': 'error', 'error_msg': 'wrong_password'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def qq_unbinding(request):
+    sites = request.user.userinfo.website_set.all()
+    binding_sites = {}
+    for site in sites:
+        if site.site == 'qq':
+            site.delete()
+        else:
+            binding_sites[site.site] = site.account
+    binding_sites = {'binding_sites': binding_sites}
+    return render(request, 'closends/user_binding.html', binding_sites)
+
+
+@csrf_exempt
+@login_required
+def weibo_binding(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        status = weibo_login(username, password)
+        print(username, password, status)
+        if status:
+            user = request.user.userinfo
+            user.website_set.create(site='weibo', account=username, authcode=password)
+            result = {'status': 'success'}
+        else:
+            result = {'status': 'error', 'error_msg': 'wrong_password'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def weibo_unbinding(request):
+    sites = request.user.userinfo.website_set.all()
+    binding_sites = {}
+    for site in sites:
+        if site.site == 'weibo':
+            site.delete()
+        else:
+            binding_sites[site.site] = site.account
+    binding_sites = {'binding_sites': binding_sites}
+    return render(request, 'closends/user_binding.html', binding_sites)
+
+
+@csrf_exempt
+@login_required
+def zhihu_binding(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        status = zhihu_login(username, password)
+        print(username, password, status)
+        if status:
+            user = request.user.userinfo
+            user.website_set.create(site='zhihu', account=username, authcode=password)
+            result = {'status': 'success'}
+        else:
+            result = {'status': 'error', 'error_msg': 'wrong_password'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def zhihu_unbinding(request):
+    sites = request.user.userinfo.website_set.all()
+    binding_sites = {}
+    for site in sites:
+        if site.site == 'zhihu':
+            site.delete()
+        else:
+            binding_sites[site.site] = site.account
+    binding_sites = {'binding_sites': binding_sites}
+    return render(request, 'closends/user_binding.html', binding_sites)
 
 
 @csrf_exempt
 @login_required
 def friend_manage(request):
     return render(request, 'closends/friends_manage.html')
+
 
 @csrf_exempt
 def get_github_code(request, code):

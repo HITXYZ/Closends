@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 
-marks = {'QQ': 'QQ', '微博': '微博', '知乎': '知乎'}
+marks = {'qq': 'QQ', 'weibo': '微博', 'zhihu': '知乎'}
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -23,9 +23,10 @@ class Website(models.Model):
     def username(self):
         return self.user.user.username
 
-    site_choices = (('QQ', 'QQ'), ('微博', '微博'), ('知乎', '知乎'))
-    site = models.CharField(max_length=2, default='QQ', choices=site_choices)
-    authcode = models.CharField(max_length=20)
+    site_choices = (('qq', 'QQ'), ('weibo', '微博'), ('zhihu', '知乎'))
+    site = models.CharField(max_length=5, default='qq', choices=site_choices)
+    account = models.CharField(max_length=50, default='')
+    authcode = models.CharField(max_length=50)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
@@ -38,9 +39,9 @@ class Friend(models.Model):
     def username(self):
         return self.user.user.username
 
-    group_choices = (('未分组', '未分组'), ('家人', '家人'), ('好友', '好友'), ('同学', '同学'))
+    group_choices = (('ungrouped', '未分组'), ('family', '家人'), ('friend', '好友'), ('classmate', '同学'))
     nickname = models.CharField(max_length=30)
-    group = models.CharField(max_length=3, default='未分组', choices=group_choices)
+    group = models.CharField(max_length=10, default='未分组', choices=group_choices)
     qq_mark = models.CharField(max_length=11)
     weibo_mark = models.CharField(max_length=20)
     zhihu_mark = models.CharField(max_length=20)

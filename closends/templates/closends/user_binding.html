@@ -24,7 +24,7 @@
             margin-top: -2%;
         }
 
-        .content_box .qq_binding {
+        .content_box .qq_binding, .weibo_binding {
             margin-top: 5%;
             margin-left: 35%;
             width: 25%;
@@ -35,6 +35,19 @@
             width: 40%;
             margin-left: 30%;
         }
+
+        .content_box .weibo_binding .btn {
+            width: 40%;
+            margin-left: 30%;
+        }
+
+        .content_box .qq_binding .error_tips{
+            display: none;
+        }
+
+        .content_box .weibo_binding .error_tips{
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -42,43 +55,132 @@
     <div class="col-md-8 content_box">
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">QQ</div>
-            <div class="col-md-6 line_item">未绑定</div>
-            <div class="col-md-4 line_item">
-                <button id="show_qq_binding_form" class="btn btn-primary">绑定</button>
-            </div>
+            {% if not binding_sites.qq %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_qq_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div class="col-md-6 line_item">{{ binding_sites.qq }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_qq_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
         </div>
         <div class="qq_binding">
             <form id="qq_binding_form" class="form-horizontal">
                 <div class="form-group">
-                    <input id="username" type="text" name="QQ" class="form-control" placeholder="QQ">
+                    <input id="username" type="text" name="qq" class="form-control" placeholder="QQ">
                 </div>
                 <div class="form-group">
-                    <input id="password" type="password" name="password" class="form-control" placeholder="Password">
+                    <input id="password" type="password" name="password" class="form-control" placeholder="密码">
                 </div>
+                <div class="form-group error_tips"><h4>账号不存在或密码错误！</h4></div>
                 <button id="binding_qq" type="button" class="btn btn-default">提交</button>
             </form>
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">微博</div>
-            <div class="col-md-6 line_item">未绑定</div>
-            <div class="col-md-4 line_item"><a href="#">绑定</a></div>
+            {% if not binding_sites.weibo %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_weibo_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div class="col-md-6 line_item">{{ binding_sites.weibo }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_weibo_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="weibo_binding">
+            <form id="weibo_binding_form" class="form-horizontal">
+                <div class="form-group">
+                    <input id="username" type="text" name="username" class="form-control" placeholder="账号">
+                </div>
+                <div class="form-group">
+                    <input id="password" type="password" name="password" class="form-control" placeholder="密码">
+                </div>
+                <div class="form-group error_tips"><h4>账号不存在或密码错误！</h4></div>
+                <button id="binding_weibo" type="button" class="btn btn-default">提交</button>
+            </form>
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">知乎</div>
-            <div class="col-md-6 line_item">未绑定</div>
-            <div class="col-md-4 line_item"><a href="#">绑定</a></div>
+            {% if not binding_sites.zhihu %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_zhihu_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div class="col-md-6 line_item">{{ binding_sites.zhihu }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_zhihu_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
         </div>
     </div>
 
     <script>
         $(document).ready(function () {
             $("#show_qq_binding_form").on("click", function () {
-                $(".qq_binding").css('display', 'block');
+                if($(this).text() === "绑定")
+                    $(".qq_binding").css('display', 'block');
+                else
+                    window.location.href = '{% url 'closends:setting:qq_unbinding' %}';
+            });
+
+            $("#show_weibo_binding_form").on("click", function () {
+                if($(this).text() === "绑定")
+                    $(".weibo_binding").css('display', 'block');
+                else
+                    window.location.href = '{% url 'closends:setting:weibo_unbinding' %}';
+            });
+
+            $("#binding_qq").on("click", function () {
+                let qq_info = $("#qq_binding_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:qq_binding' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: qq_info,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === "success"){
+                                $(".qq_binding").css('display', 'none');
+                                $("#show_qq_binding_form").text('取消绑定')
+                                    .parent().prev().text("已绑定");
+                            }
+                            else{
+                                $(".qq_binding .error_tips").css('display','block');
+                            }
+                        }//success
+                })//ajax
             });
             
-            $("#binding_qq").on("click", function () {
-                $(".qq_binding").css('display', 'none');
-                $("#show_qq_binding_form").attr('disabled', true);
+             $("#binding_weibo").on("click", function () {
+                let weibo_info = $("#weibo_binding_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:weibo_binding' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: weibo_info,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === "success"){
+                                $(".weibo_binding").css('display', 'none');
+                                $("#show_weibo_binding_form").text('取消绑定')
+                                    .parent().prev().text("已绑定");
+                            }
+                            else{
+                                $(".weibo_binding .error_tips").css('display','block');
+                            }
+                        }//success
+                })//ajax
+            });
+            
+            $("#username, #password").focus(function () {
+                $(".qq_binding .error_tips").css('display','none');
             })
         })
     </script>

@@ -56,6 +56,7 @@ DATABASES = {
         'PASSWORD': '0526',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'default-character-set': 'utf8',
     }
 }
 

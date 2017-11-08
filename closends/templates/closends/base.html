@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    //nav-bar
     <div id="weibo_top_public">
         <div class="WB_global_nav WB_global_nav_v2 WB_global_nav_alpha ">
             <div class="gn_header clearfix">
@@ -53,7 +52,7 @@
                             <div class="gn_topmenulist_tips" style="display:none" id="tips"></div>
                         </div>
                         <div class="gn_set_list">
-                            <a href="javascript:void(0);" id="account" target="_top" class=" "
+                            <a href="{% url 'closends:setting:setting_index' %}" id="account" target="_top" class=" "
                                onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
                                 <em class="W_ficon ficon_set S_ficon">account</em>
                             </a>
