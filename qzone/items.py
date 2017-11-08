@@ -40,10 +40,11 @@ class QzoneEmotionItem(QzoneItem):
 
     def __str__(self):
         string = ''
+        string += 'ID: ' + str(self.id) + '\n'
         string += 'Owner: ' + str(self.owner) + '\n'
         string += 'Time: ' + str(self.time) + '\n'
         string += 'Content: ' + str(self.content) + '\n'
-        string += 'Pictures: ' + str(self.pictures) + '\n'
+        string += 'Pictures: ' + '; '.join([str(pic) for pic in self.pictures]) + '\n'
         string += 'Source Name: ' + str(self.source_name) + '\n'
         string += 'Location: ' + str(self.location) + '\n'
         string += 'Visitor Number: ' + str(len(self.visitors)) + '\n'
@@ -86,7 +87,7 @@ class QzoneCommentItem(QzoneItem):
         string += 'Commenter: ' + str(self.commenter) + '\n'
         string += 'Time: ' + str(self.time) + '\n'
         string += 'Content: ' + str(self.content) + '\n'
-        string += 'Pictures: ' + str(self.pictures) + '\n'
+        string += 'Pictures: ' + '; '.join([str(pic) for pic in self.pictures]) + '\n'
         string += 'Reply Number: ' + str(len(self.replies)) + '\n'
         return string
 
@@ -103,7 +104,8 @@ class QzoneCommentReplyItem(QzoneItem):
         self.content = None                 # 回复内容
 
     def __str__(self):
-        return str(self.replier.name) + ' reply to ' + str(self.replyto.name) + ': ' + str(self.content)
+        return str(self.time) + ' ' + str(self.replier.name) + \
+               ' reply to ' + str(self.replyto.name) + ': ' + str(self.content)
 
     def __hash__(self):
         return hash(self.content)
@@ -140,7 +142,7 @@ class QzoneMessageReplyItem(QzoneItem):
         self.content = None                 # 回复内容
 
     def __str__(self):
-        return str(self.replier.name) + 'replied: ' + str(self.content)
+        return str(self.time) + ' ' + str(self.replier.name) + 'replied: ' + str(self.content)
 
     def __hash__(self):
         return hash(self.content)
