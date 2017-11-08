@@ -45,10 +45,16 @@ s{% block content_body %}
                     </a>
                 </div>
                 <div class="setting_bar">
+                    <a href="{% url 'closends:setting:add_friend' %}">
+                        <button class="btn btn-default">添加密友</button>
+                    </a>
+                </div>
+                <div class="setting_bar">
                     <a href="{% url 'closends:setting:friend_manage' %}">
                         <button class="btn btn-default">密友管理</button>
                     </a>
                 </div>
+
                 {% block group_list %}
 
                 {% endblock %}

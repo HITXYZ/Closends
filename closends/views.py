@@ -1,6 +1,9 @@
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response, HttpResponse, HttpResponseRedirect
 
@@ -240,10 +243,78 @@ def zhihu_unbinding(request):
 
 @csrf_exempt
 @login_required
+def get_group_friends(request, group, page):
+    user = request.user.userinfo
+    all_friends = user.friend_set.filter(group=group)
+    paginator = Paginator(all_friends, 9)
+    try:
+        friends = paginator.page(page)
+    except PageNotAnInteger:
+        friends = paginator.page(1)
+    except EmptyPage:
+        friends = paginator.page(paginator.num_pages)
+
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    context = {'group_list': group_list, 'current_group': group, 'friends': friends}
+    return render(request, 'closends/friends_manage.html', context)
+
+
+@csrf_exempt
+@login_required
 def friend_manage(request):
-    return render(request, 'closends/friends_manage.html')
+    user = request.user.userinfo
+    all_friends = user.friend_set.filter(group='group_0')
+    paginator = Paginator(all_friends, 9)
+    friends = paginator.page(1)
+
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    context = {'group_list': group_list, 'current_group': 'group_0', 'friends':friends}
+    return render(request, 'closends/friends_manage.html', context)
+
+
+@csrf_exempt
+@login_required
+def add_group(request):
+    if request.method == 'POST':
+        group_name = request.POST['group_name']
+        user = request.user.userinfo
+        group_list = user.group_list.split(',')
+        if group_name in group_list:
+            result = {'status': 'error', 'error_msg': 'group_exsit'}
+            return HttpResponse(json.dumps(result), content_type='application/json')
+        group_list.append(group_name)
+        user.group_list = ','.join(group_list)
+        user.save()
+        group_index = 'group_' + str(len(group_list)-1)
+        group_url = reverse('closends:setting:get_group_friends', args=(group_index, 1))
+        print(group_url)
+        result = {'status': 'success', 'group_name': group_name, 'group_url': group_url}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def add_friend(request):
+    return render(request, 'closends/add_friends.html')
+
+
+@csrf_exempt
+@login_required
+def add_qq_friend(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        qq = request.POST['qq']
+        # check qq account
+        user.friend_set
+        result = {}
+        return HttpResponse(json.dumps(result), content_type='application')
 
 
 @csrf_exempt
 def get_github_code(request, code):
+    print(code)
     pass

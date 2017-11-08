@@ -12,7 +12,12 @@ settingpatterns = [
     url(r'user_binging/weibo_unbinding$', weibo_unbinding, name='weibo_unbinding'),
     url(r'user_binging/zhihu_unbinding$', zhihu_unbinding, name='zhihu_unbinding'),
     url(r'friend_manage$', friend_manage, name='friend_manage'),
+    url(r'friend_manage/add_group$', add_group, name='add_group'),
+    url(r'friend_manage/add_friend$', add_friend, name='add_friend'),
+    url(r'friend_manage/add_qq_friend$', add_qq_friend, name='add_qq_friend'),
+    url(r'friend_manage/get_group_friends/(?P<group>\w+)/(?P<page>[0-9]+)$', get_group_friends, name='get_group_friends'),
 ]
+
 
 authcodepatterns = [
     url(r'github_code/(?P<code>\w+)/$', get_github_code, name='get_github_code'),

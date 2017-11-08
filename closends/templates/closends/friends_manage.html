@@ -1,7 +1,25 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
+    <script src="/static/closends/js/bootstrap.min.js"></script>
+    <script src="/static/closends/js/jquery.min.js"></script>
+
     <style>
+        .friend_list{
+            margin-top: 10px;
+        }
+
+        .friend_list div{
+            list-style-type:none;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 5%;
+        }
+
+        .friend_list button{
+            width: 100%;
+        }
+
         .content_box{
             background-color: whitesmoke;
             height: 500px;
@@ -32,127 +50,135 @@
             height: 120px;
         }
 
-        .friend_list{
-            margin-top: 10px;
+        .modal-content{
+            margin-top: 90%;
+            margin-left: -60%;
+            width: 60%;
+            height: 50%;
         }
-
-        .friend_list div{
-            list-style-type:none;
-            margin-left: 10%;
-            margin-right: 10%;
-            margin-top: 5%;
-        }
-
-        .friend_list button{
-            width: 100%;
-        }
-
     </style>
 {% endblock %}
 
 {% block group_list %}
+    <!--展示分组-->
     <div class="friend_list">
-        <div><a href="#"><button class="btn">分组1</button></a></div>
-        <div><a href="#"><button class="btn">分组2</button></a></div>
-        <div><a href="#"><button class="btn">分组3</button></a></div>
-        <div><a href="#"><button class="btn">分组4</button></a></div>
-        <div><a href="#"><button class="btn">分组5</button></a></div>
-        <div><a href="#"><button class="btn">更多分组</button></a></div>
+        {% for group in group_list %}
+            {% ifequal group.0 current_group %}
+                <div><a href="{% url 'closends:setting:get_group_friends' group.0 1 %}"><button class="btn btn-primary">{{ group.1 }}</button></a></div>
+            {% else %}
+                <div><a href="{% url 'closends:setting:get_group_friends' group.0 1 %}"><button class="btn">{{ group.1 }}</button></a></div>
+            {% endifequal %}
+        {% endfor %}
+        <div><a href="javascript:void(0)"><button type="button" class="btn" data-toggle="modal" data-target="#group_add_modal">添加分组</button></a></div>
     </div>
+
+    <!--添加分组-->
+    <div id="group_add_modal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <form id="group_add_form" class="form-inline" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input id="group_name" type="text" class="form-control" name="group_name" placeholder="组名">
+                        </div>
+
+                        <div class="form-group">
+                            <button id="adding_group" type="button" class="btn btn-default">确认</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#adding_group").on("click", function () {
+                let group_name = $("#group_add_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:add_group' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: group_name,
+                        async: false,
+                        success: function (ret) {
+                            alert(ret.group_url);
+                            if(ret.status === 'success'){
+                                $(".friend_list").children().last().before('<div><a href=""><button class="btn">' + ret.group_name + '</button></a></div>');
+                                $(".friend_list").children().last().prev().children().first().attr('href', ret.group_url)
+                            }
+                            else{
+
+                            }
+                        }//success
+                    })//ajax
+            })
+        })
+    </script>
 {% endblock %}
 
 {% block content_box %}
     <div class="col-md-8 content_box">
+
         <div class="row">
-            <div class="col-md-4 person_box">
-                <div class="row">
+            {% for friend in friends|slice:"0:3" %}
+                <div class="col-md-4 person_box">
+                    <div class="row">
                     <div class="col-md-4">
                         <img class="img-circle" src="/media/head/index_01.jpg">
                     </div>
                     <div class="col-md-8 person_info"></div>
                 </div>
-            </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_02.jpg">
                 </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
+            {% endfor %}
         </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_03.jpg">
-                </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
-        </div>
-        </div>
+
         <div class="row">
-            <div class="col-md-4 person_box">
-                <div class="row">
+            {% for friend in friends|slice:"3:6" %}
+                <div class="col-md-4 person_box">
+                    <div class="row">
                     <div class="col-md-4">
                         <img class="img-circle" src="/media/head/index_01.jpg">
                     </div>
                     <div class="col-md-8 person_info"></div>
                 </div>
-            </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_02.jpg">
                 </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
+            {% endfor %}
         </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_03.jpg">
-                </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
-        </div>
-        </div>
+
         <div class="row">
-            <div class="col-md-4 person_box">
-                <div class="row">
+            {% for friend in friends|slice:"6:9" %}
+                <div class="col-md-4 person_box">
+                    <div class="row">
                     <div class="col-md-4">
                         <img class="img-circle" src="/media/head/index_01.jpg">
                     </div>
                     <div class="col-md-8 person_info"></div>
                 </div>
-            </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_02.jpg">
                 </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
-        </div>
-            <div class="col-md-4 person_box">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-circle" src="/media/head/index_03.jpg">
-                </div>
-                <div class="col-md-8 person_info"></div>
-            </div>
-        </div>
+            {% endfor %}
         </div>
 
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li>
-                    <a href="#" aria-label="Previous">
-                        <span aria-hidden="true">上一页</span>
-                    </a>
+                    {% if friends.has_previous %}
+                        <a href="{% url 'closends:setting:get_group_friends' current_group friends.previous_page_number %}">上一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
                 </li>
                 <li>
-                    <a href="#" aria-label="Next">
-                        <span aria-hidden="true">下一页</span>
-                    </a>
+                    <span>{{ friends.number }} / {{ friends.paginator.num_pages }}</span>
+                </li>
+                <li>
+                    {% if friends.has_next %}
+                        <a href="{% url 'closends:setting:get_group_friends' current_group friends.next_page_number %}">下一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
                 </li>
             </ul>
         </nav>
