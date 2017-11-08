@@ -3,10 +3,10 @@
     @date: 2017/11/04
     @desc: Items of zhihu scraping
 """
-from base_item import ScrapeItem
+from base_item import SocialMediaItem
 
 
-class ZhihuItem(ScrapeItem):
+class ZhihuItem(SocialMediaItem):
     pass
 
 
