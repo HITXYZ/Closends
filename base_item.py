@@ -5,5 +5,5 @@
 """
 
 
-class ScrapeItem:
+class SocialMediaItem:
     pass
