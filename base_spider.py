@@ -5,5 +5,5 @@
 """
 
 
-class Spider:
+class SocialMediaSpider:
     pass
