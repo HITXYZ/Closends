@@ -28,8 +28,8 @@ user_fans_container = 100505
 login_url = 'https://passport.weibo.cn/signin/login'
 user_profile_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}&luicode=10000012&type=uid&value={uid2}'
 user_info_url = 'https://m.weibo.cn/api/container/getIndex?containerid=230283{uid1}_-_INFO' \
-                '&title=%%25E5%%259F%%25BA%%25E6%%259C%%25AC%%25E4%%25BF%%25A1%%25E6%%2581%%25AF' \
-                '&luicode=10000011&lfid=230283{uid2}'
+                '&title=%25E5%259F%25BA%25E6%259C%25AC%25E4%25BF%25A1%25E6%2581%25AF&luicode=10000011' \
+                '&lfid=230283{uid2}'
 user_weibo_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}' \
                  '&luicode=10000012&containerid=107603{uid2}&page={page}'
 user_follow_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FOLLOWERS&page={page}'
