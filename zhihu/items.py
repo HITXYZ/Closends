@@ -6,10 +6,12 @@
 from base_item import SocialMediaItem
 
 
+# 知乎条目基类
 class ZhihuItem(SocialMediaItem):
     pass
 
 
+# 知乎用户信息条目类
 class ZhihuUserItem(ZhihuItem):
     def __init__(self):
         self.id = id                        # ID
@@ -70,6 +72,7 @@ class ZhihuUserItem(ZhihuItem):
         return hash(self.name)
 
 
+# 知乎用户教育经历条目类
 class ZhihuEducationItem(ZhihuItem):
     def __init__(self):
         self.school = None      # 学校
@@ -83,10 +86,11 @@ class ZhihuEducationItem(ZhihuItem):
         return hash(self.__str__())
 
 
+# 知乎用户职业经历条目类
 class ZhihuEmploymentItem(ZhihuItem):
     def __init__(self):
-        self.company = None
-        self.job = None
+        self.company = None     # 公司名
+        self.job = None         # 职位名
 
     def __str__(self):
         string = 'Company: ' + str(self.company) + ', Job: ' + str(self.job)
@@ -96,17 +100,18 @@ class ZhihuEmploymentItem(ZhihuItem):
         return hash(self.__str__())
 
 
+# 知乎问题条目类
 class ZhihuQuestionItem(ZhihuItem):
     def __init__(self):
-        self.id = 0
-        self.title = None
-        self.create_time = None
-        self.update_time = None
-        self.content = None
-        self.follower_count = 0
-        self.visit_count = 0
-        self.comment_count = 0
-        self.topics = []
+        self.id = 0                 # 问题ID
+        self.title = None           # 标题
+        self.create_time = None     # 创建时间
+        self.update_time = None     # 更新时间
+        self.content = None         # 内容
+        self.follower_count = 0     # 关注数
+        self.visit_count = 0        # 浏览数
+        self.comment_count = 0      # 评论数
+        self.topics = []            # 话题标签列表
 
     def __str__(self):
         string = ''
@@ -125,16 +130,17 @@ class ZhihuQuestionItem(ZhihuItem):
         return hash(self.id)
 
 
+# 知乎答案条目类
 class ZhihuAnswerItem(ZhihuItem):
     def __init__(self):
-        self.id = 0
-        self.author = None
-        self.question_id = 0
-        self.create_time = None
-        self.update_time = None
-        self.content = None
-        self.voteup_count = None
-        self.comment_count = None
+        self.id = 0                 # 答案ID
+        self.author = None          # 答主
+        self.question_id = 0        # 问题ID
+        self.create_time = None     # 创建时间
+        self.update_time = None     # 更新时间
+        self.content = None         # 内容
+        self.voteup_count = None    # 赞同数
+        self.comment_count = None   # 评论数
 
     def __str__(self):
         string = ''

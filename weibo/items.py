@@ -6,22 +6,24 @@
 from base_item import SocialMediaItem
 
 
+# 微博条目基类
 class WeiboItem(SocialMediaItem):
     pass
 
 
+# 微博用户信息条目类
 class WeiboUserItem(WeiboItem):
     def __init__(self):
-        self.id = None
-        self.name = None
-        self.gender = None
-        self.avatar_url = None
-        self.location = None
-        self.description = None
-        self.signup_time = None
-        self.weibo_count = 0
-        self.follow_count = 0
-        self.fans_count = 0
+        self.id = None              # 用户ID
+        self.name = None            # 用户名
+        self.gender = None          # 性别
+        self.avatar_url = None      # 头像链接
+        self.location = None        # 所在地
+        self.description = None     # 个人简介
+        self.signup_time = None     # 注册时间
+        self.weibo_count = 0        # 微博数
+        self.follow_count = 0       # 关注数
+        self.fans_count = 0         # 粉丝数
 
     def __str__(self):
         string = ''
@@ -41,14 +43,15 @@ class WeiboUserItem(WeiboItem):
         return hash(self.id)
 
 
+# 微博内容条目类
 class WeiboContentItem(WeiboItem):
     def __init__(self):
-        self.id = None
-        self.owner = 0
-        self.time = None
-        self.content = None
-        self.source = None
-        self.pictures = []
+        self.id = None          # 微博ID
+        self.owner = 0          # 博主
+        self.time = None        # 时间
+        self.content = None     # 内容
+        self.source = None      # 来源
+        self.pictures = []      # 图片列表
 
     def __str__(self):
         string = ''
@@ -64,14 +67,15 @@ class WeiboContentItem(WeiboItem):
         return hash(self.id)
 
 
+# 微博转发内容条目类
 class WeiboRepostContentItem(WeiboContentItem):
     def __init__(self):
         WeiboContentItem.__init__(self)
-        self.source_id = None
-        self.source_owner = 0
-        self.source_time = None
-        self.source_content = None
-        self.source_pictures = []
+        self.source_id = None           # 原博ID
+        self.source_owner = 0           # 原博主
+        self.source_time = None         # 原博时间
+        self.source_content = None      # 原博内容
+        self.source_pictures = []       # 原博图片列表
 
     def __str__(self):
         string = WeiboContentItem.__str__(self)

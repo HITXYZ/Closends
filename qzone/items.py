@@ -6,14 +6,16 @@
 from base_item import SocialMediaItem
 
 
+# QQ空间条目基类
 class QzoneItem(SocialMediaItem):
     pass
 
 
+# QQ空间用户信息条目类
 class QzoneUserItem(QzoneItem):
     def __init__(self):
-        self.qq = None
-        self.name = None
+        self.qq = None      # QQ号
+        self.name = None    # 昵称
 
     def __str__(self):
         return 'QQ: ' + str(self.qq) + '; Name: ' + str(self.name)
@@ -22,18 +24,19 @@ class QzoneUserItem(QzoneItem):
         return hash(self.qq)
 
 
+# QQ空间说说条目类
 class QzoneEmotionItem(QzoneItem):
     def __init__(self):
-        self.id = None
-        self.owner = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.pictures = []
-        self.source_name = None
-        self.location = None
-        self.visitors = []
-        self.likers = []
-        self.comments = []
+        self.id = None                  # 说说ID
+        self.owner = QzoneUserItem()    # 主人
+        self.time = None                # 时间
+        self.content = None             # 内容
+        self.pictures = []              # 图片列表
+        self.source_name = None         # 设备名称
+        self.location = None            # 位置
+        self.visitors = []              # 浏览者列表
+        self.likers = []                # 点赞者列表
+        self.comments = []              # 评论列表
 
     def __str__(self):
         string = ''
@@ -52,11 +55,12 @@ class QzoneEmotionItem(QzoneItem):
         return hash(self.id)
 
 
+# QQ空间转发说说条目类
 class QzoneRepostEmotionItem(QzoneEmotionItem):
     def __init__(self):
         QzoneEmotionItem.__init__(self)
-        self.repost_source = QzoneUserItem()
-        self.repost_reason = None
+        self.repost_source = QzoneUserItem()    # 转发来源
+        self.repost_reason = None               # 转发理由
 
     def __str__(self):
         string = QzoneEmotionItem.__str__(self)
@@ -68,13 +72,14 @@ class QzoneRepostEmotionItem(QzoneEmotionItem):
         return hash(self.id)
 
 
+# QQ空间说说评论条目类
 class QzoneCommentItem(QzoneItem):
     def __init__(self):
-        self.commenter = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.pictures = []
-        self.replies = []
+        self.commenter = QzoneUserItem()    # 评论者
+        self.time = None                    # 评论时间
+        self.content = None                 # 评论内容
+        self.pictures = []                  # 评论图片列表
+        self.replies = []                   # 评论回复列表
 
     def __str__(self):
         string = ''
@@ -89,12 +94,13 @@ class QzoneCommentItem(QzoneItem):
         return hash(self.content)
 
 
+# QQ空间说说评论回复条目类
 class QzoneCommentReplyItem(QzoneItem):
     def __init__(self):
-        self.replier = QzoneUserItem()
-        self.replyto = QzoneUserItem()
-        self.time = None
-        self.content = None
+        self.replier = QzoneUserItem()      # 回复者
+        self.replyto = QzoneUserItem()      # 回复对象
+        self.time = None                    # 回复时间
+        self.content = None                 # 回复内容
 
     def __str__(self):
         return str(self.replier.name) + ' reply to ' + str(self.replyto.name) + ': ' + str(self.content)
@@ -103,14 +109,15 @@ class QzoneCommentReplyItem(QzoneItem):
         return hash(self.content)
 
 
+# QQ空间留言条目类
 class QzoneMessageItem(QzoneItem):
     def __init__(self):
-        self.id = None
-        self.owner = QzoneUserItem()
-        self.poster = QzoneUserItem()
-        self.time = None
-        self.content = None
-        self.replies = []
+        self.id = None                      # 留言ID
+        self.owner = QzoneUserItem()        # 主人
+        self.poster = QzoneUserItem()       # 留言者
+        self.time = None                    # 留言时间
+        self.content = None                 # 留言内容
+        self.replies = []                   # 留言回复列表
 
     def __str__(self):
         string = ''
@@ -125,11 +132,12 @@ class QzoneMessageItem(QzoneItem):
         return hash(self.id)
 
 
+# QQ空间留言回复条目类
 class QzoneMessageReplyItem(QzoneItem):
     def __init__(self):
-        self.replier = QzoneUserItem()
-        self.time = None
-        self.content = None
+        self.replier = QzoneUserItem()      # 回复者
+        self.time = None                    # 回复时间
+        self.content = None                 # 回复内容
 
     def __str__(self):
         return str(self.replier.name) + 'replied: ' + str(self.content)
