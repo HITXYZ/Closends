@@ -10,6 +10,7 @@ from django.shortcuts import render, render_to_response, HttpResponse, HttpRespo
 import json
 from .models import *
 from .user_binding import *
+from .check_account import *
 
 
 @csrf_exempt
@@ -302,16 +303,54 @@ def add_friend(request):
     return render(request, 'closends/add_friends.html')
 
 
+
 @csrf_exempt
 @login_required
-def add_qq_friend(request):
+def add_friend_info(request):
     if request.method == 'POST':
         user = request.user.userinfo
-        qq = request.POST['qq']
-        # check qq account
-        user.friend_set
+        head_img = request.FILES['head_img']
+        nickname = request.POST['nickname']
+        if user.friend_set.filter(nickname=nickname):
+            result = {'status':'error', 'error_msg': 'nickname_exist'}
+            return HttpResponse(json.dumps(result), content_type='application/json')
+        user.friend_set.create(nickname=nickname, head_img=head_img)
+        user.save()
+        result = {'status': 'success'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def add_found_weibo_friend(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        account = request.POST['account']
+        link = request.POST['link']
+        user.friend_set.weibo_mark = account + ',' + link
+        user.save()
+        result = {'status': 'success'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+@csrf_exempt
+@login_required
+def query_weibo_friend_by_link(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        weibo_link = request.POST['weibo_link']
         result = {}
-        return HttpResponse(json.dumps(result), content_type='application')
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def query_weibo_friend_by_account(request):
+    if request.method == 'POST':
+        weibo_account = request.POST['weibo_account']
+        person_html = check_weibo_user(weibo_account)
+        result = {'status':'success', 'person_html':person_html}
+        print(person_html)
+        return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @csrf_exempt

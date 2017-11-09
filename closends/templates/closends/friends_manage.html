@@ -1,8 +1,7 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
-    <script src="/static/closends/js/bootstrap.min.js"></script>
-    <script src="/static/closends/js/jquery.min.js"></script>
+    <script src="/static/closends/js/bootstrap.js"></script>
 
     <style>
         .friend_list{
@@ -104,7 +103,6 @@
                         data: group_name,
                         async: false,
                         success: function (ret) {
-                            alert(ret.group_url);
                             if(ret.status === 'success'){
                                 $(".friend_list").children().last().before('<div><a href=""><button class="btn">' + ret.group_name + '</button></a></div>');
                                 $(".friend_list").children().last().prev().children().first().attr('href', ret.group_url)

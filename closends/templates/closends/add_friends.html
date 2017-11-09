@@ -1,7 +1,8 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
-{#    <link href="/static/closends/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">#}
+    <script src="/static/closends/js/bootstrap.js"></script>
 
     <style>
         .content_box {
@@ -10,16 +11,321 @@
             margin-top: 10%;
             margin-left: 2%;
         }
+
+        .content_box .head_image{
+            margin-top: 5%;
+            margin-left: 40%;
+        }
+
+        .content_box .head_image img{
+            width: 140px;
+            height: 140px;
+        }
+
+        .content_box .head_image form{
+            margin-left: 10%;
+            margin-top: -18%;
+        }
+
+        .content_box .head_image input{
+            margin-left: 20%;
+            position:absolute;
+            clip:rect(0 0 0 0);
+        }
+
+        .content_box .head_image .ui_button {
+            display: inline-block;
+            width: 20px;
+            line-height: 28px;
+            font-size: 12px;
+            text-align: center;
+            color: grey;
+            border: 1px solid #d0d0d5;
+            border-radius: 4px;
+            padding: 0 15px;
+            min-width: 50px;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transition: border-color .15s, background-color .15s;
+            transition: border-color .15s, background-color .15s;
+            outline: 0 none;
+            cursor: pointer;
+            overflow: visible;
+            opacity: 0.7;
+        }
+
+        .content_box .friend_mark{
+            width: 30%;
+            margin-top: 10%;
+            margin-left: 35%;
+        }
+
+        .content_box .friend_mark strong{
+            display: none;
+        }
+
+        .content_box .site_logo{
+            margin-top: 10%;
+            margin-left: 30%;
+        }
+
+        .content_box .site_logo div{
+            margin-left: 3%;
+        }
+
+        .content_box .site_logo img{
+            width: 50px;
+            height: 50px;
+        }
+
+        #weibo_modal{
+            margin-top: 5%;
+            position: fixed;
+        }
+
+        #weibo_modal .modal-content{
+            margin-left: 10%;
+        }
+
+        #weibo_modal .modal-body .nav{
+            margin-left: 30%;
+        }
+
+        #weibo_modal .modal-body .tab-content{
+            margin-top: 5%;
+        }
+
+        #weibo_modal #link_add_form, #account_add_form{
+            width: 80%;
+            margin-left: 10%;
+        }
+
+        #weibo_modal .modal-body .search_result{
+            margin-top: 5%;
+            display: none;
+        }
+
+        #weibo_modal .modal-body .search_result .person{
+            height: 166px;
+            width: 80%;
+            margin-top: 3%;
+            margin-left: 12%;
+            background-color: whitesmoke;
+        }
+
+        #weibo_modal .modal-body .search_result .person .W_face_radius {
+            border-radius: 50%;
+        }
+
+        #weibo_modal .modal-body .search_result .person .person_pic {
+            float: left;
+            margin-left: 3%;
+            margin-top: 5%;
+        }
+
+        #weibo_modal .modal-body .search_result .person .person_detail p{
+            width: 80%;
+            font-size: 12px;
+            margin-left: 25%;
+        }
+
+        #weibo_modal .modal-body .check_found_weibo_user{
+            margin-top: 2%;
+            display: none;
+        }
+
     </style>
+
 {% endblock %}
 
 {% block content_box %}
     <div class="col-md-8 content_box">
+        <div class="head_image">
+            <img id="friend_head_image" class="img-circle" src="/static/closends/img/default_head.svg">
+            <form>
+                <label class="ui_button ui_button_primary" for="upload_friend_head_img">+</label>
+                <input id="upload_friend_head_img" name="head_image" type="file">
+            </form>
+        </div>
+
+        <div class="friend_mark">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="nickname" placeholder="昵称">
+                </div>
+
+                <!--还差一个分组-->
+
+                <div class="form-group text-center">
+                    <strong></strong>
+                </div>
+                <div class="form-group text-center">
+                    <button id="add_friend" type="button" class="btn">添加</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row site_logo">
+            <div class="col-md-1">
+                <img id="qq_logo" class="img-circle" src="/static/closends/img/qq.jpg">
+            </div>
+            <div class="col-md-1">
+                <img id="weibo_logo" class="img-circle" src="/static/closends/img/weibo.png">
+            </div>
+            <div class="col-md-1">
+                <img id="zhihu_logo" class="img-circle" src="/static/closends/img/zhihu.jpg">
+            </div>
+            <div class="col-md-1">
+                <img id="tieba_logo" class="img-circle" src="/static/closends/img/tieba.jpg">
+            </div>
+        </div>
+    </div>
+
+    <div id="weibo_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <ul class="nav nav-pills">
+                        <li class="active"><a href="#account_add_form" data-toggle="tab">用户名添加</a></li>
+                        <li class=""><a href="#link_add_form" data-toggle="tab">链接添加</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form id="account_add_form" class="form-inline tab-pane active">
+                             <div class="form-group">
+                                <input id="weibo_account" type="text" class="form-control" name="weibo_account" placeholder="Weibo Account">
+                            </div>
+
+                            <div class="form-group">
+                                <button id="query_weibo_friend_by_account" type="button" class="btn btn-default">确认</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </form>
+                        <form id="link_add_form" class="form-inline tab-pane">
+                            <div class="form-group">
+                                <input id="weibo_link" type="text" class="form-control" name="weibo_link" placeholder="Weibo Link">
+                            </div>
+
+                            <div class="form-group">
+                                <button id="adding_weibo_friend_by_link" type="button" class="btn btn-default">确认</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="search_result text-left">
+                        <div class="person"></div>
+                    </div>
+
+                    <div class="check_found_weibo_user">
+                        <button id="adding_found_weibo_user" type="button" class="btn btn-default">确认添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         $(document).ready(function () {
+            //预览用户上传的图片
+            $("#upload_friend_head_img").on('change', function () {
+                if(this.files.length > 0) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#friend_head_image").attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
 
+            //添加好友基本信息
+            $("#add_friend").on("click", function () {
+                if($(this).text() === "添加"){
+                    let img = $("#upload_friend_head_img")[0].files[0];
+                    let nickname = $("#nickname").val();
+                    let friend = new FormData();
+                    friend.append('head_img', img);
+                    friend.append('nickname', nickname);
+                    $.ajax({
+                            url: "{% url 'closends:setting:add_friend_info' %}",
+                            type: "post",
+                            datatype: "json",
+                            data: friend,
+                            processData:false,  // 告诉jquery不转换数据
+                            contentType:false,  // 告诉jquery不设置内容格式
+                            async: false,
+                            success: function (ret) {
+                                if(ret.status === 'success'){
+                                    $("#nickname").attr('readonly', true);
+                                    $(".friend_mark strong").css('display', 'block').text("添加成功！");
+                                    $("#add_friend").text("继续添加");
+                                }
+                                else{
+                                    $(".friend_mark strong").css('display', 'block').text("昵称已存在！");
+                                    $("#add_friend").text("重新添加");
+                                }
+                            }
+                        });//ajax
+                }
+                else{
+                    $(".friend_mark strong").css('display', 'none').text("");
+                    $("#add_friend").text("添加");
+                    $("#nickname").attr('readonly', false).val("");
+                    $("#friend_head_image").attr('src', '/static/closends/img/default_head.svg');
+                }
+
+            });
+
+            $("#weibo_logo").on("click", function () {
+                $("#weibo_modal").modal('show');
+            });
+            
+            $("#query_weibo_friend_by_account").on("click", function () {
+                let account = $("#account_add_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_weibo_friend_by_account' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: account,
+                        async: false,
+                        success: function (ret) {
+                            $("#weibo_modal .search_result").css('display', 'block');
+                            if(ret.status === 'success'){
+                                $("#weibo_modal .search_result .person").empty();
+                                $("#weibo_modal .search_result .person").append(ret.person_html);
+                                $(".check_found_weibo_user").css('display', 'block');
+                            }
+                            else{
+                                $("#weibo_modal .search_result .person").append("<p>查询失败,请直接添加链接!</p>");
+                            }
+                        }
+                    });//ajax
+            });
+            
+            $("#adding_found_weibo_user").on("click", function () {
+                let account = $(".person_name a em").text();
+                let link = $(".person_name a").attr('href');
+                alert(account, link);
+                $(".check_found_weibo_user").css('display', 'none');
+                $("#weibo_modal .search_result").css('display', 'none');
+                $.ajax({
+                        url: "{% url 'closends:setting:add_found_weibo_friend' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: {'account':account, 'link':link},
+                        async: false,
+                        success: function (ret) {
+                            $("#weibo_modal .search_result").css('display', 'block');
+                            if(ret.status === 'success'){
+                                $("#weibo_modal .search_result .person").empty();
+                                $("#weibo_modal .search_result .person").append("<p>添加成功!</p>");
+                            }
+                            else{
+                            }
+                        }
+                    });//ajax
+            })
         });
     </script>
 {% endblock %}
