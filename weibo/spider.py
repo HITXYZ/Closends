@@ -3,6 +3,7 @@
     @date: 2017/10/05
     @desc: Scraper for sina weibo
 """
+import time
 import datetime
 import logging
 import os
@@ -268,61 +269,26 @@ class WeiboSpider(SocialMediaSpider):
     def search_user(self, user=None, number=1):
         if user is None:
             raise MethodParamError('The user name can\'t be empty!')
+        wait = WebDriverWait(driver, 3)
         driver.get(search_url.format(user=quote(user)))
         try:
-            count = 0
-            while count < 10:    # 最多尝试5次
-                captcha_image_parent= driver.find_element_by_class_name('code_img')   # 需要验证码
-                captcha_image = captcha_image_parent.find_element_by_tag_name('img')
-                captcha_input_parent = driver.find_element_by_class_name('code_input')
-                captcha_input = captcha_input_parent.find_element_by_tag_name('input')
-                captcha_button_parent = driver.find_element_by_class_name('code_btn')
-                captcha_button = captcha_button_parent.find_element_by_tag_name('a')
-                urlretrieve(captcha_image.get_attribute('src'), 'captcha' + str(count) + '.png')
-                image = Image.open('captcha' + str(count) + '.png')     # 图片大小：104*30
-                image = image.convert('RGB')
-                pixels = image.load()
-                record = []
-                for i in range(image.size[0]):
-                    for j in range(image.size[1]):
-                        if is_light(pixels[i, j]):      # 将浅色变为白色
-                            pixels[i, j] = (255, 255, 255, 255)
-                        elif 0 < i < image.size[0] - 1 and 0 < j < image.size[1] - 1:
-                            if i < image.size[0] - 1 and is_light(pixels[i-1, j]) and is_light(pixels[i, j-1]) \
-                            and is_light(pixels[i+1, j]) and is_light(pixels[i, j+1]):      # 将黑色噪点变为白色
-                                pixels[i, j] = (255, 255, 255, 255)
-                            else:       # 有效像素点
-                                pixels[i, j] = (0, 0, 0, 255)
-                                record.append((i, j))
-                        elif i == 0 and 0 <= j < image.size[1] - 1:
-                            if is_light(pixels[i+1, j]) and is_light(pixels[i, j+1]):
-                                pixels[i, j] = (255, 255, 255, 255)
-                        elif 0 < i <= image.size[0] - 1 and j == 0:
-                            if is_light(pixels[i-1, j]) and is_light(pixels[i, j+1]):
-                                pixels[i, j] = (255, 255, 255, 255)
-                        elif i == image.size[0] - 1 and 0 < j <= image.size[1] - 1:
-                            if is_light(pixels[i-1, j]) and is_light(pixels[i, j-1]):
-                                pixels[i, j] = (255, 255, 255, 255)
-                        elif 0 <= i < image.size[0] - 1 and j == image.size[1] - 1:
-                            if is_light(pixels[i, j-1]) and is_light(pixels[i+1, j]):
-                                pixels[i, j] = (255, 255, 255, 255)
-                image = ImageOps.invert(image)
-                image.save('captcha' + str(count) + '.png')
-                code = image_to_string(image)
-                print(count, code)
-                captcha_input.clear()
-                captcha_input.send_keys(code)
-                captcha_button.click()
-                count += 1
+            captcha_image_parent= driver.find_element_by_class_name('code_img')   # 需要验证码
+            captcha_image = captcha_image_parent.find_element_by_tag_name('img')
+            captcha_input_parent = driver.find_element_by_class_name('code_input')
+            captcha_input = captcha_input_parent.find_element_by_tag_name('input')
+            captcha_button = driver.find_element_by_class_name('code_btn')
+            urlretrieve(captcha_image.get_attribute('src'), 'captcha.png')
+            image = Image.open('captcha.png')
+            image.show()
+            code = input('Please input the captcha to continue:')
+            captcha_input.clear()
+            captcha_input.send_keys(code)
+            captcha_button.click()
         except NoSuchElementException:      # 无需验证码
             pass
         except OSError:     # 无法识别图片
             return []
-        wait = WebDriverWait(driver, 3)
-        try:
-            wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
-        except TimeoutException:    # 未查找到用户
-            return []
+        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
         items = driver.find_elements_by_class_name('list_person')
         if len(items) >= number:    # 截取前number个搜索结果
             items = items[:number]
