@@ -5,11 +5,15 @@
 """
 import datetime
 import logging
+import os
 import requests
+from bs4 import BeautifulSoup
+from urllib.request import quote
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 from exceptions import LoginError, MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
@@ -34,8 +38,7 @@ user_weibo_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}' \
                  '&luicode=10000012&containerid=107603{uid2}&page={page}'
 user_follow_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FOLLOWERS&page={page}'
 user_fans_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FANS&page={page}'
-
-driver = webdriver.PhantomJS('../phantomjs')
+search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
 log_file = "./logs/weibo-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
@@ -49,25 +52,6 @@ class WeiboSpider(SocialMediaSpider):
         self.scraped_follows = {}
         self.scraped_fans = {}
         self.scraped_weibos = {}
-
-    def login(self, account=None, password=None):
-        if account is None or password is None:
-            raise LoginError('\'account\' or \'password\' can\'t be NoneType!')
-        logging.info('Login to weibo of account: %s...' % account)
-        driver.get(login_url)
-        wait = WebDriverWait(driver, 5)
-        wait.until(ec.visibility_of_element_located((By.ID, 'loginAction')))
-        driver.find_element_by_id('loginName').clear()
-        driver.find_element_by_id('loginName').send_keys(account)
-        driver.find_element_by_id('loginPassword').clear()
-        driver.find_element_by_id('loginPassword').send_keys(password)
-        driver.find_element_by_id('loginAction').click()
-        wait.until(ec.url_to_be('https://m.weibo.cn/'))
-
-        self.cookies = {}
-        for item in driver.get_cookies():
-            self.cookies[item['name']] = item['value']
-        logging.info('Succeed in logining to weibo of account: %s.' % account)
 
     def scrape_info(self, id=None):
         if not isinstance(id, int):
@@ -272,18 +256,35 @@ class WeiboSpider(SocialMediaSpider):
         self.scraped_weibos[id] = weibos
         return weibos
 
+    def search_user(self, user=None, number=1):
+        if user is None:
+            raise MethodParamError('The user name can\'t be empty!')
+        driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
+        driver.get(search_url.format(user=quote(user)))
+        wait = WebDriverWait(driver, 3)
+        try:
+            wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
+        except TimeoutException:    # 未查找到用户
+            return []
+        items = driver.find_elements_by_class_name('list_person')
+        if len(items) >= number:    # 截取前number个搜索结果
+            items = items[:number]
+        return [item.get_attribute('innerHTML') for item in items]
 
 if __name__ == '__main__':
     spider = WeiboSpider()
-    info = spider.scrape_info(5648343109)
-    follows = spider.scrape_follows(5648343109, 20)
-    fans = spider.scrape_fans(5648343109, 20)
-    weibos = spider.scrape_weibo(3087483957, 20)
+    # info = spider.scrape_info(5648343109)
+    # follows = spider.scrape_follows(5648343109, 20)
+    # fans = spider.scrape_fans(5648343109, 20)
+    # weibos = spider.scrape_weibo(3087483957, 20)
+    users = spider.search_user('于晟建', 3)
 
-    print(info)
-    for follow in follows:
-        print(follow)
-    for fan in fans:
-        print(fans)
-    for weibo in weibos:
-        print(weibo)
+    # print(info)
+    # for follow in follows:
+    #     print(follow)
+    # for fan in fans:
+    #     print(fans)
+    # for weibo in weibos:
+    #     print(weibo)
+    for user in users:
+        print(user)
