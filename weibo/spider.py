@@ -7,14 +7,15 @@ import datetime
 import logging
 import os
 import requests
-from bs4 import BeautifulSoup
-from urllib.request import quote
+from PIL import Image, ImageOps, ImageEnhance
+from pytesseract import image_to_string
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from exceptions import LoginError, MethodParamError
+from urllib.request import quote, urlretrieve
+from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
 
@@ -40,9 +41,17 @@ user_follow_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505
 user_fans_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FANS&page={page}'
 search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
+driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
+
 log_file = "./logs/weibo-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
+
+
+def is_light(rgb):
+    if sum(rgb[:3]) > 500:
+        return True
+    return False
 
 
 class WeiboSpider(SocialMediaSpider):
@@ -259,8 +268,56 @@ class WeiboSpider(SocialMediaSpider):
     def search_user(self, user=None, number=1):
         if user is None:
             raise MethodParamError('The user name can\'t be empty!')
-        driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
         driver.get(search_url.format(user=quote(user)))
+        try:
+            count = 0
+            while count < 10:    # 最多尝试5次
+                captcha_image_parent= driver.find_element_by_class_name('code_img')   # 需要验证码
+                captcha_image = captcha_image_parent.find_element_by_tag_name('img')
+                captcha_input_parent = driver.find_element_by_class_name('code_input')
+                captcha_input = captcha_input_parent.find_element_by_tag_name('input')
+                captcha_button_parent = driver.find_element_by_class_name('code_btn')
+                captcha_button = captcha_button_parent.find_element_by_tag_name('a')
+                urlretrieve(captcha_image.get_attribute('src'), 'captcha' + str(count) + '.png')
+                image = Image.open('captcha' + str(count) + '.png')     # 图片大小：104*30
+                image = image.convert('RGB')
+                pixels = image.load()
+                record = []
+                for i in range(image.size[0]):
+                    for j in range(image.size[1]):
+                        if is_light(pixels[i, j]):      # 将浅色变为白色
+                            pixels[i, j] = (255, 255, 255, 255)
+                        elif 0 < i < image.size[0] - 1 and 0 < j < image.size[1] - 1:
+                            if i < image.size[0] - 1 and is_light(pixels[i-1, j]) and is_light(pixels[i, j-1]) \
+                            and is_light(pixels[i+1, j]) and is_light(pixels[i, j+1]):      # 将黑色噪点变为白色
+                                pixels[i, j] = (255, 255, 255, 255)
+                            else:       # 有效像素点
+                                pixels[i, j] = (0, 0, 0, 255)
+                                record.append((i, j))
+                        elif i == 0 and 0 <= j < image.size[1] - 1:
+                            if is_light(pixels[i+1, j]) and is_light(pixels[i, j+1]):
+                                pixels[i, j] = (255, 255, 255, 255)
+                        elif 0 < i <= image.size[0] - 1 and j == 0:
+                            if is_light(pixels[i-1, j]) and is_light(pixels[i, j+1]):
+                                pixels[i, j] = (255, 255, 255, 255)
+                        elif i == image.size[0] - 1 and 0 < j <= image.size[1] - 1:
+                            if is_light(pixels[i-1, j]) and is_light(pixels[i, j-1]):
+                                pixels[i, j] = (255, 255, 255, 255)
+                        elif 0 <= i < image.size[0] - 1 and j == image.size[1] - 1:
+                            if is_light(pixels[i, j-1]) and is_light(pixels[i+1, j]):
+                                pixels[i, j] = (255, 255, 255, 255)
+                image = ImageOps.invert(image)
+                image.save('captcha' + str(count) + '.png')
+                code = image_to_string(image)
+                print(count, code)
+                captcha_input.clear()
+                captcha_input.send_keys(code)
+                captcha_button.click()
+                count += 1
+        except NoSuchElementException:      # 无需验证码
+            pass
+        except OSError:     # 无法识别图片
+            return []
         wait = WebDriverWait(driver, 3)
         try:
             wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
@@ -271,13 +328,16 @@ class WeiboSpider(SocialMediaSpider):
             items = items[:number]
         return [item.get_attribute('innerHTML') for item in items]
 
+
 if __name__ == '__main__':
     spider = WeiboSpider()
     # info = spider.scrape_info(5648343109)
     # follows = spider.scrape_follows(5648343109, 20)
     # fans = spider.scrape_fans(5648343109, 20)
     # weibos = spider.scrape_weibo(3087483957, 20)
-    users = spider.search_user('于晟建', 3)
+    for i in range(20):
+        users = spider.search_user('许家乐', 3)
+        print(users)
 
     # print(info)
     # for follow in follows:
@@ -286,5 +346,3 @@ if __name__ == '__main__':
     #     print(fans)
     # for weibo in weibos:
     #     print(weibo)
-    for user in users:
-        print(user)
