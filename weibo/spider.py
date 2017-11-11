@@ -3,28 +3,13 @@
     @date: 2017/10/05
     @desc: Scraper for sina weibo
 """
-import time
 import datetime
 import logging
-import os
 import requests
-from PIL import Image, ImageOps, ImageEnhance
-from pytesseract import image_to_string
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from urllib.request import quote, urlretrieve
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
 
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-}
 
 user_info_container = 230283
 user_weibo_container = 107603
@@ -40,19 +25,10 @@ user_weibo_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}' \
                  '&luicode=10000012&containerid=107603{uid2}&page={page}'
 user_follow_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FOLLOWERS&page={page}'
 user_fans_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FANS&page={page}'
-search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
-
-driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
 
 log_file = "./logs/weibo-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
-
-
-def is_light(rgb):
-    if sum(rgb[:3]) > 500:
-        return True
-    return False
 
 
 class WeiboSpider(SocialMediaSpider):
@@ -266,49 +242,18 @@ class WeiboSpider(SocialMediaSpider):
         self.scraped_weibos[id] = weibos
         return weibos
 
-    def search_user(self, user=None, number=1):
-        if user is None:
-            raise MethodParamError('The user name can\'t be empty!')
-        wait = WebDriverWait(driver, 3)
-        driver.get(search_url.format(user=quote(user)))
-        try:
-            captcha_image_parent= driver.find_element_by_class_name('code_img')   # 需要验证码
-            captcha_image = captcha_image_parent.find_element_by_tag_name('img')
-            captcha_input_parent = driver.find_element_by_class_name('code_input')
-            captcha_input = captcha_input_parent.find_element_by_tag_name('input')
-            captcha_button = driver.find_element_by_class_name('code_btn')
-            urlretrieve(captcha_image.get_attribute('src'), 'captcha.png')
-            image = Image.open('captcha.png')
-            image.show()
-            code = input('Please input the captcha to continue:')
-            captcha_input.clear()
-            captcha_input.send_keys(code)
-            captcha_button.click()
-        except NoSuchElementException:      # 无需验证码
-            pass
-        except OSError:     # 无法识别图片
-            return []
-        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
-        items = driver.find_elements_by_class_name('list_person')
-        if len(items) >= number:    # 截取前number个搜索结果
-            items = items[:number]
-        return [item.get_attribute('innerHTML') for item in items]
-
 
 if __name__ == '__main__':
     spider = WeiboSpider()
-    # info = spider.scrape_info(5648343109)
-    # follows = spider.scrape_follows(5648343109, 20)
-    # fans = spider.scrape_fans(5648343109, 20)
-    # weibos = spider.scrape_weibo(3087483957, 20)
-    for i in range(20):
-        users = spider.search_user('许家乐', 3)
-        print(users)
+    info = spider.scrape_info(5648343109)
+    follows = spider.scrape_follows(5648343109, 20)
+    fans = spider.scrape_fans(5648343109, 20)
+    weibos = spider.scrape_weibo(3087483957, 20)
 
-    # print(info)
-    # for follow in follows:
-    #     print(follow)
-    # for fan in fans:
-    #     print(fans)
-    # for weibo in weibos:
-    #     print(weibo)
+    print(info)
+    for follow in follows:
+        print(follow)
+    for fan in fans:
+        print(fans)
+    for weibo in weibos:
+        print(weibo)
