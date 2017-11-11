@@ -1,6 +1,8 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
+    <script src="/static/closends/js/bootstrap.js"></script>
+
     <style>
         .content_box{
             background-color: whitesmoke;
@@ -19,6 +21,77 @@
         .content_box .content_line .line_item{
             margin-top: 1%;
         }
+
+        .content_box .content_line button{
+            margin-top: -2%;
+        }
+
+        .content_box .head_image{
+            margin-left: 38%;
+            margin-top: 2%;
+            height: 150px;
+            display: none;
+        }
+
+        .content_box .head_image img{
+            width: 140px;
+            height: 140px;
+        }
+
+        .content_box .head_image form{
+            margin-left: 10%;
+            margin-top: -18%;
+        }
+
+        .content_box .head_image input{
+            margin-left: 20%;
+            position:fixed;
+            clip:rect(0 0 0 0);
+        }
+
+        .content_box .head_image button{
+            margin-top: 5%;
+            margin-left: 30%;
+            display: none;
+        }
+
+        .content_box .head_image .ui_button {
+            display: inline-block;
+            width: 20px;
+            line-height: 28px;
+            font-size: 12px;
+            text-align: center;
+            color: grey;
+            border: 1px solid #d0d0d5;
+            border-radius: 4px;
+            padding: 0 15px;
+            min-width: 50px;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transition: border-color .15s, background-color .15s;
+            transition: border-color .15s, background-color .15s;
+            outline: 0 none;
+            cursor: pointer;
+            overflow: visible;
+            opacity: 0.7;
+        }
+
+        .content_box .username_update{
+            margin-top: 2%;
+            margin-left: 30%;
+            display: none;
+        }
+
+        .content_box .error_tips{
+            margin-top: 2%;
+            margin-left: 10%;
+            display: none;
+        }
+
+        .content_box .error_tips strong{
+            font-size: 18px;
+        }
     </style>
 {% endblock %}
 
@@ -26,23 +99,163 @@
     <div class="col-md-8 content_box">
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">头像</div>
-            <div class="col-md-6 line_item">查看</div>
-            <div class="col-md-4 line_item"><a href="#">更改</a></div>
+            <div id="show_head_image" class="col-md-6 line_item">查看</div>
+            <div class="col-md-4 line_item">
+                <div class="head_status" style="display:none">{{ user.image_name }}</div>
+                {% if not user.image_name %}
+                    <button id="show_set_head_image" class="btn btn-primary">设置</button>
+                {% else %}
+                    <button id="show_set_head_image" class="btn btn-primary">更改</button>
+                {% endif %}
+            </div>
         </div>
+        <div class="head_image">
+            <img id="friend_head_image" class="img-circle" src="/media/head/{{ user.image_name }}">
+            <form class="form-horizontal">
+                <label class="ui_button ui_button_primary" for="upload_friend_head_img">+</label>
+                <input id="upload_friend_head_img" name="head_image" type="file">
+            </form>
+            <button id="set_head_image" type="button" class="btn btn-default">确认</button>
+        </div>
+
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">用户名</div>
             <div class="col-md-6 line_item">{{ user.user.username }}</div>
-            <div class="col-md-4 line_item"><a href="#">更改</a></div>
+            <div class="col-md-4 line_item">
+                <button id="show_update_username" class="btn btn-primary">更改</button>
+            </div>
         </div>
+        <div class="username_update">
+            <form id="username_form" class="form-inline">
+                <div class="form-group">
+                    <input type="text" name="username" class="form-control" placeholder="用户名">
+                </div>
+
+                <div class="form-group">
+                    <button id="update_username" type="button" class="btn btn-default">确认</button>
+                </div>
+            </form>
+            <div class="error_tips">
+                <strong>用户名已存在！</strong>
+            </div>
+        </div>
+
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">邮箱</div>
             <div class="col-md-6 line_item">{{ user.user.email }}</div>
-            <div class="col-md-4 line_item"><a href="#">更改</a></div>
+            <div class="col-md-4 line_item">
+                <button class="btn btn-primary">更改</button>
+            </div>
         </div>
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">密码</div>
             <div class="col-md-6 line_item">***************</div>
-            <div class="col-md-4 line_item"><a href="#">更改</a></div>
+            <div class="col-md-4 line_item">
+                <button id="show_update_username" class="btn btn-primary">更改</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            //预览用户上传的图片
+            $("#upload_friend_head_img").on('change', function () {
+            if(this.files.length > 0) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#friend_head_image").attr('src', e.target.result);
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+            //查看头像
+            $("#show_head_image").on("click", function () {
+                if($(this).text() === "查看"){
+                    $(this).text("收起");
+                    $(".head_image").show();
+                    $(".head_image input").attr("disabled", true);
+                }
+                else {
+                    $(this).text("查看");
+                    $(".head_image").hide();
+                    $(".head_image input").attr("disabled", false);
+                }
+            });
+
+            //显示头像设置界面
+            $("#show_set_head_image").on("click", function () {
+                if($(this).text() === "取消"){
+                    if($(".head_status").text())
+                        $(this).text("更改");
+                    else
+                        $(this).text("设置");
+                    $(".head_image").hide();
+                    $(".head_image button").hide();
+                }
+                else{
+                    $(this).text("取消");
+                    $(".head_image").show();
+                    $(".head_image button").show();
+                }
+            });
+
+            //设置or更改头像
+            $("#set_head_image").on("click", function () {
+                let img = $("#upload_friend_head_img")[0].files[0];
+                let head_img = new FormData();
+                head_img.append('head_img', img);
+                $.ajax({
+                    url: "{% url 'closends:setting:set_head_image' %}",
+                    type: "post",
+                    datatype: "json",
+                    data: head_img,
+                    processData:false,  // 告诉jquery不转换数据
+                    contentType:false,  // 告诉jquery不设置内容格式
+                    async: false,
+                    success: function () {
+                        window.location.reload();
+                    }
+                });//ajax
+            });
+
+            //显示用户名更改界面
+            $("#show_update_username").on("click", function () {
+                if($(this).text() === "更改"){
+                    $(this).text("取消");
+                    $(".username_update").show();
+                }
+                else{
+                    $(this).text("更改");
+                    $(".username_update input").val("");
+                    $(".username_update").hide();
+                }
+            });
+
+            //更新用户名
+            $("#update_username").on("click", function () {
+                let username = $("#username_form").serialize();
+                $.ajax({
+                    url: "{% url 'closends:setting:update_username' %}",
+                    type: "post",
+                    datatype: "json",
+                    data: username,
+                    async: false,
+                    success: function (ret) {
+                        if(ret.status === "success")
+                            window.location.reload();
+                        else{
+                            $(".error_tips").show();
+                        }
+                    }
+                });//ajax
+            });
+
+            //隐藏错误提示
+            $("#username_form input").on("focus", function () {
+                $(".error_tips").hide();
+            })
+        });
+
+    </script>
 {% endblock %}

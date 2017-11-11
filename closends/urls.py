@@ -3,7 +3,10 @@ from django.conf.urls import url, include
 
 settingpatterns = [
     url(r'index$', user_info, name='setting_index'),
+
     url(r'user_info$', user_info, name='user_info'),
+    url(r'user_info/set_head_image$', set_head_image, name='set_head_image'),
+    url(r'user_info/update_username$', update_username, name='update_username'),
 
     url(r'user_binding$', user_binding, name='user_binding'),
     url(r'user_binding/query_weibo_user$', query_weibo_user, name='query_weibo_user'),

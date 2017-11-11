@@ -10,6 +10,11 @@ class UserInfo(models.Model):
     def __str__(self):
         return self.user.username
 
+    def image_name(self):
+        if not self.head_img.name:
+            return 'default_head.svg'
+        return self.head_img.name.split('/')[-1]
+
     user = models.OneToOneField(User)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR+'/media/head')
     group_list = models.CharField(default='未分组', max_length=1024)
