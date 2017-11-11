@@ -29,7 +29,7 @@ def search_user(user=None, number=1):
     user_tokens = []
     user_htmls = []
     user_ul = bs.find('ul', {'class': 'users'})
-    if user_ul is None:
+    if user_ul is None:     # 未搜索到任何用户
         return [], []
     user_lis = user_ul.find_all('li')
     if len(user_lis) > number:
@@ -41,8 +41,8 @@ def search_user(user=None, number=1):
 
 
 if __name__ == '__main__':
-    user_tokens, user_htmls = search_user('张刚', 3)
-    for user_token in user_tokens:
+    tokens, htmls = search_user('于晟建', 3)
+    for user_token in tokens:
         print(user_token)
-    for user_html in user_htmls:
+    for user_html in htmls:
         print(user_html)
