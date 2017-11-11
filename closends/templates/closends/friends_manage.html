@@ -1,6 +1,7 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
+    <script src="/static/closends/js/jquery.min.js"></script>
     <script src="/static/closends/js/bootstrap.js"></script>
 
     <style>
@@ -19,6 +20,15 @@
             width: 100%;
         }
 
+        .modal-content{
+            margin-top: 90%;
+            margin-left: -60%;
+            width: 60%;
+            height: 50%;
+        }
+    </style>
+
+    <style>
         .content_box{
             background-color: whitesmoke;
             height: 500px;
@@ -30,7 +40,7 @@
             margin-left: 40%;
         }
 
-        .content_box .person_box{
+        .person_box{
             background-color: #bfbfbf;
             width: 30%;
             height: 120px;
@@ -38,24 +48,224 @@
             margin-left: 2.5%;
         }
 
-        .content_box .person_box img{
+        .person_box img{
             width: 50px;
             height: 50px;
-            margin-top: 50px;
+            margin-top: 50%;
         }
 
-        .content_box .person_box .person_info{
+        .person_box .person_info{
             background-color: lightblue;
             height: 120px;
         }
 
-        .modal-content{
-            margin-top: 90%;
-            margin-left: -60%;
-            width: 60%;
-            height: 50%;
+        .person_box .person_info .friend_name{
+            margin-top: 20%;
+        }
+
+        .person_box .person_info .friend_setting{
+            height: 50px;
+            margin-top: 12%;
+        }
+
+        .person_box .person_info .friend_setting img{
+            width: 20px;
+            height: 20px;
+            margin-top: 20%;
+        }
+
+        .person_box .person_info .site_logo{
+            margin-left: 2%;
+        }
+
+        .person_box .person_info .site_logo p{
+            display: none;
+        }
+
+        .person_box .person_info .site_logo div{
+        }
+
+        .person_box .person_info .site_logo img{
+            width: 20px;
+            height: 20px;
         }
     </style>
+
+    <style>
+        #weibo_info_modal .modal-content{
+            margin-top: 20%;
+            margin-left: 20%;
+        }
+
+        #weibo_info_modal .modal-body .form-group{
+            margin-top: 5%;
+        }
+
+        #weibo_info_modal .modal-body .friend_name{
+            display: none;
+        }
+
+    </style>
+
+    <style>
+        #weibo_modal{
+            margin-top: -27%;
+            position: fixed;
+        }
+
+        #weibo_modal .modal-content{
+            margin-left: 15%;
+            width: 80%;
+        }
+
+        #weibo_modal .modal-body .friend_name{
+            display: none;
+        }
+
+        #weibo_modal .modal-body .nav{
+            margin-left: 30%;
+        }
+
+        #weibo_modal .modal-body .tab-content{
+            margin-top: 5%;
+        }
+
+        #weibo_modal #link_add_form, #account_add_form{
+            width: 80%;
+            margin-left: 10%;
+        }
+
+        #weibo_modal .modal-body .search_result{
+            margin-top: 5%;
+            display: none;
+        }
+
+        #weibo_modal .modal-body .search_result .person{
+            height: 166px;
+            width: 80%;
+            margin-top: 3%;
+            margin-left: 12%;
+            background-color: whitesmoke;
+        }
+
+        #weibo_modal .modal-body .search_result .feedback{
+            height: 50px;
+            width: 80%;
+            margin-top: 3%;
+            margin-left: 12%;
+            background-color: whitesmoke;
+            display: none;
+        }
+
+        #weibo_modal .modal-body .search_result .feedback strong{
+            font-size: 20px;
+            margin-top: 50%;
+        }
+
+        #weibo_modal .modal-body .search_result .person .W_face_radius {
+            border-radius: 50%;
+        }
+
+        #weibo_modal .modal-body .search_result .person .person_pic {
+            float: left;
+            margin-top: 5%;
+        }
+
+        #weibo_modal .modal-body .search_result .person .person_detail p{
+            width: 80%;
+            font-size: 12px;
+            margin-left: 25%;
+        }
+
+        #weibo_modal .modal-body .check_found_weibo_user{
+            margin-top: 2%;
+            display: none;
+        }
+    </style>
+
+    <style>
+        #update_friend_modal .modal-content{
+            margin-top: 20%;
+            margin-left: 10%;
+            width: 80%;
+
+        }
+
+        #update_friend_modal .modal-body .head_image{
+            margin-top: 5%;
+            margin-left: 5%;
+        }
+
+        #update_friend_modal .modal-body .head_image img{
+            width: 140px;
+            height: 140px;
+        }
+
+        #update_friend_modal .modal-body .head_image form{
+            margin-top: -20%;
+        }
+
+        #update_friend_modal .modal-body .head_image input{
+            margin-left: 20%;
+            position:absolute;
+            clip:rect(0 0 0 0);
+        }
+
+        #update_friend_modal .modal-body .head_image .ui_button {
+            display: inline-block;
+            width: 20px;
+            line-height: 28px;
+            font-size: 12px;
+            text-align: center;
+            color: grey;
+            border: 1px solid #d0d0d5;
+            border-radius: 4px;
+            padding: 0 15px;
+            min-width: 50px;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transition: border-color .15s, background-color .15s;
+            transition: border-color .15s, background-color .15s;
+            outline: 0 none;
+            cursor: pointer;
+            overflow: visible;
+            opacity: 0.7;
+        }
+
+        #update_friend_modal .modal-body .friend_mark{
+            width: 50%;
+            margin-top: 15%;
+            margin-left: 25%;
+        }
+
+        #update_friend_modal .modal-body .friend_mark input{
+            margin-left: 5%;
+            width: 60%;
+        }
+
+        #update_friend_modal .modal-body .friend_mark select{
+            margin-left: 5%;
+            width: 60%;
+        }
+
+        #update_friend_modal .modal-body .friend_mark button{
+            width: 40%;
+        }
+
+        #update_friend_modal .modal-body .friend_mark strong{
+            display: none;
+        }
+
+    </style>
+
+    <style>
+        #delete_friend_modal .modal-content{
+            margin-left: 25%;
+            margin-top: 25%;
+        }
+    </style>
+
 {% endblock %}
 
 {% block group_list %}
@@ -108,7 +318,7 @@
                                 $(".friend_list").children().last().prev().children().first().attr('href', ret.group_url)
                             }
                             else{
-
+                                //分组已存在
                             }
                         }//success
                     })//ajax
@@ -119,42 +329,126 @@
 
 {% block content_box %}
     <div class="col-md-8 content_box">
-
         <div class="row">
             {% for friend in friends|slice:"0:3" %}
                 <div class="col-md-4 person_box">
                     <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-circle" src="/media/head/index_01.jpg">
+                        <div class="col-md-4">
+                            <img class="img-circle" src="/media/head/{{ friend.image_name }}">
+                        </div>
+                        <div class="col-md-8 person_info">
+                            <div class="row">
+                                <div class="friend_name text-center col-md-6">
+                                    <a href="#">
+                                        <strong>{{ friend.nickname }}</strong>
+                                    </a>
+                                </div>
+                                <div class="friend_setting col-md-6">
+                                    <img class="img-circle show_update_friend_modal" src='/static/closends/img/friend_setting.png'>
+                                    <img class="img-circle show_delete_friend_modal" src='/static/closends/img/delete_friend.png'>
+                                </div>
+                            </div>
+                            <div class="row site_logo">
+                                <div class="col-md-1">
+                                    <img class="qq_logo img-circle" src="/static/closends/img/qq.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.weibo_is_blank }}</p>
+                                    <img class="weibo_logo img-circle" src="/static/closends/img/weibo.png">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.zhihu_is_blank }}</p>
+                                    <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-8 person_info"></div>
-                </div>
                 </div>
             {% endfor %}
         </div>
-
         <div class="row">
             {% for friend in friends|slice:"3:6" %}
                 <div class="col-md-4 person_box">
                     <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-circle" src="/media/head/index_01.jpg">
+                        <div class="col-md-4">
+                            <img class="img-circle" src="/media/head/{{ friend.image_name }}">
+                        </div>
+                        <div class="col-md-8 person_info">
+                            <div class="row">
+                                <div class="friend_name text-center col-md-6">
+                                    <a href="#">
+                                        <strong>{{ friend.nickname }}</strong>
+                                    </a>
+                                </div>
+                                <div class="friend_setting col-md-6">
+                                    <img class="img-circle show_update_friend_modal" src='/static/closends/img/friend_setting.png'>
+                                    <img class="img-circle show_delete_friend_modal" src='/static/closends/img/delete_friend.png'>
+                                </div>
+                            </div>
+                            <div class="row site_logo">
+                                <div class="col-md-1">
+                                    <img class="qq_logo img-circle" src="/static/closends/img/qq.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.weibo_is_blank }}</p>
+                                    <img class="weibo_logo img-circle" src="/static/closends/img/weibo.png">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.zhihu_is_blank }}</p>
+                                    <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-8 person_info"></div>
-                </div>
                 </div>
             {% endfor %}
         </div>
-
         <div class="row">
             {% for friend in friends|slice:"6:9" %}
                 <div class="col-md-4 person_box">
                     <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-circle" src="/media/head/index_01.jpg">
+                        <div class="col-md-4">
+                            <img class="img-circle" src="/media/head/{{ friend.image_name }}">
+                        </div>
+                        <div class="col-md-8 person_info">
+                            <div class="row">
+                                <div class="friend_name text-center col-md-6">
+                                    <a href="#">
+                                        <strong>{{ friend.nickname }}</strong>
+                                    </a>
+                                </div>
+                                <div class="friend_setting col-md-6">
+                                    <img class="img-circle show_update_friend_modal" src='/static/closends/img/friend_setting.png'>
+                                    <img class="img-circle show_delete_friend_modal" src='/static/closends/img/delete_friend.png'>
+                                </div>
+                            </div>
+                            <div class="row site_logo">
+                                <div class="col-md-1">
+                                    <img class="qq_logo img-circle" src="/static/closends/img/qq.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.weibo_is_blank }}</p>
+                                    <img class="weibo_logo img-circle" src="/static/closends/img/weibo.png">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ friend.zhihu_is_blank }}</p>
+                                    <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
+                                </div>
+                                <div class="col-md-1">
+                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-8 person_info"></div>
-                </div>
                 </div>
             {% endfor %}
         </div>
@@ -181,4 +475,319 @@
             </ul>
         </nav>
     </div>
+
+    <div id="weibo_info_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <form id="account_display_form" class="form-inline tab-pane active">
+                        <div class="friend_name"></div>
+                        <div class="form-group" style="margin-right: 5%">
+                             <a href="#">
+                                 <img class="img-circle" src="/static/closends/img/default_head.svg">
+                             </a>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="update_weibo_friend" type="button" class="btn btn-default">更改</button>
+                            <button id="delete_weibo_friend" type="button" class="btn btn-default">删除</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="weibo_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="friend_name"></div>
+
+                    <ul class="nav nav-pills">
+                        <li class="active"><a href="#account_add_form" data-toggle="tab">用户名</a></li>
+                        <li class=""><a href="#link_add_form" data-toggle="tab">主页链接</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <form id="account_add_form" class="form-inline tab-pane active">
+                             <div class="form-group">
+                                <input id="weibo_account" type="text" class="form-control" name="weibo_account" placeholder="Weibo Account">
+                            </div>
+
+                            <div class="form-group">
+                                <button id="query_weibo_friend_by_account" type="button" class="btn btn-default">确认</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </form>
+                        <form id="link_add_form" class="form-inline tab-pane">
+                            <div class="form-group">
+                                <input id="weibo_link" type="text" class="form-control" name="weibo_link" placeholder="Weibo Link">
+                            </div>
+
+                            <div class="form-group">
+                                <button id="adding_weibo_friend_by_link" type="button" class="btn btn-default">确认</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="search_result text-left">
+                        <div class="person"></div>
+                        <div class="feedback text-center">
+                            <strong></strong>
+                        </div>
+                    </div>
+
+                    <div class="check_found_weibo_user">
+                        <button id="adding_found_weibo_user" type="button" class="btn btn-default">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="update_friend_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                    <div class="modal-body">
+                        <div class="friend_name" style="display: none"></div>
+                        <div class="head_image">
+                            <img id="friend_head_image" class="img-circle" src="/static/closends/img/default_head.svg">
+                            <form>
+                                <label class="ui_button ui_button_primary" for="upload_friend_head_img">+</label>
+                                <input id="upload_friend_head_img" name="head_image" type="file">
+                            </form>
+                        </div>
+                        <div class="friend_mark">
+                            <form class="form-horizontal">
+                                <div class="form-group form-inline">
+                                    <label for="nickname">昵称</label>
+                                    <input type="text" class="form-control" id="nickname" placeholder="昵称">
+                                </div>
+
+                                <div class="form-group form-inline">
+                                    <label for="group">分组</label>
+                                    <select id="group" class="form-control">
+                                        {% for _, group_name in group_list %}
+                                            <option>{{ group_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <strong></strong>
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button id="update_friend_info" type="button" class="btn">提交</button>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete_friend_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="friend_name" style="display: none"></div>
+                    <button id="delete_friend" class="btn btn-default">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            //显示好友基本信息
+            $(".show_update_friend_modal").on("click", function () {
+                let friend_name = $(this).parent().prev().find("strong").text();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_friend_info' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: {"friend_name": friend_name},
+                        async: false,
+                        success: function (ret) {
+                            $("#update_friend_modal").modal("show");
+                            $("#update_friend_modal #nickname").val(friend_name);
+                            $("#update_friend_modal .friend_name").text(friend_name);
+                            $("#update_friend_modal #group").val(ret.group_name);
+                            $("#update_friend_modal #friend_head_image").attr('src', '/media/head/' + ret.head_img);
+                        }
+                    });//ajax
+            });
+            
+            //预览用户上传的图片
+            $("#upload_friend_head_img").on('change', function () {
+                if(this.files.length > 0) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#friend_head_image").attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            //更新好友基本信息
+            $("#update_friend_info").on("click", function () {
+                    let old_nickname = $("#update_friend_modal .friend_name").text();
+                    let img = $("#upload_friend_head_img")[0].files[0];
+                    let nickname = $("#nickname").val();
+                    let group = $("#group").val();
+                    let friend = new FormData();
+                    if(nickname===""){
+                        //提示输入昵称
+                    }
+                    else{
+                        friend.append('head_img', img);
+                        friend.append('old_nickname', old_nickname);
+                        friend.append('nickname', nickname);
+                        friend.append('group', group);
+                        $.ajax({
+                                url: "{% url 'closends:setting:update_friend_info' %}",
+                                type: "post",
+                                datatype: "json",
+                                data: friend,
+                                processData:false,  // 告诉jquery不转换数据
+                                contentType:false,  // 告诉jquery不设置内容格式
+                                async: false,
+                                success: function (ret) {
+                                    if(ret.status === 'success'){
+                                        window.location.reload();
+                                    }
+                                    else{
+                                        $(".friend_mark strong").css('display', 'block').text("昵称已存在！");
+                                    }
+                                }
+                            });//ajax
+                    }//if
+            });
+
+            //确认删除好友
+            $(".show_delete_friend_modal").on("click", function () {
+                let friend_name = $(this).parent().prev().find("strong").text();
+                $("#delete_friend_modal .friend_name").text(friend_name);
+                $("#delete_friend_modal").modal("show");
+            });
+
+            //删除好友
+            $("#delete_friend").on("click", function () {
+                let friend_name = $("#delete_friend_modal .friend_name").text();
+                $.ajax({
+                        url: "{% url 'closends:setting:delete_friend' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: {"friend_name": friend_name},
+                        async: false,
+                        success: function (ret) {
+                            window.location.reload();
+                        }
+                    });//ajax
+            })
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            //已添加显示微博信息, 否则显示微博添加表单
+            $(".weibo_logo").on("click", function () {
+                let friend_name = $(this).parentsUntil(".person_box").find("strong").eq(0).text();
+                if($(this).prev().text() === "True"){
+                    $("#weibo_modal").modal("show");
+                    $("#weibo_modal .search_result").hide();
+                    $("#weibo_modal #weibo_account, #weibo_link").val("");
+                    $("#weibo_modal .friend_name").text(friend_name);
+                }
+                else{
+                    $.ajax({
+                        url: "{% url 'closends:setting:query_exist_weibo_friend' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: {'friend_name': friend_name},
+                        async: false,
+                        success: function (ret) {
+                            $("#weibo_info_modal #account_display_form .friend_name").text(friend_name);
+                            $("#weibo_info_modal #account_display_form a").attr('href', ret.link);
+                            $("#weibo_info_modal #account_display_form img").attr('src', ret.head);
+                        }
+                    });//ajax
+                    $("#weibo_info_modal").modal("show");
+                }
+            });
+
+            //更新好友微博信息
+            $("#update_weibo_friend").on("click", function () {
+                let friend_name = $("#weibo_info_modal .friend_name").text();
+                $("#weibo_modal").modal("show");
+                $("#weibo_info_modal").modal("hide");
+                $("#weibo_modal .friend_name").text(friend_name);
+            });
+
+            //查询微博账号
+            $("#query_weibo_friend_by_account").on("click", function () {
+                let account = $("#account_add_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_weibo_friend_by_account' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: account,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                $("#weibo_modal .search_result").show();
+                                $("#weibo_modal .search_result .person").empty();
+                                $("#weibo_modal .search_result .person").append(ret.person_html);
+                                $(".check_found_weibo_user").show();
+                            }
+                            else{
+                                $("#weibo_modal .search_result .feedback strong").text("查询失败,请直接添加链接!");
+                                $("#weibo_modal #adding_found_weibo_user").text("重新查询");
+                            }
+                        }
+                    });//ajax
+            });
+
+            //添加微博账号
+            $("#adding_found_weibo_user").on("click", function () {
+                if($(this).text() === "确认"){
+                    let account = $(".person_name a em").text();
+                    let link = $(".person_name a").attr('href');
+                    let head = $(".person_pic img").attr('src');
+                    let friend_name = $("#weibo_modal .friend_name").text();
+                    let weibo_friend = {'friend_name': friend_name, 'account':account, 'link':link, 'head': head};
+                    $.ajax({
+                            url: "{% url 'closends:setting:add_found_weibo_friend' %}",
+                            type: "post",
+                            datatype: "json",
+                            data: weibo_friend,
+                            async: false,
+                            success: function (ret) {
+                                if(ret.status === 'success'){
+                                    $("#weibo_modal .search_result").hide();
+                                    $("#weibo_modal .search_result .person").empty();
+                                    $("#weibo_modal .search_result .feedback").show();
+                                    $("#weibo_modal .search_result .feedback strong").text("成功!");
+                                    $("#weibo_modal #adding_found_weibo_user").text("返回");
+                                }
+                                else{
+                                    //pass
+                                }
+                            }
+                        });//ajax
+                }//if
+                else if($(this).text() === "返回"){
+                    window.location.reload();
+                }
+                else {
+                    //查询失败
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

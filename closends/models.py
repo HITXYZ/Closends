@@ -40,13 +40,37 @@ class Friend(models.Model):
     def username(self):
         return self.user.user.username
 
+    def image_name(self):
+        if not self.head_img.name:
+            return 'default_head.svg'
+        return self.head_img.name.split('/')[-1]
+
+    def weibo_is_blank(self):
+        return not self.weibo_account
+
+    def zhihu_is_blank(self):
+        return not self.zhihu_account
+
+    def tieba_is_blank(self):
+        return not self.tieba_account
+
     group_choices = (('group_0', '未分组'), ('group_1', '家人'), ('group_2', '好友'), ('group_3', '同学'))
     nickname = models.CharField(max_length=30)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR+'/media/head')
     group = models.CharField(max_length=10, default='group_0', choices=group_choices)
-    qq_mark = models.CharField(max_length=11, blank=True)
-    weibo_mark = models.CharField(max_length=20, blank=True)
-    zhihu_mark = models.CharField(max_length=20, blank=True)
+
+    weibo_account = models.CharField(max_length=20, blank=True)
+    weibo_link = models.CharField(max_length=100, blank=True)
+    weibo_head = models.CharField(max_length=100, blank=True)
+
+    zhihu_account = models.CharField(max_length=20, blank=True)
+    zhihu_link = models.CharField(max_length=100, blank=True)
+    zhihu_head = models.CharField(max_length=100, blank=True)
+
+    tieba_account = models.CharField(max_length=20, blank=True)
+    tieba_link = models.CharField(max_length=100, blank=True)
+    tieba_head = models.CharField(max_length=100, blank=True)
+
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 

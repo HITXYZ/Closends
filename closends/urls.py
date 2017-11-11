@@ -16,8 +16,13 @@ settingpatterns = [
     url(r'friend_manage$', friend_manage, name='friend_manage'),
     url(r'friend_manage/add_group$', add_group, name='add_group'),
     url(r'friend_manage/add_friend$', add_friend, name='add_friend'),
+    url(r'friend_manage/delete_friend$', delete_friend, name='delete_friend'),
     url(r'friend_manage/add_friend_info$', add_friend_info, name='add_friend_info'),
+    url(r'friend_manage/query_friend_info$', query_friend_info, name='query_friend_info'),
+    url(r'friend_manage/update_friend_info$', update_friend_info, name='update_friend_info'),
+
     url(r'friend_manage/add_found_weibo_friend$', add_found_weibo_friend, name='add_found_weibo_friend'),
+    url(r'friend_manage/query_exist_weibo_friend$', query_exist_weibo_friend, name='query_exist_weibo_friend'),
     url(r'friend_manage/query_weibo_friend_by_link$', query_weibo_friend_by_link, name='query_weibo_friend_by_link'),
     url(r'friend_manage/query_weibo_friend_by_account$', query_weibo_friend_by_account, name='query_weibo_friend_by_account'),
     url(r'friend_manage/get_group_friends/(?P<group>\w+)/(?P<page>[0-9]+)$', get_group_friends, name='get_group_friends'),
@@ -38,6 +43,6 @@ urlpatterns = [
     url(r'^logout$', user_logout, name='logout'),
 
     url(r'^index$', index, name='index'),
-    url(r'^set/', include(settingpatterns, namespace='setting')),
+    url(r'^setting/', include(settingpatterns, namespace='setting')),
     url(r'^authcode/', include(authcodepatterns, namespace='authcode')),
 ]

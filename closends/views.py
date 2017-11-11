@@ -300,8 +300,20 @@ def add_group(request):
 @csrf_exempt
 @login_required
 def add_friend(request):
-    return render(request, 'closends/add_friends.html')
+    user = request.user.userinfo
+    group_name = user.group_list.split(',')
+    return render(request, 'closends/add_friends.html', {'group_list': group_name})
 
+
+@csrf_exempt
+@login_required
+def delete_friend(request):
+    if request.method == "POST":
+        user = request.user.userinfo
+        friend = user.friend_set.filter(nickname=request.POST['friend_name'])[0]
+        friend.delete()
+        friend.save()
+        return HttpResponse("")
 
 
 @csrf_exempt
@@ -309,13 +321,57 @@ def add_friend(request):
 def add_friend_info(request):
     if request.method == 'POST':
         user = request.user.userinfo
-        head_img = request.FILES['head_img']
         nickname = request.POST['nickname']
+        group_name = user.group_list.split(',')
+        group_index = 'group_' + str(group_name.index(request.POST['group']))
         if user.friend_set.filter(nickname=nickname):
             result = {'status':'error', 'error_msg': 'nickname_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
-        user.friend_set.create(nickname=nickname, head_img=head_img)
+        if not request.FILES:
+            user.friend_set.create(nickname=nickname, group=group_index)
+        else:
+            head_img = request.FILES['head_img']
+            user.friend_set.create(nickname=nickname, head_img=head_img, group=group_index)
         user.save()
+        result = {'status': 'success'}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def query_friend_info(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        head_img = friend.image_name()
+        group_list = user.group_list.split(',')
+        group_name = group_list[int(friend.group[6:])]
+        result = {'status': 'success', 'head_img':head_img, 'group_name':group_name}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def update_friend_info(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        nickname = request.POST['nickname']
+        old_nickname = request.POST['old_nickname']
+        if nickname != old_nickname:
+            if user.friend_set.filter(nickname=nickname):
+                result = {'status': 'error', 'error_msg': 'nickname_exist'}
+                return HttpResponse(json.dumps(result), content_type='application/json')
+
+        group_name = user.group_list.split(',')
+        group_index = 'group_' + str(group_name.index(request.POST['group']))
+
+        friend = user.friend_set.filter(nickname=old_nickname)[0]
+        friend.nickname = nickname
+        friend.group = group_index
+        if request.FILES:
+            friend.head_img = request.FILES['head_img']
+        friend.save()
         result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
@@ -325,19 +381,36 @@ def add_friend_info(request):
 def add_found_weibo_friend(request):
     if request.method == 'POST':
         user = request.user.userinfo
-        account = request.POST['account']
-        link = request.POST['link']
-        user.friend_set.weibo_mark = account + ',' + link
-        user.save()
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.weibo_account = request.POST['account']
+        friend.weibo_link = request.POST['link']
+        friend.weibo_head = request.POST['head']
+        friend.save()
         result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def query_exist_weibo_friend(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        account = friend.weibo_account
+        link = friend.weibo_link
+        head = friend.weibo_head
+        result = {'account':account, 'link':link, 'head':head}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
 
 @csrf_exempt
 @login_required
 def query_weibo_friend_by_link(request):
     if request.method == 'POST':
-        user = request.user.userinfo
-        weibo_link = request.POST['weibo_link']
+        # user = request.user.userinfo
+        # weibo_link = request.POST['weibo_link']
         result = {}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
