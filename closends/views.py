@@ -9,7 +9,6 @@ from django.shortcuts import render, render_to_response, HttpResponse, HttpRespo
 
 import json
 from .models import *
-from .user_binding import *
 from .check_account import *
 
 
@@ -134,7 +133,7 @@ def index(request):
 def user_info(request):
     user = request.user.userinfo
     context = {'user': user}
-    return render(request, 'closends/user_info.html', context)
+    return render(request, 'closends/setting_user_info.html', context)
 
 
 @csrf_exempt
@@ -144,56 +143,53 @@ def user_binding(request):
     binding_sites = {}
     for site in sites:
         binding_sites[site.site] = site.account
-    print(binding_sites)
     binding_sites = {'binding_sites': binding_sites}
-    return render(request, 'closends/user_binding.html', binding_sites)
+    return render(request, 'closends/setting_user_binding.html', binding_sites)
 
 
 @csrf_exempt
 @login_required
-def qq_binding(request):
-    if request.method == 'POST':
-        qq = request.POST['qq']
-        password = request.POST['password']
-        status = qq_login(qq, password)
-        # print(qq, password, status)
-        if status:
-            user = request.user.userinfo
-            user.website_set.create(site='qq', account=qq, authcode=password)
-            result = {'status': 'success'}
+def query_weibo_user(request):
+    if request.method == "POST":
+        weibo_account = request.POST['weibo_account']
+        if request.POST['adding_option'] == "账号":
+            person_html = check_weibo_user(weibo_account)
         else:
-            result = {'status': 'error', 'error_msg': 'wrong_password'}
+            person_html = ""
+        print(person_html)
+        result = {'status': 'success', 'person_html': person_html}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @csrf_exempt
 @login_required
-def qq_unbinding(request):
-    sites = request.user.userinfo.website_set.all()
-    binding_sites = {}
-    for site in sites:
-        if site.site == 'qq':
-            site.delete()
-        else:
-            binding_sites[site.site] = site.account
-    binding_sites = {'binding_sites': binding_sites}
-    return render(request, 'closends/user_binding.html', binding_sites)
+def query_bound_weibo_info(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        weibo = user.website_set.filter(site='weibo')[0]
+        result = {'link': weibo.link, 'head': weibo.head}
+        return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @csrf_exempt
 @login_required
 def weibo_binding(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        status = weibo_login(username, password)
-        print(username, password, status)
-        if status:
-            user = request.user.userinfo
-            user.website_set.create(site='weibo', account=username, authcode=password)
-            result = {'status': 'success'}
-        else:
-            result = {'status': 'error', 'error_msg': 'wrong_password'}
+        user = request.user.userinfo
+        account = request.POST['account']
+        link = request.POST['link']
+        head = request.POST['head']
+        site = user.website_set.filter(site='weibo')
+        if not site:  # binding account
+            user.website_set.create(site='weibo', account=account, link=link, head=head)
+            user.save()
+        else:  # update account
+            site = site[0]
+            site.account = account
+            site.link = link
+            site.head = head
+            site.save()
+        result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
@@ -208,24 +204,7 @@ def weibo_unbinding(request):
         else:
             binding_sites[site.site] = site.account
     binding_sites = {'binding_sites': binding_sites}
-    return render(request, 'closends/user_binding.html', binding_sites)
-
-
-@csrf_exempt
-@login_required
-def zhihu_binding(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        status = zhihu_login(username, password)
-        print(username, password, status)
-        if status:
-            user = request.user.userinfo
-            user.website_set.create(site='zhihu', account=username, authcode=password)
-            result = {'status': 'success'}
-        else:
-            result = {'status': 'error', 'error_msg': 'wrong_password'}
-        return HttpResponse(json.dumps(result), content_type='application/json')
+    return render(request, 'closends/setting_user_binding.html', binding_sites)
 
 
 @csrf_exempt
@@ -239,7 +218,7 @@ def zhihu_unbinding(request):
         else:
             binding_sites[site.site] = site.account
     binding_sites = {'binding_sites': binding_sites}
-    return render(request, 'closends/user_binding.html', binding_sites)
+    return render(request, 'closends/setting_user_binding.html', binding_sites)
 
 
 @csrf_exempt
@@ -259,7 +238,7 @@ def get_group_friends(request, group, page):
     group_index = ['group_' + str(index) for index in range(len(group_name))]
     group_list = list(zip(group_index, group_name))
     context = {'group_list': group_list, 'current_group': group, 'friends': friends}
-    return render(request, 'closends/friends_manage.html', context)
+    return render(request, 'closends/setting_friends_manage.html', context)
 
 
 @csrf_exempt
@@ -273,8 +252,8 @@ def friend_manage(request):
     group_name = user.group_list.split(',')
     group_index = ['group_' + str(index) for index in range(len(group_name))]
     group_list = list(zip(group_index, group_name))
-    context = {'group_list': group_list, 'current_group': 'group_0', 'friends':friends}
-    return render(request, 'closends/friends_manage.html', context)
+    context = {'group_list': group_list, 'current_group': 'group_0', 'friends': friends}
+    return render(request, 'closends/setting_friends_manage.html', context)
 
 
 @csrf_exempt
@@ -290,7 +269,7 @@ def add_group(request):
         group_list.append(group_name)
         user.group_list = ','.join(group_list)
         user.save()
-        group_index = 'group_' + str(len(group_list)-1)
+        group_index = 'group_' + str(len(group_list) - 1)
         group_url = reverse('closends:setting:get_group_friends', args=(group_index, 1))
         print(group_url)
         result = {'status': 'success', 'group_name': group_name, 'group_url': group_url}
@@ -302,7 +281,7 @@ def add_group(request):
 def add_friend(request):
     user = request.user.userinfo
     group_name = user.group_list.split(',')
-    return render(request, 'closends/add_friends.html', {'group_list': group_name})
+    return render(request, 'closends/setting_add_friends.html', {'group_list': group_name})
 
 
 @csrf_exempt
@@ -325,7 +304,7 @@ def add_friend_info(request):
         group_name = user.group_list.split(',')
         group_index = 'group_' + str(group_name.index(request.POST['group']))
         if user.friend_set.filter(nickname=nickname):
-            result = {'status':'error', 'error_msg': 'nickname_exist'}
+            result = {'status': 'error', 'error_msg': 'nickname_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
         if not request.FILES:
             user.friend_set.create(nickname=nickname, group=group_index)
@@ -347,7 +326,7 @@ def query_friend_info(request):
         head_img = friend.image_name()
         group_list = user.group_list.split(',')
         group_name = group_list[int(friend.group[6:])]
-        result = {'status': 'success', 'head_img':head_img, 'group_name':group_name}
+        result = {'status': 'success', 'head_img': head_img, 'group_name': group_name}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
@@ -401,7 +380,7 @@ def query_exist_weibo_friend(request):
         account = friend.weibo_account
         link = friend.weibo_link
         head = friend.weibo_head
-        result = {'account':account, 'link':link, 'head':head}
+        result = {'account': account, 'link': link, 'head': head}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
@@ -421,8 +400,7 @@ def query_weibo_friend_by_account(request):
     if request.method == 'POST':
         weibo_account = request.POST['weibo_account']
         person_html = check_weibo_user(weibo_account)
-        result = {'status':'success', 'person_html':person_html}
-        print(person_html)
+        result = {'status': 'success', 'person_html': person_html}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 

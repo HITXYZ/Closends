@@ -6,12 +6,10 @@ settingpatterns = [
     url(r'user_info$', user_info, name='user_info'),
 
     url(r'user_binding$', user_binding, name='user_binding'),
-    url(r'user_binding/qq_binding$', qq_binding, name='qq_binding'),
+    url(r'user_binding/query_weibo_user$', query_weibo_user, name='query_weibo_user'),
     url(r'user_binding/weibo_binding$', weibo_binding, name='weibo_binding'),
-    url(r'user_binding/zhihu_binding$', zhihu_binding, name='zhihu_binding'),
-    url(r'user_binging/qq_unbinding$', qq_unbinding, name='qq_unbinding'),
-    url(r'user_binging/weibo_unbinding$', weibo_unbinding, name='weibo_unbinding'),
-    url(r'user_binging/zhihu_unbinding$', zhihu_unbinding, name='zhihu_unbinding'),
+    url(r'user_binding/query_bound_weibo_info$', query_bound_weibo_info, name='query_bound_weibo_info'),
+    url(r'user_binding/weibo_unbinding$', weibo_unbinding, name='weibo_unbinding'),
 
     url(r'friend_manage$', friend_manage, name='friend_manage'),
     url(r'friend_manage/add_group$', add_group, name='add_group'),

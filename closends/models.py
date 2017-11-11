@@ -24,10 +24,11 @@ class Website(models.Model):
     def username(self):
         return self.user.user.username
 
-    site_choices = (('qq', 'QQ'), ('weibo', '微博'), ('zhihu', '知乎'))
-    site = models.CharField(max_length=5, default='qq', choices=site_choices)
-    account = models.CharField(max_length=50)
-    authcode = models.CharField(max_length=50)
+    site_choices = (('weibo', '微博'), ('zhihu', '知乎'), ('tieba', '贴吧'))
+    site = models.CharField(max_length=5, default='weibo', choices=site_choices)
+    account = models.CharField(max_length=50, blank=True)
+    link = models.CharField(max_length=100, blank=True)
+    head = models.CharField(max_length=100, blank=True)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 

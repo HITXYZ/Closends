@@ -1,0 +1,281 @@
+{% extends 'closends/setting_base.html' %}
+
+{% block style_load %}
+    <script src="/static/closends/js/jquery.min.js"></script>
+    <script src="/static/closends/js/bootstrap.js"></script>
+
+    <style>
+        .content_box {
+            background-color: whitesmoke;
+            height: 500px;
+            margin-top: 10%;
+            margin-left: 2%;
+        }
+
+        .content_box .content_line {
+            width: 100%;
+            height: 10%;
+            margin-top: 2%;
+            background-color: lightblue;
+        }
+
+        .content_box .content_line .line_item {
+            margin-top: 1%;
+        }
+
+        .content_box .content_line button{
+            margin-top: -2%;
+        }
+    </style>
+
+    <style>
+        .weibo_binding{
+            display: none;
+        }
+
+        .weibo_binding #weibo_binding_form{
+            width: 80%;
+            margin-left: 25%;
+            margin-top: 2%;
+        }
+
+        .weibo_binding .search_result{
+            margin-top: 2%;
+            display: none;
+        }
+
+        .weibo_binding .search_result .person{
+            height: 166px;
+            width: 60%;
+            margin-left: 20%;
+            background-color: lightblue;
+        }
+
+        .weibo_binding .search_result .feedback{
+            height: 50px;
+            width: 60%;
+            margin-top: 1%;
+            margin-left: 20%;
+            background-color: lightblue;
+            display: none;
+        }
+
+        .weibo_binding .search_result .feedback strong{
+            font-size: 20px;
+            margin-top: 50%;
+        }
+
+        .weibo_binding .search_result .person .W_face_radius {
+            border-radius: 50%;
+        }
+
+        .weibo_binding .search_result .person .person_pic {
+            float: left;
+            margin-top: 5%;
+            margin-left: 2%;
+        }
+
+        .weibo_binding .search_result .person .person_detail p{
+            width: 80%;
+            font-size: 12px;
+            margin-left: 25%;
+        }
+
+        .weibo_binding #adding_found_weibo_user{
+            width: 20%;
+            margin-top: 1%;
+            margin-left: 40%;
+            display: none;
+        }
+
+        .bound_weibo_info{
+            margin-left: 40%;
+            display: none;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content_box %}
+    <div class="col-md-8 content_box">
+        <div class="btn col-md-14 text-center content_line">
+            <div class="col-md-2 line_item">微博</div>
+            {% if not binding_sites.weibo %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_weibo_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div id="show_bound_weibo_info" class="col-md-6 line_item">{{ binding_sites.weibo }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_weibo_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="weibo_binding">
+            <form id="weibo_binding_form" class="form-inline tab-pane active">
+                <div class="form-group">
+                    <select name="adding_option" class="form-control">
+                        <option>账号</option>
+                        <option>链接</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input name="weibo_account" type="text" class="form-control" placeholder="Weibo Account">
+                </div>
+                <div class="form-group">
+                    <button id="query_weibo_user" type="button" class="btn btn-default">查询</button>
+                </div>
+            </form>
+
+            <div class="search_result text-left">
+                <div class="person"></div>
+                <div class="feedback text-center">
+                    <strong></strong>
+                </div>
+            </div>
+
+            <div class="check_found_weibo_user">
+                <button id="adding_found_weibo_user" type="button" class="btn btn-default">确认</button>
+            </div>
+        </div>
+        <div class="bound_weibo_info">
+            <form class="form-horizontal">
+                <div class="form-group" style="margin-top: 2%">
+                     <a href="#">
+                         <img class="img-circle" src="/static/closends/img/default_head.svg">
+                     </a>
+                </div>
+
+                <div class="form-group" style="margin-left: 7%">
+                    <button id="update_weibo_user" type="button" class="btn btn-default">更改账号</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn col-md-14 text-center content_line">
+            <div class="col-md-2 line_item">知乎</div>
+            {% if not binding_sites.zhihu %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_zhihu_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div id="show_bound_zhihu_info" class="col-md-6 line_item">{{ binding_sites.zhihu }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_zhihu_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="btn col-md-14 text-center content_line">
+            <div class="col-md-2 line_item">贴吧</div>
+            {% if not binding_sites.tieba %}
+                <div class="col-md-6 line_item">未绑定</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_tieba_binding_form" class="btn btn-primary">绑定</button>
+                </div>
+            {% else %}
+                <div id="show_bound_tieba_info" class="col-md-6 line_item">{{ binding_sites.tieba }}</div>
+                <div class="col-md-4 line_item">
+                    <button id="show_tieba_binding_form" class="btn btn-primary">取消绑定</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#show_weibo_binding_form").on("click", function () {
+                if($(this).text() === "绑定"){
+                    $(".weibo_binding").show();
+                    $(this).text("收起");
+                }
+                else if($(this).text() === "收起"){
+                    $(this).text("绑定");
+                    $(".weibo_binding").hide();
+                    $(".weibo_binding select").val("账号");
+                    $(".weibo_binding input").val("");
+                    $(".weibo_binding .person").empty();
+                    $(".weibo_binding .search_result").hide();
+                    $(".weibo_binding strong").text("");
+                    $(".weibo_binding #adding_found_weibo_user").hide();
+                }
+                else
+                    window.location.href = '{% url 'closends:setting:weibo_unbinding' %}';
+            });
+
+            $("#show_bound_weibo_info").on("click", function () {
+                if($(".bound_weibo_info").css('display') === 'block')
+                    $(".bound_weibo_info").hide();
+                else{
+                     $.ajax({
+                        url: "{% url 'closends:setting:query_bound_weibo_info' %}",
+                        type: "post",
+                        datatype: "json",
+                        async: false,
+                        success: function (ret) {
+                            $(".bound_weibo_info a").attr('href', ret.link);
+                            $(".bound_weibo_info img").attr('src', ret.head);
+                            $(".bound_weibo_info").show();
+                        }
+                    });//ajax
+                }
+            });
+
+            $("#update_weibo_user").on("click", function () {
+                $(".bound_weibo_info").hide();
+                $(".weibo_binding").show();
+            });
+
+            $("#query_weibo_user").on("click", function () {
+                let account = $("#weibo_binding_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_weibo_user' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: account,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                $(".weibo_binding .search_result").show();
+                                $(".weibo_binding .search_result .person").empty();
+                                $(".weibo_binding .search_result .person").append(ret.person_html);
+                                $("#adding_found_weibo_user").show();
+                            }
+                            else{
+                                $(".weibo_binding .search_result .feedback strong").text("查询失败,请直接添加链接!");
+                                $(".weibo_binding #adding_found_weibo_user").text("重新查询");
+                            }
+                        }
+                    });//ajax
+            });
+
+            $("#adding_found_weibo_user").on("click", function () {
+                let account = $(".person_name a em").text();
+                let link = $(".person_name a").attr('href');
+                let head = $(".person_pic img").attr('src');
+                let weibo_user = {'account':account, 'link':link, 'head': head};
+                $.ajax({
+                        url: "{% url 'closends:setting:weibo_binding' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: weibo_user,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                window.location.href = '{% url 'closends:setting:user_binding' %}';
+                            }
+                            else{
+                                //pass
+                            }
+                        }
+                    });//ajax
+            });
+
+            $("#username, #password").focus(function () {
+                $(".error_tips").css('display','none');
+            })
+        })
+    </script>
+{% endblock %}
