@@ -6,17 +6,19 @@
 
     <link href="/static/closends/img/closends.ico" rel="shortcut icon">
     <link href="/static/closends/css/nav_bar.css" rel="stylesheet"/>
+
     {% block css_load %}
 
     {% endblock %}
 </head>
 
 <body>
+    <!--nav bar-->
     <div id="weibo_top_public">
         <div class="WB_global_nav WB_global_nav_v2 WB_global_nav_alpha ">
             <div class="gn_header clearfix">
                 <div class="gn_logo">
-                    <a href="#" class="box"><span class="logo"></span></a>
+                    <a href="{% url 'closends:index' %}" class="box"><span class="logo"></span></a>
                 </div>
 
                 <div class=" gn_search_v2">
@@ -29,15 +31,15 @@
                     <div class="gn_nav">
                         <ul class="gn_nav_list">
                             <li>
-                                <a href="#" class="S_txt1">
+                                <a href="{% url 'closends:index' %}" class="S_txt1">
                                     <em class="W_ficon ficon_home S_ficon"></em>
                                     <em class="S_txt1">首页</em>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="gn_name">
+                                <a href="{% url 'closends:setting:user_info' %}" class="gn_name">
                                     <em class="W_ficon ficon_user S_ficon"></em>
-                                    <em class="S_txt1">用户名</em>
+                                    <em class="S_txt1">{{ user.username }}</em>
                                 </a>
                             </li>
                         </ul>
@@ -45,19 +47,10 @@
 
                     <div class="gn_set S_line1">
                         <div class="gn_set_list">
-                            <a href="javascript:void(0);" id="msg" target="_top">
-                                <em class="W_ficon ficon_mail S_ficon">message</em>
-                            </a>
-                            <div class="gn_topmenulist gn_topmenulist_notice" id="msgLayer" style="display:none"></div>
-                            <div class="gn_topmenulist_tips" style="display:none" id="tips"></div>
-                        </div>
-                        <div class="gn_set_list">
-                            <a href="{% url 'closends:setting:setting_index' %}" id="account" target="_top" class=" "
-                               onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
+                            <a href="{% url 'closends:setting:setting_index' %}" id="account" target="_top" onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
                                 <em class="W_ficon ficon_set S_ficon">account</em>
                             </a>
-                            <div class="gn_topmenulist gn_topmenulist_set " id="accountLayer" style="display:none"
-                                 onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
+                            <div class="gn_topmenulist gn_topmenulist_set " id="accountLayer" style="display:none" onmouseover="show_topmenulist()" onmouseout="hide_topmenulist()">
                                 <ul>
                                     <li class="gn_func"><a target="_top" href="{% url 'closends:setting:user_info' %}">个人信息</a></li>
                                     <li class="gn_func"><a target="_top" href="{% url 'closends:setting:user_binding' %}">账号绑定</a></li>

@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 
-marks = {'qq': 'QQ', 'weibo': '微博', 'zhihu': '知乎'}
+marks = {'weibo': '微博', 'zhihu': '知乎', 'tieba':'贴吧'}
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 

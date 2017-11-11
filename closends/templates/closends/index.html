@@ -1,5 +1,38 @@
 {% extends 'closends/base.html' %}
 
-{% block content_body %}
+{% block css_load %}
+    <style>
+        .WB_main {
+        }
 
+        .WB_frame {
+            letter-spacing: -0.31em;
+            *letter-spacing: normal;
+            word-spacing: -0.43em;
+            font-size: 0;
+
+            width: 1000px;
+            min-height: 680px;
+            margin: 0 auto;
+            padding: 16px 0 0 0;
+
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .WB_miniblog {
+            padding-top: 284px;
+            background-repeat: no-repeat;
+            background-position: center 0;
+            background-image: url("/static/closends/img/body_bg.jpg");
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+    <div class="WB_miniblog">
+        <div class="WB_main">
+            <div class="WB_frame">
+            </div>
+        </div>
+    </div>
 {% endblock %}

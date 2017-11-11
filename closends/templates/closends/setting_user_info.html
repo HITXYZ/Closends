@@ -110,7 +110,7 @@
             </div>
         </div>
         <div class="head_image">
-            <img id="friend_head_image" class="img-circle" src="/media/head/{{ user.image_name }}">
+            <img id="friend_head_image" class="img-circle" src="/media/head/{{ user.userinfo.image_name }}">
             <form class="form-horizontal">
                 <label class="ui_button ui_button_primary" for="upload_friend_head_img">+</label>
                 <input id="upload_friend_head_img" name="head_image" type="file">
@@ -120,7 +120,7 @@
 
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">用户名</div>
-            <div class="col-md-6 line_item">{{ user.user.username }}</div>
+            <div class="col-md-6 line_item">{{ user.username }}</div>
             <div class="col-md-4 line_item">
                 <button id="show_update_username" class="btn btn-primary">更改</button>
             </div>
@@ -142,7 +142,7 @@
 
         <div class="btn col-md-14 text-center content_line">
             <div class="col-md-2 line_item">邮箱</div>
-            <div class="col-md-6 line_item">{{ user.user.email }}</div>
+            <div class="col-md-6 line_item">{{ user.email }}</div>
             <div class="col-md-4 line_item">
                 <button class="btn btn-primary">更改</button>
             </div>

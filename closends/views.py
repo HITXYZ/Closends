@@ -147,9 +147,9 @@ def index(request):
 @csrf_exempt
 @login_required
 def user_info(request):
-    user = request.user.userinfo
-    context = {'user': user}
-    return render(request, 'closends/setting_user_info.html', context)
+    # user = request.user.userinfo
+    # context = {'user': user}
+    return render(request, 'closends/setting_user_info.html')
 
 
 @csrf_exempt
