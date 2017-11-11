@@ -11,8 +11,8 @@ settingpatterns = [
     url(r'user_binding$', user_binding, name='user_binding'),
     url(r'user_binding/query_weibo_user$', query_weibo_user, name='query_weibo_user'),
     url(r'user_binding/weibo_binding$', weibo_binding, name='weibo_binding'),
-    url(r'user_binding/query_bound_weibo_info$', query_bound_weibo_info, name='query_bound_weibo_info'),
     url(r'user_binding/weibo_unbinding$', weibo_unbinding, name='weibo_unbinding'),
+    url(r'user_binding/query_bound_weibo_info$', query_bound_weibo_info, name='query_bound_weibo_info'),
 
     url(r'friend_manage$', friend_manage, name='friend_manage'),
     url(r'friend_manage/add_group$', add_group, name='add_group'),
@@ -29,11 +29,6 @@ settingpatterns = [
     url(r'friend_manage/get_group_friends/(?P<group>\w+)/(?P<page>[0-9]+)$', get_group_friends, name='get_group_friends'),
 ]
 
-
-authcodepatterns = [
-    url(r'github_code/(?P<code>\w+)/$', get_github_code, name='get_github_code'),
-]
-
 app_name = 'closends'
 urlpatterns = [
     url(r'^$', to_login, name='to_login'),
@@ -45,5 +40,4 @@ urlpatterns = [
 
     url(r'^index$', index, name='index'),
     url(r'^setting/', include(settingpatterns, namespace='setting')),
-    url(r'^authcode/', include(authcodepatterns, namespace='authcode')),
 ]

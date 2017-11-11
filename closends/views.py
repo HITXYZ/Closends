@@ -22,10 +22,14 @@ def page_error(request):
     return render_to_response('500.html')
 
 
+"""
+    登录注册注销模块：
+        用户名、密码登录
+"""
+
+
 @csrf_exempt
 def to_login(request):
-    if request.user.is_authenticated:
-        print(request.user.email)
     return render(request, 'closends/login.html')
 
 
@@ -43,6 +47,7 @@ def username_login(request):
         if not User.objects.filter(username=username):
             result = {'status': 'error', 'error_message': 'user_not_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
+
         user = authenticate(request=request, username=username, password=password)
         if user and user.is_active:
             login(request, user)
@@ -67,6 +72,7 @@ def email_login(request):
         if not User.objects.get(email=email):
             result = {'status': 'error', 'error_message': 'user_not_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
+
         user = authenticate(request=request, email=email, password=password)
         if user and user.is_active:
             login(request, user)
@@ -120,12 +126,22 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('closends:to_login'))
 
 
+"""
+    动态主页模块：
+        平台、分组、主题、时间、关键字查询
+"""
+
+
 @csrf_exempt
 @login_required
 def index(request):
-    user = request.user
-    print(user.username, user.email)
     return render(request, 'closends/index.html')
+
+
+"""
+    个人信息设置模块：
+        查询、设置、更改
+"""
 
 
 @csrf_exempt
@@ -133,7 +149,6 @@ def index(request):
 def user_info(request):
     user = request.user.userinfo
     context = {'user': user}
-    print(user.image_name())
     return render(request, 'closends/setting_user_info.html', context)
 
 
@@ -155,14 +170,20 @@ def update_username(request):
         user = request.user
         username = request.POST['username']
         if username != user.username:
-            if User.objects.filter(username = username):
-                result = {'status':"error", 'error_msg':'username_exist'}
+            if User.objects.filter(username=username):
+                result = {'status': "error", 'error_msg': 'username_exist'}
                 return HttpResponse(json.dumps(result), content_type='application/json')
             else:
                 user.username = username
                 user.save()
-        result = {'status':'success'}
+        result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+"""
+    账号绑定模块:
+        绑定、查询、更改、取绑
+"""
 
 
 @csrf_exempt
@@ -185,7 +206,6 @@ def query_weibo_user(request):
             person_html = check_weibo_user(weibo_account)
         else:
             person_html = ""
-        print(person_html)
         result = {'status': 'success', 'person_html': person_html}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
@@ -252,6 +272,43 @@ def zhihu_unbinding(request):
 
 @csrf_exempt
 @login_required
+def zhihu_unbinding(request):
+    sites = request.user.userinfo.website_set.all()
+    binding_sites = {}
+    for site in sites:
+        if site.site == 'tieba':
+            site.delete()
+        else:
+            binding_sites[site.site] = site.account
+    binding_sites = {'binding_sites': binding_sites}
+    return render(request, 'closends/setting_user_binding.html', binding_sites)
+
+
+"""
+    好友管理模块:
+        分组管理 增、移
+        好友管理 增、删、改、查询
+        好友账号管理 增、删、改、查询
+"""
+
+
+@csrf_exempt
+@login_required
+def friend_manage(request):
+    user = request.user.userinfo
+    all_friends = user.friend_set.filter(group='group_0')
+    paginator = Paginator(all_friends, 9)
+    friends = paginator.page(1)
+
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    context = {'group_list': group_list, 'current_group': 'group_0', 'friends': friends}
+    return render(request, 'closends/setting_friends_manage.html', context)
+
+
+@csrf_exempt
+@login_required
 def get_group_friends(request, group, page):
     user = request.user.userinfo
     all_friends = user.friend_set.filter(group=group)
@@ -272,21 +329,6 @@ def get_group_friends(request, group, page):
 
 @csrf_exempt
 @login_required
-def friend_manage(request):
-    user = request.user.userinfo
-    all_friends = user.friend_set.filter(group='group_0')
-    paginator = Paginator(all_friends, 9)
-    friends = paginator.page(1)
-
-    group_name = user.group_list.split(',')
-    group_index = ['group_' + str(index) for index in range(len(group_name))]
-    group_list = list(zip(group_index, group_name))
-    context = {'group_list': group_list, 'current_group': 'group_0', 'friends': friends}
-    return render(request, 'closends/setting_friends_manage.html', context)
-
-
-@csrf_exempt
-@login_required
 def add_group(request):
     if request.method == 'POST':
         group_name = request.POST['group_name']
@@ -295,12 +337,12 @@ def add_group(request):
         if group_name in group_list:
             result = {'status': 'error', 'error_msg': 'group_exsit'}
             return HttpResponse(json.dumps(result), content_type='application/json')
+
         group_list.append(group_name)
         user.group_list = ','.join(group_list)
         user.save()
         group_index = 'group_' + str(len(group_list) - 1)
         group_url = reverse('closends:setting:get_group_friends', args=(group_index, 1))
-        print(group_url)
         result = {'status': 'success', 'group_name': group_name, 'group_url': group_url}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
@@ -335,6 +377,7 @@ def add_friend_info(request):
         if user.friend_set.filter(nickname=nickname):
             result = {'status': 'error', 'error_msg': 'nickname_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
+
         if not request.FILES:
             user.friend_set.create(nickname=nickname, group=group_index)
         else:
@@ -431,9 +474,3 @@ def query_weibo_friend_by_account(request):
         person_html = check_weibo_user(weibo_account)
         result = {'status': 'success', 'person_html': person_html}
         return HttpResponse(json.dumps(result), content_type='application/json')
-
-
-@csrf_exempt
-def get_github_code(request, code):
-    print(code)
-    pass

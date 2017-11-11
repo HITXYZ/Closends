@@ -16,7 +16,7 @@ class UserInfo(models.Model):
         return self.head_img.name.split('/')[-1]
 
     user = models.OneToOneField(User)
-    head_img = models.ImageField(blank=True, upload_to=BASE_DIR+'/media/head')
+    head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
     group_list = models.CharField(default='未分组', max_length=1024)
 
 
@@ -62,7 +62,7 @@ class Friend(models.Model):
 
     group_choices = (('group_0', '未分组'), ('group_1', '家人'), ('group_2', '好友'), ('group_3', '同学'))
     nickname = models.CharField(max_length=30)
-    head_img = models.ImageField(blank=True, upload_to=BASE_DIR+'/media/head')
+    head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
     group = models.CharField(max_length=10, default='group_0', choices=group_choices)
 
     weibo_account = models.CharField(max_length=20, blank=True)
