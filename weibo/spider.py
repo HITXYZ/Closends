@@ -5,6 +5,7 @@
 """
 import datetime
 import logging
+import re
 import requests
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
@@ -17,7 +18,7 @@ user_follow_container = 100505
 user_fans_container = 100505
 
 login_url = 'https://passport.weibo.cn/signin/login'
-user_profile_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}&luicode=10000012&type=uid&value={uid2}'
+user_profile_url = '-'
 user_info_url = 'https://m.weibo.cn/api/container/getIndex?containerid=230283{uid1}_-_INFO' \
                 '&title=%25E5%259F%25BA%25E6%259C%25AC%25E4%25BF%25A1%25E6%2581%25AF&luicode=10000011' \
                 '&lfid=230283{uid2}'
@@ -45,6 +46,7 @@ class WeiboSpider(SocialMediaSpider):
         logging.info('Scraping info of weibo user: %d...' % id)
         item = WeiboUserItem()
         item.id = id
+        item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=id)
 
         # 通过主页请求获取关注数、粉丝数、头像url
         response = requests.get(user_profile_url.format(uid1=id, uid2=id))
@@ -109,6 +111,7 @@ class WeiboSpider(SocialMediaSpider):
                 user = card.get('user')
                 item = WeiboUserItem()
                 item.id = user.get('id')
+                item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.id)
                 item.name = user.get('screen_name')
                 item.gender = '男' if user.get('gender') == 'm' else '女'
                 item.avatar_url = user.get('profile_image_url')
@@ -162,6 +165,7 @@ class WeiboSpider(SocialMediaSpider):
                 user = card.get('user')
                 item = WeiboUserItem()
                 item.id = user.get('id')
+                item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.id)
                 item.name = user.get('screen_name')
                 item.gender = '男' if user.get('gender') == 'm' else '女'
                 item.avatar_url = user.get('profile_image_url')
@@ -215,26 +219,52 @@ class WeiboSpider(SocialMediaSpider):
                 if card.get('card_type') != 9:
                     continue
                 mblog = card.get('mblog')
-                if 'retweeted_status' in mblog.keys():
+                if 'retweeted_status' in mblog.keys():      # 转发微博
                     item = WeiboRepostContentItem()
                     retweet = mblog.get('retweeted_status')
-                    item.source_id = retweet.get('id')
-                    if retweet.get('user') is not None:     # 原微博可能已被删除
-                        item.source_owner = retweet.get('user').get('id')
-                    item.source_time = retweet.get('created_at')
-                    item.source_content = retweet.get('text')
+                    item.content = retweet.get('text')
+                    item.source_id = retweet.get('bid')
                     if 'pics' in retweet.keys():
                         for pic in retweet.get('pics'):
-                            item.source_pictures.append(pic.get('url'))
+                            item.pictures.append(pic.get('url'))
+                    if 'page_info' in retweet.keys():
+                        item.media_pic = retweet.get('page_info').get('page_pic').get('url')
+                        page_url = retweet.get('page_info').get('page_url')
+                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):    # 移动端文章链接打不开，将其换为PC端链接
+                            article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
+                            item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
+                        else:
+                            item.media_url = page_url
+                    if retweet.get('user') is not None:     # 原微博可能已被删除
+                        item.source_url = 'https://weibo.com/{uid}/{bid}'.format(uid=retweet.get('user').get('id'),
+                                                                                 bid=item.source_id)
+                        item.source_owner.id = retweet.get('user').get('id')
+                        item.source_owner.name = retweet.get('user').get('screen_name')
+                        item.source_owner.avatar_url = retweet.get('user').get('profile_image_url')
+                        item.source_owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.source_owner.id)
+                    item.repost_reason = mblog.get('text')
                 else:
                     item = WeiboContentItem()
-                item.id = mblog.get('id')
-                item.owner = mblog.get('user').get('id')
+                    item.content = mblog.get('text')
+                    if 'pics' in mblog.keys():
+                        for pic in mblog.get('pics'):
+                            item.pictures.append(pic.get('url'))
+                    if 'page_info' in mblog.keys():
+                        item.media_pic = mblog.get('page_info').get('page_pic').get('url')
+                        page_url = mblog.get('page_info').get('page_url')
+                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
+                            article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
+                            item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
+                        else:
+                            item.media_url = page_url
+                item.id = mblog.get('bid')
+                item.order = int(mblog.get('id'))
+                item.owner.id = mblog.get('user').get('id')
+                item.owner.name = mblog.get('user').get('screen_name')
+                item.owner.avatar_url = mblog.get('user').get('profile_image_url')
+                item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
+                item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
                 item.time = mblog.get('created_at')
-                item.content = mblog.get('text')
-                if 'pics' in mblog.keys():
-                    for pic in mblog.get('pics'):
-                        item.pictures.append(pic.get('url'))
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
@@ -245,15 +275,15 @@ class WeiboSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = WeiboSpider()
-    info = spider.scrape_info(5648343109)
-    follows = spider.scrape_follows(5648343109, 20)
-    fans = spider.scrape_fans(5648343109, 20)
+    # info = spider.scrape_info(5648343109)
+    # follows = spider.scrape_follows(5648343109, 20)
+    # fans = spider.scrape_fans(5648343109, 20)
     weibos = spider.scrape_weibo(3087483957, 20)
 
-    print(info)
-    for follow in follows:
-        print(follow)
-    for fan in fans:
-        print(fans)
+    # print(info)
+    # for follow in follows:
+    #     print(follow)
+    # for fan in fans:
+    #     print(fans)
     for weibo in weibos:
         print(weibo)
