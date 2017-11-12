@@ -1,38 +1,232 @@
 {% extends 'closends/base.html' %}
 
 {% block css_load %}
+    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/closends/js/bootstrap.js"></script>
+    <script src="/static/closends/js/jquery.min.js"></script>
+
     <style>
-        .WB_main {
+        .left_sidebar{
+            width: 200px;
+            height: 800px;
+            margin-left: 2%;
+            margin-top: 5%;
+            border: 1px solid;
+            position: fixed;
         }
 
-        .WB_frame {
-            letter-spacing: -0.31em;
-            *letter-spacing: normal;
-            word-spacing: -0.43em;
-            font-size: 0;
-
-            width: 1000px;
-            min-height: 680px;
-            margin: 0 auto;
-            padding: 16px 0 0 0;
-
-            background-color: rgba(255, 255, 255, 0.25);
+        .main_content{
+            width: 600px;
+            margin-left: 250px;
+            margin-top: 6.7%;
+            border: 1px solid;
         }
 
-        .WB_miniblog {
-            padding-top: 284px;
-            background-repeat: no-repeat;
-            background-position: center 0;
-            background-image: url("/static/closends/img/body_bg.jpg");
+        .right_sidebar{
+            width: 200px;
+            height: 800px;
+            margin-left: 870px;
+            margin-top: -84.3%;
+            border: 1px solid;
+            position: fixed;
+        }
+
+        .main_content div{
+            height: 200px;
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            background-color: lightblue;
         }
     </style>
+
+    <style>
+        .platform{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .platform span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .platform span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .platform span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .platform .all_sites .site{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .platform .all_sites button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+        .friend_groups{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .friend_groups span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .friend_groups span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .friend_groups span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .friend_groups .group_list .group{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .friend_groups .group_list button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+        .topics{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .topics span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .topics span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .topics span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .topics .topic_list .topic{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .topics .topic_list button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+    </style>
+
 {% endblock %}
 
 {% block content_body %}
-    <div class="WB_miniblog">
-        <div class="WB_main">
-            <div class="WB_frame">
+    <div class="main_box">
+        <div class="container">
+            <div class="left_sidebar">
+                <div class="platform">
+                    <span>
+                        <button id="unfold_platform" class="btn-link">平台
+                            <img class="img-circle" src="/static/closends/img/unfold.png">
+                        </button>
+                    </span>
+                    <div class="all_sites">
+                        <div class="site">
+                            <a href="#">
+                                <button class="btn-link text-left">微博</button>
+                            </a>
+                        </div>
+                        <div class="site">
+                            <a href="#">
+                                <button class="btn-link text-left">知乎</button>
+                            </a>
+                        </div>
+                        <div class="site">
+                            <a href="#">
+                                <button class="btn-link text-left">贴吧</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="friend_groups">
+                    <span>
+                        <button id="unfold_groups" class="btn-link">分组
+                            <img class="img-circle" src="/static/closends/img/unfold.png">
+                        </button>
+                    </span>
+                    <div class="group_list">
+                        {% for group in group_list %}
+                            <div class="group">
+                                <a href="#">
+                                    <button class="btn-link text-left">{{ group.1 }}</button>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="topics">
+                    <span>
+                        <button id="unfold_topics" class="btn-link">话题
+                            <img class="img-circle" src="/static/closends/img/unfold.png">
+                        </button>
+                    </span>
+                    <div class="topic_list">
+                        {% for group in group_list %}
+                            <div class="topic">
+                                <a href="#">
+                                    <button class="btn-link text-left">{{ group.1 }}</button>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
+            <div class="main_content">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="right_sidebar"></div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#unfold_platform").on("click", function () {
+                $(".all_sites").toggle();
+            });
+
+            $("#unfold_groups").on("click", function () {
+                $(".group_list").toggle();
+            });
+
+            $("#unfold_topics").on("click", function () {
+                $(".topic_list").toggle();
+            });
+        })
+    </script>
 {% endblock %}

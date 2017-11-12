@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 
-marks = {'weibo': '微博', 'zhihu': '知乎', 'tieba':'贴吧'}
+marks = {'weibo': '微博', 'zhihu': '知乎', 'tieba': '贴吧'}
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -31,9 +31,9 @@ class Website(models.Model):
 
     site_choices = (('weibo', '微博'), ('zhihu', '知乎'), ('tieba', '贴吧'))
     site = models.CharField(max_length=5, default='weibo', choices=site_choices)
-    account = models.CharField(max_length=50, blank=True)
-    link = models.CharField(max_length=100, blank=True)
-    head = models.CharField(max_length=100, blank=True)
+    account = models.CharField(max_length=50)
+    link = models.CharField(max_length=100)
+    head = models.CharField(max_length=100)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
@@ -80,19 +80,19 @@ class Friend(models.Model):
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
-class QQContent(models.Model):
-    """QQ动态"""
-
-    def __str__(self):
-        return self.content[:20]
-
-    def nickname(self):
-        return self.friend.nickname
-
-    content = models.TextField()
-    video_url = models.URLField(blank=True)
-    publish_date = models.DateField('date published')
-    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
+# class QQContent(models.Model):
+#     """QQ动态"""
+#
+#     def __str__(self):
+#         return self.content[:20]
+#
+#     def nickname(self):
+#         return self.friend.nickname
+#
+#     content = models.TextField()
+#     video_url = models.URLField(blank=True)
+#     publish_date = models.DateField('date published')
+#     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
 class WeiboContent(models.Model):
@@ -104,14 +104,34 @@ class WeiboContent(models.Model):
     def nickname(self):
         return self.friend.nickname
 
+    # basic post
+    pub_date = models.DateField('date published')
+    src_url = models.CharField(max_length=100)
     content = models.TextField()
-    video_url = models.URLField(blank=True)
-    publish_date = models.DateField('date published')
+
+    # check video/image or is reposted
+    is_repost = models.BooleanField()
+    has_image = models.BooleanField()
+    has_video = models.BooleanField()
+
+    # original author
+    origin_account = models.CharField(max_length=20, blank=True)
+    origin_link = models.CharField(max_length=100, blank=True)
+
+    # original post
+    origin_pub_date = models.DateField('date_published')
+    origin_src_url = models.CharField(max_length=100, blank=True)
+    origin_content = models.TextField(blank=True)
+    origin_has_image = models.BooleanField(blank=True)
+    origin_has_video = models.BooleanField(blank=True)
+    video_image = models.ImageField(upload_to=BASE_DIR + '/media/head', blank=True)
+    video_url = models.CharField(max_length=100, blank=True)
+
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
 class ZhihuContent(models.Model):
-    """微博动态"""
+    """知乎动态"""
 
     def __str__(self):
         return self.content[:20]
@@ -119,9 +139,16 @@ class ZhihuContent(models.Model):
     def nickname(self):
         return self.friend.nickname
 
+    pub_date = models.DateField('date published')
+    title = models.CharField(max_length=50)
+    title_link = models.CharField(max_length=100)
+    has_image = models.BooleanField()
     content = models.TextField()
-    video_url = models.URLField(blank=True)
-    publish_date = models.DateField('date published')
+
+    friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
+
+
+class TiebaContent(models.Model):
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
@@ -131,8 +158,7 @@ class Image(models.Model):
     def __str__(self):
         return self.image_url
 
-    image = models.ImageField()
-    image_url = models.URLField(max_length=50, blank=True)
-    content_qq = models.ForeignKey(QQContent, on_delete=models.CASCADE)
+    image_url = models.URLField(max_length=100, blank=True)
     content_weibo = models.ForeignKey(WeiboContent, on_delete=models.CASCADE)
     content_zhihu = models.ForeignKey(ZhihuContent, on_delete=models.CASCADE)
+    content_tieba = models.ForeignKey(TiebaContent, on_delete=models.CASCADE)

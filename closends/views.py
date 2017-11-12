@@ -135,7 +135,12 @@ def user_logout(request):
 @csrf_exempt
 @login_required
 def index(request):
-    return render(request, 'closends/index.html')
+    user = request.user.userinfo
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    result = {'group_list': group_list}
+    return render(request, 'closends/index.html', result)
 
 
 """

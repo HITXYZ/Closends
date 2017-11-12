@@ -19,8 +19,8 @@ class ImageInline(admin.StackedInline):
     model = Image
 
 
-class QQContentInline(admin.StackedInline):
-    model = QQContent
+class TiebaContentInline(admin.StackedInline):
+    model = TiebaContent
 
 
 class WeiboContentInline(admin.StackedInline):
@@ -37,7 +37,7 @@ class MyUserAdmin(UserAdmin):
 
 
 class UserInfoAdmin(admin.ModelAdmin):
-    list_display = ('__str__', )
+    list_display = ('__str__',)
     inlines = (WebsiteInline, FriendInline)
 
 
@@ -47,22 +47,21 @@ class WebsiteAdmin(admin.ModelAdmin):
 
 class FriendAdmin(admin.ModelAdmin):
     listdisplay = ('username', 'nickname', 'group')
-    inlines = (QQContentInline, WeiboContentInline, ZhihuContentInline,)
-
-
-class QQContentAdmin(admin.ModelAdmin):
-    listdisplay = ('nickname', 'content', 'publishdate')
-    inlines = (ImageInline,)
+    inlines = (TiebaContentInline, WeiboContentInline, ZhihuContentInline,)
 
 
 class WeiboContentAdmin(admin.ModelAdmin):
-    listdisplay = ('nickname', 'content', 'publishdate')
+    listdisplay = ('nickname', 'content', 'pub_date')
     inlines = (ImageInline,)
 
 
 class ZhihuContentAdmin(admin.ModelAdmin):
-    listdisplay = ('nickname', 'content', 'publishdate')
+    listdisplay = ('nickname', 'content', 'pub_date')
     inlines = (ImageInline,)
+
+
+class TiebaContentAdmin(admin.ModelAdmin):
+    pass
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -75,7 +74,7 @@ admin.site.register(User, MyUserAdmin)
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Friend, FriendAdmin)
-admin.site.register(QQContent, QQContentAdmin)
 admin.site.register(WeiboContent, WeiboContentAdmin)
 admin.site.register(ZhihuContent, ZhihuContentAdmin)
+admin.site.register(TiebaContent, TiebaContentAdmin)
 admin.site.register(Image, ImageAdmin)
