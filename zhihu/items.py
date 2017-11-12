@@ -156,3 +156,41 @@ class ZhihuAnswerItem(ZhihuItem):
 
     def __hash__(self):
         return hash(self.id)
+
+
+# 知乎用户动态条目
+class ZhihuActivityItem(ZhihuItem):
+    def __init__(self):
+        self.id = 0
+        self.verb = None
+        self.create_time = None
+        self.actor = None
+        self.target_user_name = None
+        self.target_user_avatar = None
+        self.target_user_headline = None
+        self.target_user_url = None
+        self.target_title = None
+        self.target_title_url = None
+        self.target_content = None
+        self.target_content_url = None
+        self.action_text = None
+
+    def __str__(self):
+        string = ''
+        string += 'ID: ' + str(self.id) + '\n'
+        string += 'Verb: ' + str(self.verb) + '\n'
+        string += 'Create Time: ' + str(self.create_time) + '\n'
+        string += 'Actor: ' + str(self.actor) + '\n'
+        string += 'Target User Name: ' + str(self.target_user_name) + '\n'
+        string += 'Target User Avatar: ' + str(self.target_user_avatar) + '\n'
+        string += 'Target User Headline: ' + str(self.target_user_headline) + '\n'
+        string += 'Target User Url: ' + str(self.target_user_url) + '\n'
+        string += 'Target Title: ' + str(self.target_title) + '\n'
+        string += 'Target Title Url: ' + str(self.target_title_url) + '\n'
+        string += 'Target Content: ' + str(self.target_content) + '\n'
+        string += 'Target Content Url: ' + str(self.target_content_url) + '\n'
+        string += 'Action Text: ' + str(self.action_text) + '\n'
+        return string
+
+    def __hash__(self):
+        return hash(self.id)

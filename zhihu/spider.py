@@ -10,7 +10,7 @@ import datetime
 import logging
 import requests
 from bs4 import BeautifulSoup
-from zhihu.items import ZhihuUserItem, ZhihuEducationItem, ZhihuEmploymentItem, ZhihuQuestionItem, ZhihuAnswerItem
+from zhihu.items import *
 from exceptions import MethodParamError
 from base_spider import SocialMediaSpider
 
@@ -24,6 +24,7 @@ headers = {
 user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
 follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
 followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?include={include}&offset={offset}&limit={limit}'
+activity_url = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit={limit}&after_id={after}&desktop=True'
 question_url = 'https://www.zhihu.com/api/v4/questions/{id}?include={include}'
 user_questions_url = 'https://www.zhihu.com/api/v4/members/{user}/questions?offset={offset}&limit={limit}'
 answer_url = 'https://www.zhihu.com/api/v4/answers/{id}?include={include}'
@@ -194,6 +195,38 @@ class ZhihuSpider(SocialMediaSpider):
         logging.info('Succeed in scraping followers of zhihu user: %s.' % user)
         self.scraped_followers[user] = followers
         return followers
+
+    def scrape_activities(self, user=None):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' must be an instance of \'str\'')
+        timestamp = int(time.time())
+        response = requests.get(activity_url.format(user=user, limit=10, after=timestamp), headers=headers)
+        result = response.json()
+        activities = []
+        for data in result.get('data'):
+            item = ZhihuActivityItem()
+            item.id = data.get('id')
+            item.verb = data.get('verb')
+            item.create_time = time.ctime(data.get('created_time'))
+            item.actor = data.get('actor').get('url_token')
+            target = data.get('target')
+            item.target_user_name = target.get('author').get('name')
+            item.target_user_avatar = target.get('author').get('avatar_url')
+            item.target_user_headline = target.get('author').get('headline')
+            item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(user=target.get('author').get('url_token'))
+            item.target_title = target.get('title')
+            if item.verb == 'MEMBER_VOTEUP_ARTICLE':
+                item.target_title_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
+            elif item.verb == 'QUESTION_FOLLOW' or item.verb == 'QUESTION_CREATE':
+                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
+            else:
+                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('question').get('id'))
+            if item.verb != 'QUESTION_FOLLOW' and item.verb != 'QUESTION_CREATE':
+                item.target_content = target.get('excerpt_new')
+                item.target_content_url = 'https://www.zhihu.com/answer/{id}'.format(id=target.get('id'))
+            item.action_text = data.get('action_text')
+            activities.append(item)
+        return activities
 
     def scrape_question_by_id(self, id=0):
         if id == 0:
@@ -498,22 +531,25 @@ class ZhihuSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = ZhihuSpider()
-    info = spider.scrape_info(user='qing-shen-jue-qian')
-    print(info)
-    spider.save_info()
+    # info = spider.scrape_info(user='qing-shen-jue-qian')
+    # print(info)
+    # spider.save_info()
 
-    follows = spider.scrape_follows(user='qing-shen-jue-qian', number=1)
-    for follow in follows:
-        print(follow)
-    spider.save_user_follows('qing-shen-jue-qian')
+    # follows = spider.scrape_follows(user='qing-shen-jue-qian', number=1)
+    # for follow in follows:
+    #     print(follow)
+    # spider.save_user_follows('qing-shen-jue-qian')
 
-    followers = spider.scrape_followers(user='qing-shen-jue-qian', number=1)
-    for follower in followers:
-        print(follower)
-    spider.save_user_followers('qing-shen-jue-qian')
+    # followers = spider.scrape_followers(user='qing-shen-jue-qian', number=1)
+    # for follower in followers:
+    #     print(follower)
+    # spider.save_user_followers('qing-shen-jue-qian')
 
-    question = spider.scrape_question_by_id(67684166)
-    print(question)
+    # question = spider.scrape_question_by_id(67684166)
+    # print(question)
 
-    answer = spider.scrape_answer_by_id(255562932)
-    print(answer)
+    # answer = spider.scrape_answer_by_id(255562932)
+    # print(answer)
+    activities = spider.scrape_activities('excited-vczh')
+    for activity in activities:
+        print(activity)
