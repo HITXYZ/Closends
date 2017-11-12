@@ -9,34 +9,16 @@
         .left_sidebar{
             width: 200px;
             height: 800px;
-            margin-left: 2%;
-            margin-top: 5%;
+            margin-left: 20%;
             border: 1px solid;
             position: fixed;
         }
 
         .main_content{
             width: 600px;
-            margin-left: 250px;
+            margin-left: 35%;
             margin-top: 6.7%;
             border: 1px solid;
-        }
-
-        .right_sidebar{
-            width: 200px;
-            height: 800px;
-            margin-left: 870px;
-            margin-top: -84.3%;
-            border: 1px solid;
-            position: fixed;
-        }
-
-        .main_content div{
-            height: 200px;
-            margin-top: 2%;
-            margin-left: 2%;
-            margin-right: 2%;
-            background-color: lightblue;
         }
     </style>
 
@@ -139,81 +121,346 @@
 
     </style>
 
+    <style>
+        .WB_transmit_post, .WB_original_post, .zhihu_item{
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            border-radius:5px;
+            background-color: white;
+        }
+
+        .WB_face {
+            width: 50px;
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .WB_face img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .WB_detail {
+            margin-left: 70px;
+            margin-top: -60px;
+            padding-bottom: 10px;
+        }
+
+        .WB_feed_expand{
+            margin-left: -70px;
+            background-color: #f2f2f5;
+        }
+
+        .WB_feed{
+            margin-left: 70px;
+        }
+
+        .WB_info {
+            margin: 0 0 3px;
+            padding: 5px 0 0;
+        }
+
+        .WB_text {
+            margin-right: 30px;
+            padding: 1px 0 3px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_text img {
+            vertical-align: text-bottom;
+        }
+
+        .WB_media .media-box{
+            margin-top: 5px;
+        }
+
+        .WB_media .media-box .col-md-3{
+            width: 115px;
+        }
+
+        .WB_media .media-box img{
+            width: 110px;
+            height: 110px;
+        }
+
+        .topic{
+            padding-left: 10px;
+            padding-top: -5px;
+        }
+
+        .author_info{
+            padding-top: 10px;
+            padding-left: 10px;
+        }
+
+        .author_info .userlink{
+            width: 60px;
+            height: 60px;
+        }
+
+        .author_info .userlink img{
+            width: 50px;
+            height: 50px;
+        }
+
+        .author_info .author_info_content{
+            margin-top: 10px;
+        }
+
+        .author_info .author_info_content .author_info_detail{
+            margin-top: 5px;
+        }
+
+        .rich_content{
+            padding-bottom: 10px;
+        }
+
+        .rich_content .col-md-9{
+            padding-right: 20px;
+        }
+
+        .rich_content .rich_content_cover{
+            padding-left: 25px;
+        }
+
+        .rich_content .rich_content_cover img{
+            width: 120px;
+        }
+
+        .rich_content .rich_content_inner{
+            margin-left: 35px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
 {% endblock %}
 
 {% block content_body %}
     <div class="main_box">
-        <div class="container">
-            <div class="left_sidebar">
-                <div class="platform">
-                    <span>
-                        <button id="unfold_platform" class="btn-link">平台
-                            <img class="img-circle" src="/static/closends/img/unfold.png">
-                        </button>
-                    </span>
-                    <div class="all_sites">
-                        <div class="site">
-                            <a href="#">
-                                <button class="btn-link text-left">微博</button>
-                            </a>
-                        </div>
-                        <div class="site">
-                            <a href="#">
-                                <button class="btn-link text-left">知乎</button>
-                            </a>
-                        </div>
-                        <div class="site">
-                            <a href="#">
-                                <button class="btn-link text-left">贴吧</button>
-                            </a>
-                        </div>
+        <div class="left_sidebar">
+            <div class="platform">
+                <span>
+                    <button id="unfold_platform" class="btn-link">平台
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="all_sites">
+                    <div class="site">
+                        <a href="#">
+                            <button class="btn-link text-left">微博</button>
+                        </a>
                     </div>
-                </div>
-                <div class="friend_groups">
-                    <span>
-                        <button id="unfold_groups" class="btn-link">分组
-                            <img class="img-circle" src="/static/closends/img/unfold.png">
-                        </button>
-                    </span>
-                    <div class="group_list">
-                        {% for group in group_list %}
-                            <div class="group">
-                                <a href="#">
-                                    <button class="btn-link text-left">{{ group.1 }}</button>
-                                </a>
-                            </div>
-                        {% endfor %}
+                    <div class="site">
+                        <a href="#">
+                            <button class="btn-link text-left">知乎</button>
+                        </a>
                     </div>
-                </div>
-                <div class="topics">
-                    <span>
-                        <button id="unfold_topics" class="btn-link">话题
-                            <img class="img-circle" src="/static/closends/img/unfold.png">
-                        </button>
-                    </span>
-                    <div class="topic_list">
-                        {% for group in group_list %}
-                            <div class="topic">
-                                <a href="#">
-                                    <button class="btn-link text-left">{{ group.1 }}</button>
-                                </a>
-                            </div>
-                        {% endfor %}
+                    <div class="site">
+                        <a href="#">
+                            <button class="btn-link text-left">贴吧</button>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="main_content">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+            <div class="friend_groups">
+                <span>
+                    <button id="unfold_groups" class="btn-link">分组
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="group_list">
+                    {% for group in group_list %}
+                        <div class="group">
+                            <a href="#">
+                                <button class="btn-link text-left">{{ group.1 }}</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="right_sidebar"></div>
+            <div class="topics">
+                <span>
+                    <button id="unfold_topics" class="btn-link">话题
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="topic_list">
+                    {% for group in group_list %}
+                        <div class="topic">
+                            <a href="#">
+                                <button class="btn-link text-left">{{ group.1 }}</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="main_content">
+            <div class="WB_transmit_post">
+                <div class="WB_face">
+                    <a target="_blank" class="W_face_radius" href="">
+                        <img src="//tva4.sinaimg.cn/crop.0.0.177.177.50/612edf3agw1ekppvdur8wj2050050q32.jpg" class="img-circle">
+                    </a>
+                </div>
+                <div class="WB_detail">
+                    <div class="WB_info">
+                        <a href="" target="_blank">IT程序猿</a>
+                        <a href="" target="_blank">(备注)</a>
+                    </div>
+                    <div class="WB_from">
+                        <a href="" target="_blank">15:57</a>
+                        <a href="" target="_blank">原文链接</a>
+                    </div>
+                    <div class="WB_text">
+                        猿哥看到的是，阿里狂欢节后背有着一群牛逼的程序猿！
+                        <img render="ext" src="//img.t.sinajs.cn/t4/appstyle/expression/ext/normal/36/gza_org.gif" title="[鼓掌]" alt="[鼓掌]" type="face" style="visibility: visible;"></div>
+                    <div class="WB_feed_expand">
+                        <div class="WB_feed">
+                            <div class="WB_info">
+                                <a class="W_fb" href="" title="阿里技术">@阿里技术</a>
+                            </div>
+                            <div class="WB_func clearfix">
+                                <a href="" target="_blank" >14:28</a>
+                                <a href="" target="_blank" >原文链接</a>
+                            </div>
+                            <div class="WB_text">
+                                <a target="_blank" render="ext" suda-uatrack="key=topic_click&amp;value=click_topic" class="a_topic" extra-data="type=topic" href="//huati.weibo.com/k/%E5%A4%A9%E7%8C%AB%E5%8F%8C11+%E6%8A%80%E6%9C%AF%E8%B6%85%E7%BA%A7%E5%B7%A5%E7%A8%8B?from=501">#天猫双11技术超级工程#</a>
+                                成交额1682亿、交易创建峰值32.5万笔/秒、支付峰值25.6万笔/秒，消费者、商家、物流、银行、运营商、海关等全面参与，达成人类商业史上最大规模的一次协同！这一切的背后，是强大的互联网基础设施和智能技术保障。9年天猫双11，互联网技术超级工程！
+                            </div>
+                            <div class="WB_media">
+                                <div class="media-box row">
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                </div>
+                                <div class="media-box row">
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                </div>
+                                <div class="media-box row">
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                    <div class="col-md-3 pic">
+                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zhihu_item">
+                <div class="author_info row">
+                    <div class="userlink col-md-2">
+                        <a href=""><img class="img-circle" src="/static/closends/img/logo.jpg"></a>
+                    </div>
+                    <div class="author_info_content col-md-8">
+                        <div class="author_info_head">
+                            <div>
+                                <a class="userlink_link" href="">少数派</a>
+                            </div>
+                        </div>
+                        <div class="author_info_detail">
+                            <div class="rich_text">高品质数字生活消费指南，微信号 sspaime</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic">
+                    <h5 class="content_item_title">
+                        <a href="//zhuanlan.zhihu.com/p/30979279" target="_blank">iPhone X 的硬件性能如何？看看这 4家机构的专业测试报告</a>
+                    </h5>
+                </div>
+
+                <div class="rich_content row">
+                    <div class="rich_content_cover col-md-2">
+                        <img src="/static/closends/img/zhihu_cover.jpg">
+                    </div>
+                    <div class="rich_content_inner col-md-9">
+                        <span class="rich_text">iPhone X 正式开售几天过去了，很多用户都已经拿到期盼已久的新 iPhone。Face ID 和刘海似乎成了众多测评视频中的重头戏，但别忘了 iPhone X 的 A11 仿生芯片、OLED 屏…</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="WB_original_post">
+                <div class="WB_face">
+                    <a target="_blank" class="W_face_radius" href="">
+                        <img src="//tva4.sinaimg.cn/crop.0.0.177.177.50/612edf3agw1ekppvdur8wj2050050q32.jpg" class="img-circle">
+                    </a>
+                </div>
+                <div class="WB_detail">
+                    <div class="WB_info">
+                        <a href="" target="_blank">IT程序猿</a>
+                        <a href="" target="_blank">(备注)</a>
+                    </div>
+                    <div class="WB_from">
+                        <a href="" target="_blank">15:57</a>
+                        <a href="" target="_blank">原文链接</a>
+                    </div>
+                    <div class="WB_text">
+                        <a target="_blank" render="ext" suda-uatrack="key=topic_click&amp;value=click_topic" class="a_topic" extra-data="type=topic" href="//huati.weibo.com/k/IT%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB?from=501">#IT技术分享#</a> 【7款经典游戏 诠释高级算法精髓】<a suda-uatrack="key=minicard&amp;value=pagelink_minicard_click" title="网页链接" href="http://t.cn/RpiYInk" alt="http://t.cn/RpiYInk" action-type="feed_list_url" target="_blank"><i class="W_ficon ficon_cd_link">O</i>网页链接</a>采用基础的Java语言，通过7款经典好玩的游戏，bobo老师带你进入不一样的算法世界，体验算法在实际开发中的应用，真正把算法用起来！<br><br>1、微软数据结构+算法面试100题答案：<a suda-uatrack="key=minicard&amp;value=pagelink_minicard_click" title="网页链接" href="http://t.cn/RbrAxzj" alt="http://t.cn/RbrAxzj" action-type="feed_list_url" target="_blank"><i class="W_ficon ficon_cd_link">O</i>网页链接</a> <br>2、算法与数据结构精解： ​​​​...<a target="_blank" href="//weibo.com/3306361973/FuRNX8v7J" class="WB_text_opt" suda-uatrack="key=original_blog_unfold&amp;value=click_unfold:4173566692026267:3306361973" action-type="fl_unfold" action-data="mid=4173566692026267&amp;is_settop&amp;is_sethot&amp;is_setfanstop&amp;is_setyoudao">展开全文<i class="W_ficon ficon_arrow_down">c</i></a>
+                    </div>
+                    <div class="WB_media">
+                        <div class="media-box row">
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                        </div>
+                        <div class="media-box row">
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                        </div>
+                        <div class="media-box row">
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                            <div class="col-md-3 pic">
+                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function () {
             $("#unfold_platform").on("click", function () {
