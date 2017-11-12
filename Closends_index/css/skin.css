@@ -76,11 +76,7 @@ body,.S_page{background-color:#dfd7b2;background-image:none;  }
 .WB_frame{ background-color:rgba(255,255,255,0.25);}
 .WB_timeline .S{ color:#847c53;border-left-color:#847c53;}
 .WB_timeline .current em,.WB_timeline .S_dot,.W_gotop{ background-color:#847c53;}
-.WB_miniblog{background-image:url("images/body_bg.jpg?id=1410943047113") ;}
-.S_page .WB_miniblog{background-image:url("images/body_bg_page.jpg?id=1410943047113") ;}
-.send_weibo{background-image:url("images/bg_main.jpg?id=1410943047113") ;}
-.send_weibo .W_btn_a{background-image:url("images/btn.png?id=1410943047113") ;}
-.L-zh-hk .send_weibo .W_btn_a,.L-zh-tw .send_weibo .W_btn_a{background-image:url("images/btn_CHT.png?id=1410943047113") ;}
-.W_gotop{background-image:url("images/gotop.png?id=1410943047113") ;}
+.WB_miniblog{background-image:url("img/body_bg.jpg") ;}
+.S_page .WB_miniblog{background-image:url("img/body_bg_page.jpg") ;}
 .pf_wrap{background-image:none;}
 #js_skin_skinvip037_skin{height:42px;}
