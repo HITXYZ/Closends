@@ -4,9 +4,6 @@
     @desc: Search weibo users and get html
 """
 import os
-import re
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -15,15 +12,6 @@ from selenium.webdriver.support import expected_conditions as ec
 from urllib.request import quote
 from exceptions import MethodParamError
 
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-    'Referer': 'https://weibo.com',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.8'
-}
 
 search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
@@ -42,11 +30,11 @@ def get_user_by_search(user=None, number=1):
     try:
         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
         user_divs = driver.find_elements_by_class_name('list_person')
-    except TimeoutException:    # 未找到结果或网速太慢
+    except TimeoutException:            # 未找到结果或网速太慢
         return [], []
     except NoSuchElementException:      # 未找到结果
         return [], []
-    if len(user_divs) >= number:    # 截取前number个搜索结果
+    if len(user_divs) >= number:        # 截取前number个搜索结果
         user_divs = user_divs[:number]
     user_ids = []
     user_htmls = []
@@ -64,7 +52,7 @@ def get_user_by_homepage(url):
     wait = WebDriverWait(driver, 10)
     try:
         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'username')))
-    except TimeoutException:    # 网速太慢或链接错误
+    except TimeoutException:        # 网速太慢或链接错误
         return None, None
     username = driver.find_element_by_class_name('username').text
     user_ids, user_htmls = get_user_by_search(user=username, number=1)
