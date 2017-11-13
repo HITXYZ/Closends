@@ -18,7 +18,7 @@ headers = {
 search_url = 'https://www.zhihu.com/search?type=people&q={key}'
 
 
-def search_user(user=None, number=1):
+def get_user_by_search(user=None, number=1):
     if not isinstance(user, str):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
@@ -41,22 +41,20 @@ def search_user(user=None, number=1):
     return user_tokens, user_htmls
 
 
-def get_user_from_profile(url):
+def get_user_by_homepage(url):
     if not isinstance(url, str):
         raise MethodParamError('Parameter \'url\' must be an instance of \'str\'!')
     if not re.match(r'https://www\.zhihu\.com/people/.*', url):     # 不合法的主页地址
-        return None
+        return None, None
     user = re.search(r'https://www\.zhihu\.com/people/(.*)', url).group(1).split('/')[0]
     response = requests.get('https://www.zhihu.com/people/' + user + '/activities', headers=headers)
     if response.status_code == 404:     # 用户不存在
-        return None
-    return user
+        return None, None
+    user_tokens, user_htmls = get_user_by_search(user=user, number=1)
+    if len(user_tokens) > 0 and len(user_htmls) > 0:
+        return user_tokens[0], user_htmls[0]
+    return None, None
 
 
 if __name__ == '__main__':
-    tokens, htmls = search_user('于晟建', 3)
-    for user_token in tokens:
-        print(user_token)
-    for user_html in htmls:
-        print(user_html)
-    print(get_user_from_profile('https://www.zhihu.com/people/excited-vczh/activities'))
+    print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
