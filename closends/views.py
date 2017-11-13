@@ -7,9 +7,9 @@ from django.core.paginator import PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response, HttpResponse, HttpResponseRedirect
 
-import json
+import json, time
 from .models import *
-from .check_account import *
+from .tasks import sendmail
 
 
 @csrf_exempt
@@ -208,7 +208,7 @@ def query_weibo_user(request):
     if request.method == "POST":
         weibo_account = request.POST['weibo_account']
         if request.POST['adding_option'] == "账号":
-            person_html = check_weibo_user(weibo_account)
+            person_html = ""
         else:
             person_html = ""
         result = {'status': 'success', 'person_html': person_html}
@@ -476,6 +476,6 @@ def query_weibo_friend_by_link(request):
 def query_weibo_friend_by_account(request):
     if request.method == 'POST':
         weibo_account = request.POST['weibo_account']
-        person_html = check_weibo_user(weibo_account)
+        person_html = ""
         result = {'status': 'success', 'person_html': person_html}
         return HttpResponse(json.dumps(result), content_type='application/json')

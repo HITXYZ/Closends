@@ -3,6 +3,7 @@
     @date: 2017/10/23
     @desc: Items of weibo scraping
 """
+
 from closends.spider.base_item import SocialMediaItem
 
 
@@ -89,6 +90,17 @@ class WeiboContentItem(WeiboItem):
     def __hash__(self):
         return hash(self.id)
 
+    def convert_format(self):
+        pub_date = self.order
+        src_url = self.url
+        content = self.content
+
+        is_repost = False
+        images = self.pictures
+        video_image = self.media_pic
+
+        return pub_date, src_url, content, is_repost, images, video_image
+
 
 # 微博转发内容条目类
 class WeiboRepostContentItem(WeiboContentItem):
@@ -109,3 +121,26 @@ class WeiboRepostContentItem(WeiboContentItem):
 
     def __hash__(self):
         return hash(self.id)
+
+    def convert_format(self):
+        basic = WeiboContentItem.convert_format(self)
+
+        pub_date = basic[0]
+        src_url = basic[1]
+        content = self.repost_reason
+
+        is_repost = True
+        images = []
+        video_image = ""
+
+        origin_account = self.source_owner.name
+        origin_link = self.source_owner.avatar_url
+
+        origin_pub_date = ""
+        origin_src_url = self.source_url
+        origin_content = basic[2]
+        origin_images = basic[4]
+        origin_video_image = basic[5]
+
+        return pub_date, src_url, content, is_repost, images, video_image, \
+               origin_account, origin_link, origin_pub_date, origin_src_url, origin_content, origin_images, origin_video_image

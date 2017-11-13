@@ -72,6 +72,7 @@ class Friend(models.Model):
     zhihu_account = models.CharField(max_length=20, blank=True)
     zhihu_link = models.CharField(max_length=100, blank=True)
     zhihu_head = models.CharField(max_length=100, blank=True)
+    zhihu_detail = models.CharField(max_length=200, blank=True)
 
     tieba_account = models.CharField(max_length=20, blank=True)
     tieba_link = models.CharField(max_length=100, blank=True)
@@ -112,7 +113,7 @@ class WeiboContent(models.Model):
     # check video/image or is reposted
     is_repost = models.BooleanField()
     has_image = models.BooleanField()
-    has_video = models.BooleanField()
+    video_image = models.CharField(max_length=100, blank=True)
 
     # original author
     origin_account = models.CharField(max_length=20, blank=True)
@@ -123,9 +124,7 @@ class WeiboContent(models.Model):
     origin_src_url = models.CharField(max_length=100, blank=True)
     origin_content = models.TextField(blank=True)
     origin_has_image = models.BooleanField(blank=True)
-    origin_has_video = models.BooleanField(blank=True)
-    video_image = models.ImageField(upload_to=BASE_DIR + '/media/head', blank=True)
-    video_url = models.CharField(max_length=100, blank=True)
+    origin_video_image = models.CharField(max_length=100, blank=True)
 
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
@@ -142,7 +141,7 @@ class ZhihuContent(models.Model):
     pub_date = models.DateField('date published')
     title = models.CharField(max_length=50)
     title_link = models.CharField(max_length=100)
-    has_image = models.BooleanField()
+    cover_image = models.CharField(max_length=100, blank=True)
     content = models.TextField()
 
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)

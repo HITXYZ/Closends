@@ -7,8 +7,8 @@
 import logging
 import re
 import requests
-from closends.spider.exceptions import MethodParamError
-from closends.spider.weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
+from closends.spider.base_exceptions import MethodParamError
+from closends.spider.weibo_items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from closends.spider.base_spider import SocialMediaSpider
 
 user_info_container = 230283

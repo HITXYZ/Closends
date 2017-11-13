@@ -6,12 +6,11 @@
 import csv
 import re
 import time
-import datetime
 import logging
 import requests
 from bs4 import BeautifulSoup
-from closends.spider.zhihu.items import *
-from closends.spider.exceptions import MethodParamError
+from closends.spider.zhihu_items import *
+from closends.spider.base_exceptions import MethodParamError
 from closends.spider.base_spider import SocialMediaSpider
 
 headers = {
@@ -55,7 +54,6 @@ class ZhihuSpider(SocialMediaSpider):
         if user is None:
             return None
         logging.info('Scraping info of zhihu user: %s...' % user)
-        print(user_url.format(user=user, include=user_query))
         response = requests.get(user_url.format(user=user, include=user_query), headers=headers)
         if response.status_code == 404:  # 用户不存在或账号被封禁
             logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -227,6 +225,7 @@ class ZhihuSpider(SocialMediaSpider):
                 item.target_content = target.get('excerpt_new')
                 item.target_content_url = 'https://www.zhihu.com/answer/{id}'.format(id=target.get('id'))
             item.action_text = data.get('action_text')
+            item.thumbnail = target.get('thumbnail')
             activities.append(item)
         return activities
 

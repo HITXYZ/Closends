@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'kombu.transport.django',
     'closends',
 ]
 
@@ -100,3 +101,17 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# celery中间件
+BROKER_URL = 'redis://localhost:6379'
+
+# celery结果返回, 用于跟踪结果
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+# celery内容等消息的格式设置
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# celery时区设置
+CELERY_TIMEZONE = 'Asia/Shanghai'

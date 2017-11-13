@@ -175,6 +175,7 @@ class ZhihuActivityItem(ZhihuItem):
         self.target_content = None
         self.target_content_url = None
         self.action_text = None
+        self.thumbnail = None
 
     def __str__(self):
         string = ''
@@ -191,7 +192,17 @@ class ZhihuActivityItem(ZhihuItem):
         string += 'Target Content: ' + str(self.target_content) + '\n'
         string += 'Target Content Url: ' + str(self.target_content_url) + '\n'
         string += 'Action Text: ' + str(self.action_text) + '\n'
+        string += 'Thumbnail: ' + str(self.thumbnail) + '\n'
         return string
 
     def __hash__(self):
         return hash(self.id)
+
+    def convert_format(self):
+        pub_date = self.create_time
+        title = self.target_title
+        title_link = self.target_content_url
+        cover_image = ""
+        content = self.target_content
+
+        return pub_date, title, title_link, cover_image, content
