@@ -30,7 +30,7 @@ search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
 
 
-def search_user(user=None, number=1):
+def get_user_by_search(user=None, number=1):
     if not isinstance(user, str):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
@@ -57,23 +57,20 @@ def search_user(user=None, number=1):
     return user_ids, user_htmls
 
 
-def get_id_from_profile(url):
+def get_user_by_homepage(url):
     if not isinstance(url, str):
         raise MethodParamError('Parameter \'url\' must be an instance of \'str\'!')
-    pattern1 = re.compile(r'https://weibo.com/u/[0-9a-z]+.*')
-    pattern2 = re.compile(r'https://weibo.com/[0-9a-z]+.*')
-    if re.match(pattern1, url):
-        id = re.search(r'https://weibo\.com/u/([0-9a-z]+).*', url).group(1)
-    elif re.match(pattern2, url):
-        id = re.search(r'https://weibo.com/([0-9a-z]+).*', url).group(1)
-    else:
-        return None
-    response = requests.get('https://weibo.com/u/' + id, headers=headers)
-    print(response.text)
-    bs = BeautifulSoup(response.text, 'lxml')
-    if bs.find('title').get_text() == '404错误':      # 该用户不存在
-        return None
-    return id
+    driver.get(url)
+    wait = WebDriverWait(driver, 10)
+    try:
+        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'username')))
+    except TimeoutException:    # 网速太慢或链接错误
+        return None, None
+    username = driver.find_element_by_class_name('username').text
+    user_ids, user_htmls = get_user_by_search(user=username, number=1)
+    if len(user_ids) > 0 and len(user_htmls) > 0:
+        return user_ids[0], user_htmls[0]
+    return None, None
 
 
 if __name__ == '__main__':
@@ -82,4 +79,4 @@ if __name__ == '__main__':
     #     print(type(id), id)
     # for html in htmls:
     #     print(html)
-    print(get_id_from_profile('https://weibo.com/topgirls8?refer_flag=1001030101_&is_all=1'))
+    print(get_user_by_homepage('https://weibo.com/topgirls8?refer_flag=1001030101_&is_all=1'))
