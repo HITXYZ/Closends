@@ -52,12 +52,10 @@ class FriendAdmin(admin.ModelAdmin):
 
 class WeiboContentAdmin(admin.ModelAdmin):
     listdisplay = ('nickname', 'content', 'pub_date')
-    inlines = (ImageInline,)
 
 
 class ZhihuContentAdmin(admin.ModelAdmin):
     listdisplay = ('nickname', 'content', 'pub_date')
-    inlines = (ImageInline,)
 
 
 class TiebaContentAdmin(admin.ModelAdmin):

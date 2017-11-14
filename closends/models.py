@@ -1,6 +1,9 @@
 import os
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 marks = {'weibo': '微博', 'zhihu': '知乎', 'tieba': '贴吧'}
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,9 +34,9 @@ class Website(models.Model):
 
     site_choices = (('weibo', '微博'), ('zhihu', '知乎'), ('tieba', '贴吧'))
     site = models.CharField(max_length=5, default='weibo', choices=site_choices)
-    account = models.CharField(max_length=50)
-    link = models.CharField(max_length=100)
-    head = models.CharField(max_length=100)
+    site_account = models.CharField(max_length=20)
+    site_ID = models.CharField(max_length=20, blank=True)
+    site_head = models.URLField(max_length=500, blank=True)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
@@ -60,23 +63,26 @@ class Friend(models.Model):
     def tieba_is_blank(self):
         return not self.tieba_account
 
-    group_choices = (('group_0', '未分组'), ('group_1', '家人'), ('group_2', '好友'), ('group_3', '同学'))
+    group_choices = (('group_0', '未分组'), ('group_1', '同学'), ('group_2', '好友'), ('group_3', '家人'))
     nickname = models.CharField(max_length=30)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
     group = models.CharField(max_length=10, default='group_0', choices=group_choices)
 
     weibo_account = models.CharField(max_length=20, blank=True)
-    weibo_link = models.CharField(max_length=100, blank=True)
-    weibo_head = models.CharField(max_length=100, blank=True)
+    weibo_ID = models.CharField(max_length=20, blank=True)
+    weibo_link = models.URLField(max_length=500, blank=True)
+    weibo_head = models.URLField(max_length=500, blank=True)
 
     zhihu_account = models.CharField(max_length=20, blank=True)
-    zhihu_link = models.CharField(max_length=100, blank=True)
-    zhihu_head = models.CharField(max_length=100, blank=True)
+    zhihu_ID = models.CharField(max_length=20, blank=True)
+    zhihu_link = models.URLField(max_length=500, blank=True)
+    zhihu_head = models.URLField(max_length=500, blank=True)
     zhihu_detail = models.CharField(max_length=200, blank=True)
 
     tieba_account = models.CharField(max_length=20, blank=True)
-    tieba_link = models.CharField(max_length=100, blank=True)
-    tieba_head = models.CharField(max_length=100, blank=True)
+    tieba_ID = models.CharField(max_length=20, blank=True)
+    tieba_link = models.URLField(max_length=500, blank=True)
+    tieba_head = models.URLField(max_length=500, blank=True)
 
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
@@ -106,25 +112,25 @@ class WeiboContent(models.Model):
         return self.friend.nickname
 
     # basic post
-    pub_date = models.DateField('date published')
-    src_url = models.CharField(max_length=100)
+    pub_date = models.CharField(max_length=20)
+    src_url = models.URLField(max_length=500, blank=True)
     content = models.TextField()
 
     # check video/image or is reposted
     is_repost = models.BooleanField()
     has_image = models.BooleanField()
-    video_image = models.CharField(max_length=100, blank=True)
+    video_image = models.URLField(max_length=500, blank=True)
 
     # original author
     origin_account = models.CharField(max_length=20, blank=True)
-    origin_link = models.CharField(max_length=100, blank=True)
+    origin_link = models.URLField(max_length=500, blank=True)
 
     # original post
-    origin_pub_date = models.DateField('date_published')
-    origin_src_url = models.CharField(max_length=100, blank=True)
+    origin_pub_date = models.CharField(max_length=20, blank=True)
+    origin_src_url = models.URLField(max_length=500, blank=True)
     origin_content = models.TextField(blank=True)
-    origin_has_image = models.BooleanField(blank=True)
-    origin_video_image = models.CharField(max_length=100, blank=True)
+    origin_has_image = models.BooleanField(default=False)
+    origin_video_image = models.URLField(max_length=500, blank=True)
 
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
@@ -138,7 +144,7 @@ class ZhihuContent(models.Model):
     def nickname(self):
         return self.friend.nickname
 
-    pub_date = models.DateField('date published')
+    pub_date = models.DateField(default=timezone.now)
     title = models.CharField(max_length=50)
     title_link = models.CharField(max_length=100)
     cover_image = models.CharField(max_length=100, blank=True)
@@ -158,6 +164,7 @@ class Image(models.Model):
         return self.image_url
 
     image_url = models.URLField(max_length=100, blank=True)
-    content_weibo = models.ForeignKey(WeiboContent, on_delete=models.CASCADE)
-    content_zhihu = models.ForeignKey(ZhihuContent, on_delete=models.CASCADE)
-    content_tieba = models.ForeignKey(TiebaContent, on_delete=models.CASCADE)
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")

@@ -6,7 +6,6 @@
 
 from closends.spider.base_item import SocialMediaItem
 
-
 # 微博条目基类
 class WeiboItem(SocialMediaItem):
     pass
@@ -91,15 +90,16 @@ class WeiboContentItem(WeiboItem):
         return hash(self.id)
 
     def convert_format(self):
-        pub_date = self.order
-        src_url = self.url
-        content = self.content
+        weibo = {}
+        weibo['pub_date'] = str(self.order)
+        weibo['src_url'] = str(self.url)
+        weibo['content'] = str(self.content)
 
-        is_repost = False
-        images = self.pictures
-        video_image = self.media_pic
+        weibo['is_repost'] = False
+        weibo['images'] = self.pictures
+        weibo['video_image'] = str(self.media_pic)
 
-        return pub_date, src_url, content, is_repost, images, video_image
+        return weibo
 
 
 # 微博转发内容条目类
@@ -125,22 +125,22 @@ class WeiboRepostContentItem(WeiboContentItem):
     def convert_format(self):
         basic = WeiboContentItem.convert_format(self)
 
-        pub_date = basic[0]
-        src_url = basic[1]
-        content = self.repost_reason
+        weibo = {}
+        weibo['pub_date'] = basic['pub_date']
+        weibo['src_url'] = basic['src_url']
+        weibo['content'] = str(self.repost_reason)
 
-        is_repost = True
-        images = []
-        video_image = ""
+        weibo['is_repost'] = True
+        weibo['images'] = []
+        weibo['video_image'] = ""
 
-        origin_account = self.source_owner.name
-        origin_link = self.source_owner.avatar_url
+        weibo['origin_account'] = str(self.source_owner.name)
+        weibo['origin_link'] = str(self.source_owner.avatar_url)
 
-        origin_pub_date = ""
-        origin_src_url = self.source_url
-        origin_content = basic[2]
-        origin_images = basic[4]
-        origin_video_image = basic[5]
+        weibo['origin_pub_date'] = ""
+        weibo['origin_src_url'] = str(self.source_url)
+        weibo['origin_content'] = basic['content']
+        weibo['origin_images'] = basic['images']
+        weibo['origin_video_image'] = basic['video_image']
 
-        return pub_date, src_url, content, is_repost, images, video_image, \
-               origin_account, origin_link, origin_pub_date, origin_src_url, origin_content, origin_images, origin_video_image
+        return weibo
