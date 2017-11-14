@@ -1,15 +1,15 @@
 """
     @author: Jiale Xu
     @date: 2017/10/23
-    @desc: Exceptions of weibo scraping
+    @desc: Exceptions of scraping
 """
 
 
-class ScraperError(Exception):
+class SocialMediaException(Exception):
     pass
 
 
-class LoginError(ScraperError):
+class LoginError(SocialMediaException):
     def __init__(self, value='Login failed!'):
         self.info = value
 
@@ -17,7 +17,7 @@ class LoginError(ScraperError):
         return repr(self.info)
 
 
-class SpiderInitError(ScraperError):
+class SpiderInitError(SocialMediaException):
     def __init__(self, value='Spider initialization failed!'):
         self.info = value
 
@@ -25,7 +25,7 @@ class SpiderInitError(ScraperError):
         return repr(self.info)
 
 
-class MethodParamError(ScraperError):
+class MethodParamError(SocialMediaException):
     def __init__(self, value='Invalid item!'):
         self.info = value
     
