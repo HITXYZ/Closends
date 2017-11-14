@@ -210,7 +210,7 @@ class ZhihuSpider(SocialMediaSpider):
             item.create_time = time.ctime(data.get('created_time'))
             item.actor = data.get('actor').get('url_token')
             target = data.get('target')
-            if item.verb == 'QUESTION_CREATE' or 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
+            if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
                 item.target_user_name = target.get('author').get('name')
                 item.target_user_avatar = target.get('author').get('avatar_url')
                 item.target_user_headline = target.get('author').get('headline')
@@ -230,7 +230,7 @@ class ZhihuSpider(SocialMediaSpider):
                 item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
                     qid=target.get('question').get('id'), aid=target.get('id'))
                 item.thumbnail = target.get('thumbnail')
-            elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or 'MEMBER_CREATE_ARTICLE':   # 赞了文章，
+            elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':   # 赞了文章，发表了文章
                 item.target_user_name = target.get('author').get('name')
                 item.target_user_avatar = target.get('author').get('avatar_url')
                 item.target_user_headline = target.get('author').get('headline')
@@ -241,12 +241,12 @@ class ZhihuSpider(SocialMediaSpider):
                 item.target_content = target.get('excerpt')
                 item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
                 item.thumbnail = target.get('image_url')
-            elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':
+            elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':    # 关注了话题，创建了话题
                 item.target_title = target.get('name')
                 item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
                     id=target.get('id'))
                 item.thumbnail = target.get('avatar_url')
-            elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':
+            elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':    # 关注了收藏夹，创建了收藏夹
                 item.target_user_name = target.get('author').get('name')
                 item.target_user_avatar = target.get('author').get('avatar_url')
                 item.target_user_headline = target.get('author').get('headline')
@@ -264,10 +264,6 @@ class ZhihuSpider(SocialMediaSpider):
                 item.target_content = target.get('excerpt_new')
                 item.target_content_url = 'https://www.zhihu.com/pin/{id}'.format(id=target.get('id'))
             item.action_text = data.get('action_text')
-            if item.verb == 'MEMBER_VOTEUP_ARTICLE' or 'MEMBER_CREATE_ARTICLE':
-                item.thumbnail = target.get('image_url')
-            else:
-                item.thumbnail = target.get('thumbnail')
             activities.append(item)
         return activities
 
@@ -593,6 +589,6 @@ if __name__ == '__main__':
 
     # answer = spider.scrape_answer_by_id(255562932)
     # print(answer)
-    activities = spider.scrape_activities('excited-vczh')
+    activities = spider.scrape_activities('aphrodite-54-57')
     for activity in activities:
         print(activity)
