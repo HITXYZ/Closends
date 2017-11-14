@@ -11,9 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from urllib.request import quote
 from exceptions import MethodParamError
+from configs import weibo_search_url
 
-
-search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
 driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
 
@@ -26,7 +25,7 @@ def get_user_by_search(user=None, number=1):
     if number <= 0:
         number = 1
     wait = WebDriverWait(driver, 3)
-    driver.get(search_url.format(user=quote(user)))
+    driver.get(weibo_search_url.format(user=quote(user)))
     try:
         wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'pl_personlist')))
         user_divs = driver.find_elements_by_class_name('list_person')

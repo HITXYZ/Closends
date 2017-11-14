@@ -6,16 +6,9 @@
 import re
 import requests
 from bs4 import BeautifulSoup
-from urllib.request import quote, urlretrieve
+from urllib.request import quote
 from exceptions import MethodParamError
-
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-}
-
-search_url = 'https://www.zhihu.com/search?type=people&q={key}'
+from configs import zhihu_search_url, zhihu_headers
 
 
 def get_user_by_search(user=None, number=1):
@@ -25,7 +18,7 @@ def get_user_by_search(user=None, number=1):
         raise MethodParamError('Parameter \'number\' must be an instance of \'int\'!')
     if number <= 0:
         number = 1
-    response = requests.get(search_url.format(key=quote(user)), headers=headers)
+    response = requests.get(zhihu_search_url.format(key=quote(user)), headers=zhihu_headers)
     bs = BeautifulSoup(response.text, 'lxml')
     user_tokens = []
     user_htmls = []
@@ -47,7 +40,7 @@ def get_user_by_homepage(url):
     if not re.match(r'https://www\.zhihu\.com/people/.*', url):     # 不合法的主页地址
         return None, None
     user = re.search(r'https://www\.zhihu\.com/people/(.*)', url).group(1).split('/')[0]
-    response = requests.get('https://www.zhihu.com/people/' + user + '/activities', headers=headers)
+    response = requests.get('https://www.zhihu.com/people/' + user + '/activities', headers=zhihu_headers)
     if response.status_code == 404:     # 用户不存在
         return None, None
     user_tokens, user_htmls = get_user_by_search(user=user, number=1)

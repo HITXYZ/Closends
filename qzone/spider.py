@@ -16,31 +16,12 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from qzone.items import *
 from base_spider import SocialMediaSpider
+from configs import qzone_comment_base_url, qzone_emotion_base_url, qzone_headers, qzone_like_base_url, \
+    qzone_message_base_url, qzone_visitor_base_url
 
 
-emotion_base_url = 'https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin={qq}' \
-                           '&ftype=0&sort=0&pos={pos}&num=20&replynum=100&g_tk={gtk}&callback=_preloadCallback' \
-                   '&code_version=1&format=jsonp&need_private_comment=1'
+driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
 
-comment_base_url = 'https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msgdetail_v6?uin={qq}' \
-                   '&tid={tid}&ftype=0&sort=0&pos=0&num={num}&g_tk={gtk}&callback=_preloadCallback&code_version=1' \
-                   '&format=jsonp&need_private_comment=1'
-
-like_base_url = 'https://user.qzone.qq.com/proxy/domain/users.qzone.qq.com/cgi-bin/likes/get_like_list_app?uin={qq1}' \
-                '&unikey=http%3A%2F%2Fuser.qzone.qq.com%2F{qq2}%2Fmood%2F{id}.1&begin_uin=0&query_count=100&' \
-                'if_first_page=1&g_tk={gtk}'
-
-visitor_base_url = 'https://h5.qzone.qq.com/proxy/domain/g.qzone.qq.com/cgi-bin/friendshow/cgi_get_visitor_single?' \
-                   'uin={qq}&appid=311&blogid={id1}&param={id2}&ref=qzfeeds&beginNum=1&needFriend=1&num=500&g_tk={gtk}'
-
-message_base_url = 'https://user.qzone.qq.com/proxy/domain/m.qzone.qq.com/cgi-bin/new/get_msgb?uin={qq1}' \
-                   '&hostUin={qq2}&start={pos}&format=jsonp&num=10&inCharset=utf-8&outCharset=utf-8&g_tk={gtk}'
-
-headers = {'User_Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                         '(KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
-           'Referer': 'https://qzs.qq.com/qzone/app/mood_v6/html/index.html'}
-
-driver = webdriver.PhantomJS('../phantomjs')
 
 log_file = './logs/qzone-log-%s.log' % (datetime.date.today())
 logging.basicConfig(filename=log_file, format='%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s',
@@ -107,7 +88,7 @@ class QzoneSpider(SocialMediaSpider):
         if qq is None:
             qq = self.qq
         logging.info('Scraping emotions of %d...' % qq)
-        response = requests.get(emotion_base_url.format(qq=qq, pos=0, gtk=self.gtk), cookies=self.cookies).text
+        response = requests.get(qzone_emotion_base_url.format(qq=qq, pos=0, gtk=self.gtk), cookies=self.cookies).text
         result = json.loads(response[17:-2])
 
         if result.get('code') < 0:       # 没有空间访问权限
@@ -128,8 +109,8 @@ class QzoneSpider(SocialMediaSpider):
         for i in range(page_number):
             if finish_count >= need_count:
                 break
-            emotion_response = requests.get(emotion_base_url.format(qq=qq, pos=pos, gtk=self.gtk),
-                                        cookies=self.cookies, headers=headers).text
+            emotion_response = requests.get(qzone_emotion_base_url.format(qq=qq, pos=pos, gtk=self.gtk),
+                                            cookies=self.cookies, headers=qzone_headers).text
             emotion_result = json.loads(emotion_response[17:-2])
             pos += 20       # 每发出一次请求获取接下来20条说说
             if emotion_result.get('msglist') is None:     # 所有说说已读取完毕
@@ -165,8 +146,8 @@ class QzoneSpider(SocialMediaSpider):
                 elif 'story_info' in emotion.keys():    # 照片含有位置信息
                     item.location = emotion.get('story_info').get('lbs').get('idname')
 
-                visitor_response = requests.get(visitor_base_url.format(qq=qq, id1=item.id, id2=item.id, gtk=self.gtk),
-                                            cookies=self.cookies, headers=headers).text
+                visitor_response = requests.get(qzone_visitor_base_url.format(qq=qq, id1=item.id, id2=item.id, gtk=self.gtk),
+                                                cookies=self.cookies, headers=qzone_headers).text
                 if visitor_response[10:-2][-1] == '}':
                     visitor_result = json.loads(visitor_response[10:-2])
                 else:
@@ -178,8 +159,8 @@ class QzoneSpider(SocialMediaSpider):
                         visitor_item.name = visitor.get('name')
                         item.visitors.append(visitor_item)
 
-                like_response = requests.get(like_base_url.format(qq1=self.qq, qq2=qq, id=item.id, gtk=self.gtk),
-                                            cookies=self.cookies, headers=headers).content  # 请求获取点赞列表
+                like_response = requests.get(qzone_like_base_url.format(qq1=self.qq, qq2=qq, id=item.id, gtk=self.gtk),
+                                             cookies=self.cookies, headers=qzone_headers).content  # 请求获取点赞列表
                 like_result = json.loads(like_response.decode('utf-8')[10:-3])
                 if like_result.get('code') == 0 and like_result.get('data').get('total_number') > 0:   # 请求成功且有人点赞
                     for like in like_result.get('data').get('like_uin_info'):
@@ -190,9 +171,9 @@ class QzoneSpider(SocialMediaSpider):
 
                 if emotion.get('cmtnum') > 0:       # 有评论
                     if emotion.get('commentlist') is None or emotion.get('cmtnum') > len(emotion.get('commentlist')): # 评论未加载完毕
-                        comments_response = requests.get(comment_base_url.format(qq=qq, tid=emotion.get('tid'),
-                                                                             num=emotion.get('cmtnum'), gtk=self.gtk),
-                                                     cookies=self.cookies, headers=headers).text
+                        comments_response = requests.get(qzone_comment_base_url.format(qq=qq, tid=emotion.get('tid'),
+                                                                                       num=emotion.get('cmtnum'), gtk=self.gtk),
+                                                         cookies=self.cookies, headers=qzone_headers).text
                         comments_result = json.loads(comments_response[17:-2])
                         comments = comments_result.get('commentlist')
                     else:       # 评论已加载完毕
@@ -238,8 +219,8 @@ class QzoneSpider(SocialMediaSpider):
         if qq is None:
             qq = self.qq
         logging.info('Scraping messages of %d...' % qq)
-        response = requests.get(message_base_url.format(qq1=self.qq, qq2=qq, pos=0, gtk=self.gtk),
-                                     cookies=self.cookies).text
+        response = requests.get(qzone_message_base_url.format(qq1=self.qq, qq2=qq, pos=0, gtk=self.gtk),
+                                cookies=self.cookies).text
         result = json.loads(response[10:-2])
 
         if result.get('code') < 0:       # 没有空间访问权限
@@ -260,8 +241,8 @@ class QzoneSpider(SocialMediaSpider):
         for i in range(page_number):
             if finish_count >= need_count:
                 break
-            message_response = requests.get(message_base_url.format(qq1=self.qq, qq2=qq, pos=pos, gtk=self.gtk),
-                                        cookies=self.cookies, headers=headers).text
+            message_response = requests.get(qzone_message_base_url.format(qq1=self.qq, qq2=qq, pos=pos, gtk=self.gtk),
+                                            cookies=self.cookies, headers=qzone_headers).text
             message_result = json.loads(message_response[10:-2])
             pos += 10
             if message_result.get('data').get('commentList') is None:     # 所有留言已抓取完毕

@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/10/05
-    @desc: Scraper for sina weibo
+@author: Jiale Xu
+@date: 2017/10/05
+@desc: Scraper for sina weibo
 """
 import datetime
 import logging
@@ -10,22 +10,9 @@ import requests
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
+from configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
+    weibo_user_profile_url, weibo_user_weibo_url
 
-
-user_info_container = 230283
-user_weibo_container = 107603
-user_follow_container = 100505
-user_fans_container = 100505
-
-login_url = 'https://passport.weibo.cn/signin/login'
-user_profile_url = '-'
-user_info_url = 'https://m.weibo.cn/api/container/getIndex?containerid=230283{uid1}_-_INFO' \
-                '&title=%25E5%259F%25BA%25E6%259C%25AC%25E4%25BF%25A1%25E6%2581%25AF&luicode=10000011' \
-                '&lfid=230283{uid2}'
-user_weibo_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}' \
-                 '&luicode=10000012&containerid=107603{uid2}&page={page}'
-user_follow_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FOLLOWERS&page={page}'
-user_fans_url = 'https://m.weibo.cn/api/container/getSecond?containerid=100505{uid}_-_FANS&page={page}'
 
 log_file = "./logs/weibo-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
@@ -49,14 +36,14 @@ class WeiboSpider(SocialMediaSpider):
         item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=id)
 
         # 通过主页请求获取关注数、粉丝数、头像url
-        response = requests.get(user_profile_url.format(uid1=id, uid2=id))
+        response = requests.get(weibo_user_profile_url.format(uid1=id, uid2=id))
         result = response.json()
         item.follow_count = result.get('userInfo').get('follow_count')
         item.fans_count = result.get('userInfo').get('followers_count')
         item.avatar_url = result.get('userInfo').get('profile_image_url')
 
         # 通过详细资料请求获取详细资料
-        response = requests.get(user_info_url.format(uid1=id, uid2=id))
+        response = requests.get(weibo_user_info_url.format(uid1=id, uid2=id))
         result = response.json()
         for card in result.get('cards'):
             if card.get('card_type') != 11:
@@ -78,7 +65,7 @@ class WeiboSpider(SocialMediaSpider):
                     item.signup_time = item_content
 
         # 通过用户微博请求获取用户微博数
-        response = requests.get(user_weibo_url.format(uid1=id, uid2=id, page=1))
+        response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
         item.weibo_count = result.get('cardlistInfo').get('total')
         logging.info('Succeed in scraping info of weibo user: %d.' % id)
@@ -91,7 +78,7 @@ class WeiboSpider(SocialMediaSpider):
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping follows of weibo user: %d...' % id)
-        response = requests.get(user_follow_url.format(uid=id, page=1))
+        response = requests.get(weibo_user_follow_url.format(uid=id, page=1))
         result = response.json()
         total = result.get('count')
         if number <= 0:
@@ -103,7 +90,7 @@ class WeiboSpider(SocialMediaSpider):
         position = 0
         while finish_count < need_count:
             position += 1
-            response = requests.get(user_follow_url.format(uid=id, page=position))
+            response = requests.get(weibo_user_follow_url.format(uid=id, page=position))
             result = response.json()
             for card in result.get('cards'):
                 if finish_count >= need_count:
@@ -119,7 +106,7 @@ class WeiboSpider(SocialMediaSpider):
                 item.weibo_count = user.get('statuses_count')
                 item.follow_count = user.get('follow_count')
                 item.fans_count = user.get('followers_count')
-                response_info = requests.get(user_info_url.format(uid1=item.id, uid2=item.id))
+                response_info = requests.get(weibo_user_info_url.format(uid1=item.id, uid2=item.id))
                 result_info = response_info.json()
                 for card in result_info.get('cards'):
                     if card.get('card_type') != 11:
@@ -145,7 +132,7 @@ class WeiboSpider(SocialMediaSpider):
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping fans of weibo user: %d...' % id)
-        response = requests.get(user_fans_url.format(uid=id, page=1))
+        response = requests.get(weibo_user_fans_url.format(uid=id, page=1))
         result = response.json()
         total = result.get('count')
         if number <= 0:
@@ -157,7 +144,7 @@ class WeiboSpider(SocialMediaSpider):
         position = 0
         while finish_count < need_count:
             position += 1
-            response = requests.get(user_fans_url.format(uid=id, page=position))
+            response = requests.get(weibo_user_fans_url.format(uid=id, page=position))
             result = response.json()
             for card in result.get('cards'):
                 if finish_count >= need_count:
@@ -173,7 +160,7 @@ class WeiboSpider(SocialMediaSpider):
                 item.weibo_count = user.get('statuses_count')
                 item.follow_count = user.get('follow_count')
                 item.fans_count = user.get('followers_count')
-                response_info = requests.get(user_info_url.format(uid1=item.id, uid2=item.id))
+                response_info = requests.get(weibo_user_info_url.format(uid1=item.id, uid2=item.id))
                 result_info = response_info.json()
                 for card in result_info.get('cards'):
                     if card.get('card_type') != 11:
@@ -199,7 +186,7 @@ class WeiboSpider(SocialMediaSpider):
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping weibos of weibo user: %d...' % id)
-        response = requests.get(user_weibo_url.format(uid1=id, uid2=id, page=1))
+        response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
         total = result.get('cardlistInfo').get('total')
         if number <= 0:
@@ -211,7 +198,7 @@ class WeiboSpider(SocialMediaSpider):
         position = 0
         while finish_count < need_count:
             position += 1
-            response = requests.get(user_weibo_url.format(uid1=id, uid2=id, page=position))
+            response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
             for card in result.get('cards'):
                 if finish_count >= need_count:
