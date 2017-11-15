@@ -1,6 +1,6 @@
 import json
+from ..tasks import weibo_spider_friend
 
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -65,10 +65,28 @@ def add_group(request):
         group_list.append(group_name)
         user.group_list = ','.join(group_list)
         user.save()
-        group_index = 'group_' + str(len(group_list) - 1)
-        group_url = reverse('closends:setting:get_group_friends', args=(group_index, 1))
-        result = {'status': 'success', 'group_name': group_name, 'group_url': group_url}
+        result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def delete_group(request):
+    if request.method == 'POST':
+        group_name = request.POST['group_name']
+        user = request.user.userinfo
+        group_list = user.group_list.split(',')
+        group_index = 'group_' + str(group_list.index(group_name))
+        group_list.remove(group_name)
+        user.group_list = ','.join(group_list)
+        user.save()
+
+        friends = user.friend_set.filter(group=group_index)
+        for friend in friends:
+            friend.group = 'group_0'
+            friend.save()
+
+        return HttpResponse("")
 
 
 @csrf_exempt
@@ -177,6 +195,12 @@ def add_found_friend_weibo(request):
         friend.weibo_link = request.POST['link']
         friend.weibo_head = request.POST['head']
         friend.save()
+
+        args = {}
+        args['id'] = friend.id
+        args['weibo_ID'] = friend.weibo_ID
+
+        weibo_spider_friend.delay(args)
         return HttpResponse("")
 
 

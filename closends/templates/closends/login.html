@@ -85,7 +85,7 @@
         }
 
         .lay_main .lay_body .bottom{
-            margin-top: 10%;
+            margin-top: 5%;
             margin-left: 40%;
         }
 
@@ -244,7 +244,7 @@
                     async: false,
                     success: function (ret) {
                         if (ret.status === "success")
-                            window.location = '{% url 'closends:index' %}';
+                            window.location = '{% url 'closends:content:index' %}';
                         else {
                             $('#username_login_form').find('input').each(function () {
                                 $(this).val("");
@@ -266,7 +266,7 @@
                         async: false,
                         success: function (ret) {
                             if (ret.status === "success")
-                                window.location = '{% url 'closends:index' %}';
+                                window.location = '{% url 'closends:content:index' %}';
                             else {
                                 $('#username_login_form').find('input').each(function () {
                                     $(this).val("");

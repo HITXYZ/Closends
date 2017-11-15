@@ -90,7 +90,7 @@ def weibo_unbinding(request):
         if site.site == 'weibo':
             site.delete()
         else:
-            binding_sites[site.site] = site.account
+            binding_sites[site.site] = site.site_account
     binding_sites = {'binding_sites': binding_sites}
     return render(request, 'closends/setting_user_binding.html', binding_sites)
 
@@ -173,6 +173,6 @@ def tieba_unbinding(request):
         if site.site == 'tieba':
             site.delete()
         else:
-            binding_sites[site.site] = site.account
+            binding_sites[site.site] = site.site_account
     binding_sites = {'binding_sites': binding_sites}
     return render(request, 'closends/setting_user_binding.html', binding_sites)

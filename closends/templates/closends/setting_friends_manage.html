@@ -1,6 +1,7 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
+{#    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">#}
     <script src="/static/closends/js/jquery.min.js"></script>
     <script src="/static/closends/js/bootstrap.js"></script>
 
@@ -10,14 +11,33 @@
         }
 
         .friend_list div {
-            list-style-type: none;
-            margin-left: 10%;
+            margin-left: 1%;
             margin-right: 10%;
             margin-top: 5%;
         }
 
         .friend_list button {
-            width: 100%;
+            margin-left: -10px;
+            width: 80px;
+        }
+
+        .friend_list img{
+            width: 15px;
+            height: 15px;
+{#            display: none;#}
+        }
+
+        .friend_list .row{
+            width: 150px;
+        }
+
+        .friend_list .display_group{
+            margin-left: 10px;
+        }
+
+        .friend_list .delete_group{
+            margin-top: 15px;
+            margin-left: 40px;
         }
 
         .modal-content {
@@ -99,6 +119,17 @@
         }
 
         #friend_delete_modal button {
+            margin-left: 5%;
+        }
+    </style>
+
+    <style>
+        #group_delete_modal .modal-content {
+            margin-left: 20%;
+            margin-top: 35%;
+        }
+
+        #group_delete_modal button {
             margin-left: 5%;
         }
     </style>
@@ -452,16 +483,34 @@
     <div class="friend_list">
         {% for group in group_list %}
             {% ifequal group.0 current_group %}
-                <div><a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
-                    <button class="btn btn-primary">{{ group.1 }}</button>
-                </a></div>
+                <div>
+                    <div class="row">
+                        <div class="col-md-1 display_group">
+                            <a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
+                            <button class="btn btn-primary">{{ group.1 }}</button>
+                            </a>
+                        </div>
+                        <div class="col-md-1 delete_group">
+                            <img src="/static/closends/img/delete_friend.png">
+                        </div>
+                    </div>
+                </div>
             {% else %}
-                <div><a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
-                    <button class="btn">{{ group.1 }}</button>
-                </a></div>
+                <div>
+                    <div class="row">
+                        <div class="col-md-1 display_group">
+                            <a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
+                            <button class="btn">{{ group.1 }}</button>
+                            </a>
+                        </div>
+                        <div class="col-md-1 delete_group">
+                            <img src="/static/closends/img/delete_friend.png">
+                        </div>
+                    </div>
+                </div>
             {% endifequal %}
         {% endfor %}
-        <div><a href="javascript:void(0)">
+        <div style="margin-left: 27px; margin-top: 10px"><a href="javascript:void(0)">
             <button type="button" class="btn" data-toggle="modal" data-target="#group_add_modal">添加分组</button>
         </a></div>
     </div>
@@ -485,8 +534,40 @@
         </div>
     </div>
 
+    <div id="group_delete_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="group_name" style="display: none"></div>
+                    <button id="delete_group" class="btn btn-default">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function () {
+            $(".friend_list img").on("click", function () {
+                let group_name = $(this).parent().parent().find("button").eq(0).text();
+                $("#group_delete_modal").modal('show');
+                $("#group_delete_modal .group_name").text(group_name);
+            });
+
+            $("#delete_group").on("click", function () {
+                let group_name = $("#group_delete_modal .group_name").text();
+                $.ajax({
+                    url: "{% url 'closends:setting:delete_group' %}",
+                    type: "post",
+                    datatype: "json",
+                    data: {'group_name': group_name},
+                    async: false,
+                    success: function () {
+                        window.location.reload();
+                    }//success
+                })//ajax
+            });
+
             $("#adding_group").on("click", function () {
                 let group_name = $("#group_add_form").serialize();
                 $.ajax({
@@ -497,8 +578,7 @@
                     async: false,
                     success: function (ret) {
                         if (ret.status === 'success') {
-                            $(".friend_list").children().last().before('<div><a href=""><button class="btn">' + ret.group_name + '</button></a></div>');
-                            $(".friend_list").children().last().prev().children().first().attr('href', ret.group_url)
+                            window.location.reload();
                         }
                         else {
                             //分组已存在
@@ -510,7 +590,7 @@
     </script>
 
 {% endblock %}
-
+    
 {% block content_box %}
 
     <div class="col-md-8 content_box">
@@ -1235,7 +1315,7 @@
                         datatype: "json",
                         data: zhihu_friend,
                         async: false,
-                        success: function (ret) {
+                        success: function () {
                             $("#zhihu_search_modal .search_result").hide();
                             $("#zhihu_search_modal .search_result .person").empty();
                             $("#zhihu_search_modal .search_result .feedback").show();

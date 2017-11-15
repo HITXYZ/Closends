@@ -280,7 +280,7 @@
                 <div class="group_list">
                     {% for group in group_list %}
                         <div class="group">
-                            <a href="#">
+                            <a href="{% url 'closends:content:query_by_group' group=group.0 page=1 %}">
                                 <button class="btn-link text-left">{{ group.1 }}</button>
                             </a>
                         </div>
@@ -457,7 +457,11 @@
                 <ul class="pagination">
                     <li>
                         {% if contents.has_previous %}
-                            <a href="{% url 'closends:index' contents.previous_page_number %}">上一页</a>
+                            {% ifequal option 'group' %}
+                                <a href="{% url 'closends:content:query_by_group' group=current_group page=contents.previous_page_number %}">上一页</a>
+                            {% else %}
+                                <a href="{% url 'closends:content:index' page=contents.previous_page_number %}">上一页</a>
+                            {% endifequal %}
                         {% else %}
                             <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
                         {% endif %}
@@ -467,7 +471,12 @@
                     </li>
                     <li>
                         {% if contents.has_next %}
-                            <a href="{% url 'closends:index' contents.next_page_number %}">下一页</a>
+                            {% ifequal option 'group' %}
+                                <a href="{% url 'closends:content:query_by_group' group=current_group page=contents.next_page_number %}">上一页</a>
+                            {% else %}
+                                <a href="{% url 'closends:content:index' page=contents.next_page_number %}">下一页</a>
+                            {% endifequal %}
+
                         {% else %}
                             <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
                         {% endif %}

@@ -1,7 +1,7 @@
 from .views import *
 from django.conf.urls import url, include
 
-settingpatterns = [
+setting_patterns = [
     url(r'index$', person_info.user_info, name='setting_index'),
 
     # personal info
@@ -25,6 +25,7 @@ settingpatterns = [
     # group manage
     url(r'friend_manage$', friend_manage.friend_manage, name='friend_manage'),
     url(r'friend_manage/add_group$', friend_manage.add_group, name='add_group'),
+    url(r'friend_manage/delete_group$', friend_manage.delete_group, name='delete_group'),
     url(r'friend_manage/get_group_friends/(?P<group>\w+)/(?P<page>[0-9]+)$', friend_manage.get_group_friends, name='get_group_friends'),
 
     # friend manage
@@ -45,6 +46,10 @@ settingpatterns = [
     url(r'friend_manage/query_exist_friend_zhihu$', friend_manage.query_exist_friend_zhihu, name='query_exist_friend_zhihu'),
 ]
 
+content_patterns = [
+    url(r'all_query/(?:page-(?P<page>\d+)/)?$', main_page.query_all, name='index'),
+    url(r'group_query/(?P<group>\w+)/(?:page-(?P<page>\d+)/)$', main_page.query_by_group, name='query_by_group')
+]
 
 app_name = 'closends'
 urlpatterns = [
@@ -55,6 +60,6 @@ urlpatterns = [
     url(r'^register$', login_register.register, name='register'),
     url(r'^logout$', login_register.user_logout, name='logout'),
 
-    url(r'^index/(?:page-(?P<page>\d+)/)?$', main_page.index, name='index'),
-    url(r'^setting/', include(settingpatterns, namespace='setting')),
+    url(r'^index/', include(content_patterns, namespace='content')),
+    url(r'^setting/', include(setting_patterns, namespace='setting')),
 ]
