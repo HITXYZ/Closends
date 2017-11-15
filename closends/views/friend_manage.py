@@ -86,7 +86,6 @@ def delete_friend(request):
         user = request.user.userinfo
         friend = user.friend_set.filter(nickname=request.POST['friend_name'])[0]
         friend.delete()
-        friend.save()
         return HttpResponse("")
 
 
@@ -153,22 +152,37 @@ def update_friend_info(request):
 
 @csrf_exempt
 @login_required
-def add_found_weibo_friend(request):
+def delete_friend_weibo(request):
     if request.method == 'POST':
         user = request.user.userinfo
         friend_name = request.POST['friend_name']
         friend = user.friend_set.filter(nickname=friend_name)[0]
-        friend.weibo_account = request.POST['account']
-        friend.weibo_link = request.POST['link']
-        friend.weibo_head = request.POST['head']
+        friend.weibo_ID = ""
+        friend.weibo_account = ""
+        friend.weibo_link = ""
+        friend.weibo_head = ""
         friend.save()
-        result = {'status': 'success'}
-        return HttpResponse(json.dumps(result), content_type='application/json')
+        return HttpResponse("")
 
 
 @csrf_exempt
 @login_required
-def query_exist_weibo_friend(request):
+def add_found_friend_weibo(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.weibo_ID = request.POST['ID']
+        friend.weibo_account = request.POST['account']
+        friend.weibo_link = request.POST['link']
+        friend.weibo_head = request.POST['head']
+        friend.save()
+        return HttpResponse("")
+
+
+@csrf_exempt
+@login_required
+def query_exist_friend_weibo(request):
     if request.method == 'POST':
         user = request.user.userinfo
         friend_name = request.POST['friend_name']
@@ -182,19 +196,43 @@ def query_exist_weibo_friend(request):
 
 @csrf_exempt
 @login_required
-def query_weibo_friend_by_link(request):
+def delete_friend_zhihu(request):
     if request.method == 'POST':
-        # user = request.user.userinfo
-        # weibo_link = request.POST['weibo_link']
-        result = {}
-        return HttpResponse(json.dumps(result), content_type='application/json')
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.zhihu_ID = ""
+        friend.zhihu_account = ""
+        friend.zhihu_link = ""
+        friend.zhihu_head = ""
+        friend.save()
+        return HttpResponse("")
 
 
 @csrf_exempt
 @login_required
-def query_weibo_friend_by_account(request):
+def add_found_friend_zhihu(request):
     if request.method == 'POST':
-        weibo_account = request.POST['weibo_account']
-        person_html = ""
-        result = {'status': 'success', 'person_html': person_html}
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.zhihu_ID = request.POST['ID']
+        friend.zhihu_account = request.POST['account']
+        friend.zhihu_link = request.POST['link']
+        friend.zhihu_head = request.POST['head']
+        friend.save()
+        return HttpResponse("")
+
+
+@csrf_exempt
+@login_required
+def query_exist_friend_zhihu(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        account = friend.zhihu_account
+        link = friend.zhihu_link
+        head = friend.zhihu_head
+        result = {'account': account, 'link': link, 'head': head}
         return HttpResponse(json.dumps(result), content_type='application/json')

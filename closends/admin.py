@@ -32,30 +32,32 @@ class ZhihuContentInline(admin.StackedInline):
 
 
 class MyUserAdmin(UserAdmin):
-    listdisplay = ('username', 'email', 'isstaff')
+    # list_display = ('username', 'email', 'is_staff')
     inlines = (UserInfoInline,)
 
 
 class UserInfoAdmin(admin.ModelAdmin):
-    list_display = ('__str__',)
+    # list_display = ('__str__',)
     inlines = (WebsiteInline, FriendInline)
 
 
 class WebsiteAdmin(admin.ModelAdmin):
-    listdisplay = ('username', 'site', 'authcode')
+    pass
+    # list_display = ('username', 'site', 'authcode')
 
 
 class FriendAdmin(admin.ModelAdmin):
-    listdisplay = ('username', 'nickname', 'group')
+    # list_display = ('username', 'nickname', 'group')
     inlines = (TiebaContentInline, WeiboContentInline, ZhihuContentInline,)
 
 
 class WeiboContentAdmin(admin.ModelAdmin):
-    listdisplay = ('nickname', 'content', 'pub_date')
-
+    list_display = ('friend_nickname', 'pub_date', 'content_section', 'is_repost')
+    list_filter = ['is_repost']
 
 class ZhihuContentAdmin(admin.ModelAdmin):
-    listdisplay = ('nickname', 'content', 'pub_date')
+    pass
+    # list_display = ('nickname', 'content', 'pub_date')
 
 
 class TiebaContentAdmin(admin.ModelAdmin):

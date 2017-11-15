@@ -11,15 +11,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from urllib.request import quote
-from closends.spider.exceptions import MethodParamError
+from closends.spider.base_exceptions import MethodParamError
 
 
 search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
-driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+driver = webdriver.PhantomJS(executable_path= base_dir + '/phantomjs.exe', service_log_path=os.path.devnull)
 
 
-def get_user_by_search(user=None, number=1):
+def get_user_by_account(user=None, number=1):
     if not isinstance(user, str):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
@@ -56,7 +57,7 @@ def get_user_by_homepage(url):
     except TimeoutException:        # 网速太慢或链接错误
         return None, None
     username = driver.find_element_by_class_name('username').text
-    user_ids, user_htmls = get_user_by_search(user=username, number=1)
+    user_ids, user_htmls = get_user_by_account(user=username, number=1)
     if len(user_ids) > 0 and len(user_htmls) > 0:
         return user_ids[0], user_htmls[0]
     return None, None

@@ -20,6 +20,10 @@
             margin-top: 6.7%;
             border: 1px solid;
         }
+
+        .main_content nav{
+            margin-left: 35%;
+        }
     </style>
 
     <style>
@@ -171,6 +175,8 @@
 
         .WB_text img {
             vertical-align: text-bottom;
+            width: 15px;
+            height: 15px;
         }
 
         .WB_media .media-box{
@@ -300,76 +306,119 @@
         </div>
 
         <div class="main_content">
-            <div class="WB_transmit_post">
-                <div class="WB_face">
-                    <a target="_blank" class="W_face_radius" href="">
-                        <img src="//tva4.sinaimg.cn/crop.0.0.177.177.50/612edf3agw1ekppvdur8wj2050050q32.jpg" class="img-circle">
-                    </a>
-                </div>
-                <div class="WB_detail">
-                    <div class="WB_info">
-                        <a href="" target="_blank">IT程序猿</a>
-                        <a href="" target="_blank">(备注)</a>
-                    </div>
-                    <div class="WB_from">
-                        <a href="" target="_blank">15:57</a>
-                        <a href="" target="_blank">原文链接</a>
-                    </div>
-                    <div class="WB_text">
-                        猿哥看到的是，阿里狂欢节后背有着一群牛逼的程序猿！
-                        <img render="ext" src="//img.t.sinajs.cn/t4/appstyle/expression/ext/normal/36/gza_org.gif" title="[鼓掌]" alt="[鼓掌]" type="face" style="visibility: visible;"></div>
-                    <div class="WB_feed_expand">
-                        <div class="WB_feed">
+            {% for content in contents %}
+                {% if not content.is_repost %}
+                    <div class="WB_original_post">
+                        <div class="WB_face">
+                            <a target="_blank" class="W_face_radius" href="{{ content.friend_link }}">
+                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                            </a>
+                        </div>
+                        <div class="WB_detail">
                             <div class="WB_info">
-                                <a class="W_fb" href="" title="阿里技术">@阿里技术</a>
+                                <a href="{{ content.friend_link }}" target="_blank">{{ content.friend_account }}</a>
+                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
                             </div>
-                            <div class="WB_func clearfix">
-                                <a href="" target="_blank" >14:28</a>
-                                <a href="" target="_blank" >原文链接</a>
+                            <div class="WB_from">
+                                <a href="" target="_blank">15:57</a>
+                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
                             </div>
                             <div class="WB_text">
-                                <a target="_blank" render="ext" suda-uatrack="key=topic_click&amp;value=click_topic" class="a_topic" extra-data="type=topic" href="//huati.weibo.com/k/%E5%A4%A9%E7%8C%AB%E5%8F%8C11+%E6%8A%80%E6%9C%AF%E8%B6%85%E7%BA%A7%E5%B7%A5%E7%A8%8B?from=501">#天猫双11技术超级工程#</a>
-                                成交额1682亿、交易创建峰值32.5万笔/秒、支付峰值25.6万笔/秒，消费者、商家、物流、银行、运营商、海关等全面参与，达成人类商业史上最大规模的一次协同！这一切的背后，是强大的互联网基础设施和智能技术保障。9年天猫双11，互联网技术超级工程！
+                                {{ content.content | safe }}
                             </div>
                             <div class="WB_media">
-                                <div class="media-box row">
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                {% if content.has_image %}
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"0:3" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"3:6" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"6:9" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                </div>
-                                <div class="media-box row">
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                {% elif not content.video_image %}
+                                    <img src="{{ content.video_image }}">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="WB_transmit_post">
+                        <div class="WB_face">
+                            <a target="_blank" class="W_face_radius" href="{{ content.friend_link }}">
+                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                            </a>
+                        </div>
+                        <div class="WB_detail">
+                            <div class="WB_info">
+                                <a href="{{ content.friend_link }}" target="_blank">{{ content.friend_account }}</a>
+                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                            </div>
+                            <div class="WB_from">
+                                <a href="" target="_blank">15:57</a>
+                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                            </div>
+                            <div class="WB_text">
+                                {{ content.content | safe }}
+                            </div>
+                            <div class="WB_feed_expand">
+                                <div class="WB_feed">
+                                    <div class="WB_info">
+                                        <a class="W_fb" href="{{ content.origin_link }}" title="阿里技术">@{{ content.origin_account }}</a>
                                     </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    <div class="WB_func clearfix">
+                                        <a href="" target="_blank" >14:28</a>
+                                        <a href="{{ content.origin_src_url }}" target="_blank" >原文链接</a>
                                     </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    <div class="WB_text">
+                                        {{ content.origin_content|safe }}
                                     </div>
-                                </div>
-                                <div class="media-box row">
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                                    </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                                    </div>
-                                    <div class="col-md-3 pic">
-                                        <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
+                                    <div class="WB_media">
+                                        {% if content.origin_has_image %}
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"0:3" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"3:6" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"6:9" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif not content.origin_video_image %}
+                                            <img src="{{ content.origin_video_image }}">
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                {% endif %}
+            {% endfor %}
 
             <div class="zhihu_item">
                 <div class="author_info row">
@@ -404,61 +453,27 @@
                 </div>
             </div>
 
-            <div class="WB_original_post">
-                <div class="WB_face">
-                    <a target="_blank" class="W_face_radius" href="">
-                        <img src="//tva4.sinaimg.cn/crop.0.0.177.177.50/612edf3agw1ekppvdur8wj2050050q32.jpg" class="img-circle">
-                    </a>
-                </div>
-                <div class="WB_detail">
-                    <div class="WB_info">
-                        <a href="" target="_blank">IT程序猿</a>
-                        <a href="" target="_blank">(备注)</a>
-                    </div>
-                    <div class="WB_from">
-                        <a href="" target="_blank">15:57</a>
-                        <a href="" target="_blank">原文链接</a>
-                    </div>
-                    <div class="WB_text">
-                        <a target="_blank" render="ext" suda-uatrack="key=topic_click&amp;value=click_topic" class="a_topic" extra-data="type=topic" href="//huati.weibo.com/k/IT%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB?from=501">#IT技术分享#</a> 【7款经典游戏 诠释高级算法精髓】<a suda-uatrack="key=minicard&amp;value=pagelink_minicard_click" title="网页链接" href="http://t.cn/RpiYInk" alt="http://t.cn/RpiYInk" action-type="feed_list_url" target="_blank"><i class="W_ficon ficon_cd_link">O</i>网页链接</a>采用基础的Java语言，通过7款经典好玩的游戏，bobo老师带你进入不一样的算法世界，体验算法在实际开发中的应用，真正把算法用起来！<br><br>1、微软数据结构+算法面试100题答案：<a suda-uatrack="key=minicard&amp;value=pagelink_minicard_click" title="网页链接" href="http://t.cn/RbrAxzj" alt="http://t.cn/RbrAxzj" action-type="feed_list_url" target="_blank"><i class="W_ficon ficon_cd_link">O</i>网页链接</a> <br>2、算法与数据结构精解： ​​​​...<a target="_blank" href="//weibo.com/3306361973/FuRNX8v7J" class="WB_text_opt" suda-uatrack="key=original_blog_unfold&amp;value=click_unfold:4173566692026267:3306361973" action-type="fl_unfold" action-data="mid=4173566692026267&amp;is_settop&amp;is_sethot&amp;is_setfanstop&amp;is_setyoudao">展开全文<i class="W_ficon ficon_arrow_down">c</i></a>
-                    </div>
-                    <div class="WB_media">
-                        <div class="media-box row">
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                        </div>
-                        <div class="media-box row">
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                        </div>
-                        <div class="media-box row">
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                            <div class="col-md-3 pic">
-                                <img src="https://wx1.sinaimg.cn/mw690/68430d85gy1flg8chi3yaj20hs0rs43g.jpg">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        {% if contents.has_previous %}
+                            <a href="{% url 'closends:index' contents.previous_page_number %}">上一页</a>
+                        {% else %}
+                            <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <span>{{ contents.number }} / {{ contents.paginator.num_pages }}</span>
+                    </li>
+                    <li>
+                        {% if contents.has_next %}
+                            <a href="{% url 'closends:index' contents.next_page_number %}">下一页</a>
+                        {% else %}
+                            <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
     <script>

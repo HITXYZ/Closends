@@ -35,6 +35,7 @@ class Website(models.Model):
     site_choices = (('weibo', '微博'), ('zhihu', '知乎'), ('tieba', '贴吧'))
     site = models.CharField(max_length=5, default='weibo', choices=site_choices)
     site_account = models.CharField(max_length=20)
+    site_link = models.URLField(max_length=500, blank=True)
     site_ID = models.CharField(max_length=20, blank=True)
     site_head = models.URLField(max_length=500, blank=True)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
@@ -108,8 +109,21 @@ class WeiboContent(models.Model):
     def __str__(self):
         return self.content[:20]
 
-    def nickname(self):
+    def content_section(self):
+        return self.content[:20]
+
+    def friend_nickname(self):
         return self.friend.nickname
+
+    def friend_account(self):
+        return self.friend.weibo_account
+
+    def friend_head(self):
+        return self.friend.image_name()
+
+    def friend_link(self):
+        return self.friend.weibo_link
+
 
     # basic post
     pub_date = models.CharField(max_length=20)

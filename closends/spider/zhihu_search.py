@@ -7,7 +7,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.request import quote, urlretrieve
-from closends.spider.exceptions import MethodParamError
+from closends.spider.base_exceptions import MethodParamError
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
@@ -36,7 +36,12 @@ def get_user_by_search(user=None, number=1):
         user_lis = user_lis[:number]
     for user_li in user_lis:
         user_tokens.append(user_li.attrs['data-token'])
-        user_htmls.append(user_li.prettify())
+        item = []
+        item.append(str(user_li.find('img')))
+        item.append(str(user_li.find('a', {'class', 'name-link'})))
+        item.append(str(user_li.find('span', {'class', 'bio'})))
+        item += [str(it) for it in user_li.find_all('a')[-3:]]
+        user_htmls.append(item)
     return user_tokens, user_htmls
 
 
@@ -57,4 +62,5 @@ def get_user_by_homepage(url):
 
 if __name__ == '__main__':
     # print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities')[1])
-    print(get_user_by_search("于晟建")[1])
+    print(get_user_by_search("少数派"))
+    # print(get_user_by_homepage("https://www.zhihu.com/org/shao-shu-pai-46/activities"))
