@@ -37,3 +37,22 @@ class TiebaUserItem(TiebaItem):
 
     def __hash__(self):
         return hash(self.name)
+
+
+class TiebaPostItem(TiebaItem):
+    def __init__(self):
+        self.title = ''
+        self.content = ''
+        self.url = ''
+        self.images = []
+
+    def __str__(self):
+        string = ''
+        string += 'Title: ' + str(self.title) + '\n'
+        string += 'Content: ' + str(self.content) + '\n'
+        string += 'Url: ' + str(self.url) + '\n'
+        string += 'Images: ' + '; '.join(str(image) for image in self.images)
+        return string
+
+    def __hash__(self):
+        return hash(self.title)
