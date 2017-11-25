@@ -1,3 +1,10 @@
+# logging configurations
+log_qzone = True        # 是否需要记录空间爬虫日志
+log_tieba = True        # 是否需要记录贴吧爬虫日志
+log_weibo = True        # 是否需要记录微博爬虫日志
+log_zhihu = True        # 是否需要记录知乎爬虫日志
+log_path = 'D:\PyCharm\PycharmProjects\SocialMediaScraper\logs'     # 日志文件夹路径
+
 # weibo configurations
 weibo_user_profile_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}&luicode=10000012&type=uid&value={uid2}'
 weibo_user_info_url = 'https://m.weibo.cn/api/container/getIndex?containerid=230283{uid1}_-_INFO' \

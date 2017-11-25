@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 1997/10/27
-    @desc: Items of qzone scraping
+@author: Jiale Xu
+@date: 1997/10/27
+@desc: Items of qzone scraping.
 """
 from base_item import SocialMediaItem
 
