@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/10/23
-    @desc: Items of weibo scraping
+@author: Jiale Xu
+@date: 2017/10/23
+@desc: Items of weibo scraping.
 """
 from base_item import SocialMediaItem
 
@@ -23,8 +23,8 @@ class WeiboPosterItem(WeiboItem):
         string = ''
         string += 'ID: ' + str(self.id) + '\n'
         string += 'Name: ' + str(self.name) + '\n'
-        string += 'Avatar Url' + str(self.avatar_url) + '\n'
-        string += 'Profile Url' + str(self.profile_url) + '\n'
+        string += 'Avatar Url: ' + str(self.avatar_url) + '\n'
+        string += 'Profile Url: ' + str(self.profile_url) + '\n'
         return string
 
     def __hash__(self):

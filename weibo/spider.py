@@ -1,22 +1,23 @@
 """
 @author: Jiale Xu
 @date: 2017/10/05
-@desc: Scraper for sina weibo
+@desc: Scraper for sina weibo.
 """
-import datetime
-import logging
 import re
 import requests
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
 from configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
-    weibo_user_profile_url, weibo_user_weibo_url, log_path
+    weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo
 
 
-log_file = log_path + "/weibo-log-%s.log" % (datetime.date.today())
-logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
-                    datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
+if log_weibo:
+    import logging
+    import datetime
+    log_file = log_path + "/weibo-log-%s.log" % (datetime.date.today())
+    logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
 
 class WeiboSpider(SocialMediaSpider):
@@ -30,7 +31,8 @@ class WeiboSpider(SocialMediaSpider):
     def scrape_user_info(self, id):
         if not isinstance(id, int):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
-        logging.info('Scraping info of weibo user: %d...' % id)
+        if log_weibo:
+            logging.info('Scraping info of weibo user: %d...' % id)
         item = WeiboUserItem()
         item.id = id
         item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=id)
@@ -68,7 +70,8 @@ class WeiboSpider(SocialMediaSpider):
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
         item.weibo_count = result.get('cardlistInfo').get('total')
-        logging.info('Succeed in scraping info of weibo user: %d.' % id)
+        if log_weibo:
+            logging.info('Succeed in scraping info of weibo user: %d.' % id)
         self.scraped_infos[id] = item
         return item
 
@@ -77,7 +80,8 @@ class WeiboSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
-        logging.info('Scraping follows of weibo user: %d...' % id)
+        if log_weibo:
+            logging.info('Scraping follows of weibo user: %d...' % id)
         response = requests.get(weibo_user_follow_url.format(uid=id, page=1))
         result = response.json()
         total = result.get('count')
@@ -122,7 +126,8 @@ class WeiboSpider(SocialMediaSpider):
                             item.signup_time = item_content
                 follows.append(item)
                 finish_count += 1
-        logging.info('Succeed in scraping follows of weibo user: %d.' % id)
+        if log_weibo:
+            logging.info('Succeed in scraping follows of weibo user: %d.' % id)
         self.scraped_follows[id] = follows
         return follows
 
@@ -131,7 +136,8 @@ class WeiboSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
-        logging.info('Scraping fans of weibo user: %d...' % id)
+        if log_weibo:
+            logging.info('Scraping fans of weibo user: %d...' % id)
         response = requests.get(weibo_user_fans_url.format(uid=id, page=1))
         result = response.json()
         total = result.get('count')
@@ -176,7 +182,8 @@ class WeiboSpider(SocialMediaSpider):
                             item.signup_time = item_content
                 fans.append(item)
                 finish_count += 1
-        logging.info('Succeed in scraping follows of weibo user: %d.' % id)
+        if log_weibo:
+            logging.info('Succeed in scraping follows of weibo user: %d.' % id)
         self.scraped_fans[id] = fans
         return fans
 
@@ -185,7 +192,8 @@ class WeiboSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
-        logging.info('Scraping weibos of weibo user: %d...' % id)
+        if log_weibo:
+            logging.info('Scraping weibos of weibo user: %d...' % id)
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
         total = result.get('cardlistInfo').get('total')
@@ -255,6 +263,7 @@ class WeiboSpider(SocialMediaSpider):
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
-        logging.info('Succeed in scraping weibos of weibo user: %d.' % id)
+        if log_weibo:
+            logging.info('Succeed in scraping weibos of weibo user: %d.' % id)
         self.scraped_weibos[id] = weibos
         return weibos

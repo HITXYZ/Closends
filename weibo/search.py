@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/11/11
-    @desc: Search weibo users and get html
+@author: Jiale Xu
+@date: 2017/11/11
+@desc: Search weibo users and get html.
 """
 import os
 from selenium import webdriver
