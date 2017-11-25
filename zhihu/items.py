@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/11/04
-    @desc: Items of zhihu scraping
+@author: Jiale Xu
+@date: 2017/11/04
+@desc: Items of zhihu scraping.
 """
 from base_item import SocialMediaItem
 
@@ -42,11 +42,11 @@ class ZhihuUserItem(ZhihuItem):
         string += 'ID: ' + str(self.id) + '\n'
         string += 'Name: ' + str(self.name) + '\n'
         if self.gender == 0:
-            string += 'Gender: female' + '\n'
+            string += 'Gender: 男' + '\n'
         elif self.gender == 1:
-            string += 'Gender: male' + '\n'
+            string += 'Gender: 女' + '\n'
         else:
-            string += 'Gender: unknown' + '\n'
+            string += 'Gender: 未知' + '\n'
         string += 'Avatar Url: ' + str(self.avatar_url) + '\n'
         string += 'Business: ' + str(self.business) + '\n'
         string += 'Headline: ' + str(self.headline) + '\n'
@@ -59,7 +59,7 @@ class ZhihuUserItem(ZhihuItem):
         string += 'Favorited Count: ' + str(self.favorited_count) + '\n'
         string += 'Following Count: ' + str(self.following_count) + '\n'
         string += 'Follower Count: ' + str(self.follower_count) + '\n'
-        string += 'Following Topic Count:' + str(self.following_topic_count) + '\n'
+        string += 'Following Topic Count: ' + str(self.following_topic_count) + '\n'
         string += 'Following Column Count: ' + str(self.following_column_count) + '\n'
         string += 'Following Question Count: ' + str(self.following_question_count) + '\n'
         string += 'Following Favlist Count: ' + str(self.following_favlist_count) + '\n'
