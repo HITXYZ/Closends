@@ -15,9 +15,9 @@ class WeiboItem(SocialMediaItem):
 class WeiboPosterItem(WeiboItem):
     def __init__(self):
         self.id = 0                 # 用户ID
-        self.name = None            # 用户名
-        self.avatar_url = None      # 头像链接
-        self.profile_url = None     # 主页链接
+        self.name = ''              # 用户名
+        self.avatar_url = ''        # 头像链接
+        self.profile_url = ''       # 主页链接
 
     def __str__(self):
         string = ''
@@ -35,10 +35,10 @@ class WeiboPosterItem(WeiboItem):
 class WeiboUserItem(WeiboPosterItem):
     def __init__(self):
         WeiboPosterItem.__init__(self)
-        self.gender = None          # 性别
-        self.location = None        # 所在地
-        self.description = None     # 个人简介
-        self.signup_time = None     # 注册时间
+        self.gender = ''            # 性别
+        self.location = ''          # 所在地
+        self.description = ''       # 个人简介
+        self.signup_time = ''       # 注册时间
         self.weibo_count = 0        # 微博数
         self.follow_count = 0       # 关注数
         self.fans_count = 0         # 粉丝数
@@ -61,16 +61,16 @@ class WeiboUserItem(WeiboPosterItem):
 # 微博内容条目类
 class WeiboContentItem(WeiboItem):
     def __init__(self):
-        self.id = None                  # 微博ID
+        self.id = 0                     # 微博ID
         self.order = 0                  # 用于比较时间先后的16位整数
-        self.url = None                 # 微博链接
+        self.url = ''                   # 微博链接
         self.owner = WeiboPosterItem()  # 博主
-        self.time = None                # 时间
-        self.content = None             # 内容
-        self.source = None              # 来源
+        self.time = ''                  # 时间
+        self.content = ''               # 内容
+        self.source = ''                # 来源
         self.pictures = []              # 图片列表
-        self.media_pic = None           # 媒体封面截图
-        self.media_url = None           # 媒体内容链接
+        self.media_pic = ''             # 媒体封面截图
+        self.media_url = ''             # 媒体内容链接
 
     def __str__(self):
         string = ''
@@ -94,10 +94,10 @@ class WeiboContentItem(WeiboItem):
 class WeiboRepostContentItem(WeiboContentItem):
     def __init__(self):
         WeiboContentItem.__init__(self)
-        self.source_id = None                   # 原博ID
-        self.source_url = None                  # 原博链接
+        self.source_id = ''                     # 原博ID
+        self.source_url = ''                    # 原博链接
         self.source_owner = WeiboPosterItem()   # 原博主
-        self.repost_reason = None               # 转发理由
+        self.repost_reason = ''                 # 转发理由
 
     def __str__(self):
         string = WeiboContentItem.__str__(self)
