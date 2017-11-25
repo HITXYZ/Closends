@@ -8,14 +8,25 @@ import requests
 from bs4 import BeautifulSoup
 from base_spider import SocialMediaSpider
 from urllib.request import quote
-from configs import tieba_user_profile_url, tieba_user_post_url
+from exceptions import MethodParamError
+from configs import tieba_user_profile_url, tieba_user_post_url, log_tieba, log_path
 from tieba.items import TiebaUserItem, TiebaPostItem
+
+
+if log_tieba:
+    import logging
+    import datetime
+    log_file = log_path + "/tieba-log-%s.log" % (datetime.date.today())
+    logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
 
 class TiebaSpider(SocialMediaSpider):
     def scrape_user_info(self, user):
         if not isinstance(user, str):
-            return None
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if log_tieba:
+            logging.info('Scraping info of tieba user: %s...' % user)
         response = requests.get(tieba_user_profile_url.format(user=quote(user)))
         bs = BeautifulSoup(response.text, 'lxml')
         item = TiebaUserItem()
@@ -39,11 +50,15 @@ class TiebaSpider(SocialMediaSpider):
             item.forum_count += len(forum_items2)
         post = bs.find('span', {'class': 'user_name'}).find_all('span')[4].get_text()
         item.post_count = int(re.search(r'发贴:(\d+)', post).group(1))
+        if log_tieba:
+            logging.info('Succeed in scraping info of tieba user: %s.' % user)
         return item
 
     def scrape_user_forums(self, user):
         if not isinstance(user, str):
-            return []
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if log_tieba:
+            logging.info('Scraping forums of tieba user: %s...' % user)
         response = requests.get(tieba_user_profile_url.format(user=quote(user)))
         bs = BeautifulSoup(response.text, 'lxml')
         forum_div1 = bs.find('div', {'id': 'forum_group_wrap'})
@@ -55,11 +70,17 @@ class TiebaSpider(SocialMediaSpider):
         if forum_div2 is not None:
             for forum_a in forum_div2.find_all('a', {'class': 'unsign'}):
                 forums.append(forum_a.get_text())
+        if log_tieba:
+            logging.info('Succeed in scraping forums of tieba user: %s.' % user)
         return forums
 
     def scrape_user_posts(self, user, number=10):
-        if not isinstance(user, str) or not isinstance(number, int):
-            return []
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError("Parameter \'number\' isn\'t an instance of type \'int\'!")
+        if log_tieba:
+            logging.info('Scraping posts of tieba user: %s...' % user)
         response = requests.get(tieba_user_profile_url.format(user=quote(user)))
         bs = BeautifulSoup(response.text, 'lxml')
         post = bs.find('span', {'class': 'user_name'}).find_all('span')[4].get_text()
@@ -91,18 +112,6 @@ class TiebaSpider(SocialMediaSpider):
                 posts.append(item)
                 finish += 1
             page += 1
+        if log_tieba:
+            logging.info('Succeed in scraping posts of tieba user: %s.' % user)
         return posts
-
-
-if __name__ == '__main__':
-    spider = TiebaSpider()
-    info = spider.scrape_user_info('愛你沒法說')
-    print(info)
-
-    forums = spider.scrape_user_forums('愛你沒法說')
-    for forum in forums:
-        print(forum)
-
-    posts = spider.scrape_user_posts('愛你沒法說')
-    for post in posts:
-        print(post)

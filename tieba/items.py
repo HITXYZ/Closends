@@ -1,7 +1,7 @@
 """
 @author: Jiale Xu
 @date: 2017/11/20
-@desc: Items for tieba scraping
+@desc: Items for tieba scraping.
 """
 from base_item import SocialMediaItem
 
