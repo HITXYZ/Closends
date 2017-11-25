@@ -16,8 +16,8 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from qzone.items import *
 from base_spider import SocialMediaSpider
-from configs import qzone_comment_base_url, qzone_emotion_base_url, qzone_headers, qzone_like_base_url, \
-    qzone_message_base_url, qzone_visitor_base_url
+from configs import qzone_comment_url, qzone_emotion_url, qzone_headers, qzone_like_url, \
+    qzone_message_url, qzone_visitor_url
 
 
 driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
@@ -88,7 +88,7 @@ class QzoneSpider(SocialMediaSpider):
         if qq is None:
             qq = self.qq
         logging.info('Scraping emotions of %d...' % qq)
-        response = requests.get(qzone_emotion_base_url.format(qq=qq, pos=0, gtk=self.gtk), cookies=self.cookies).text
+        response = requests.get(qzone_emotion_url.format(qq=qq, pos=0, gtk=self.gtk), cookies=self.cookies).text
         result = json.loads(response[17:-2])
 
         if result.get('code') < 0:       # 没有空间访问权限
@@ -109,7 +109,7 @@ class QzoneSpider(SocialMediaSpider):
         for i in range(page_number):
             if finish_count >= need_count:
                 break
-            emotion_response = requests.get(qzone_emotion_base_url.format(qq=qq, pos=pos, gtk=self.gtk),
+            emotion_response = requests.get(qzone_emotion_url.format(qq=qq, pos=pos, gtk=self.gtk),
                                             cookies=self.cookies, headers=qzone_headers).text
             emotion_result = json.loads(emotion_response[17:-2])
             pos += 20       # 每发出一次请求获取接下来20条说说
@@ -146,7 +146,7 @@ class QzoneSpider(SocialMediaSpider):
                 elif 'story_info' in emotion.keys():    # 照片含有位置信息
                     item.location = emotion.get('story_info').get('lbs').get('idname')
 
-                visitor_response = requests.get(qzone_visitor_base_url.format(qq=qq, id1=item.id, id2=item.id, gtk=self.gtk),
+                visitor_response = requests.get(qzone_visitor_url.format(qq=qq, id1=item.id, id2=item.id, gtk=self.gtk),
                                                 cookies=self.cookies, headers=qzone_headers).text
                 if visitor_response[10:-2][-1] == '}':
                     visitor_result = json.loads(visitor_response[10:-2])
@@ -159,7 +159,7 @@ class QzoneSpider(SocialMediaSpider):
                         visitor_item.name = visitor.get('name')
                         item.visitors.append(visitor_item)
 
-                like_response = requests.get(qzone_like_base_url.format(qq1=self.qq, qq2=qq, id=item.id, gtk=self.gtk),
+                like_response = requests.get(qzone_like_url.format(qq1=self.qq, qq2=qq, id=item.id, gtk=self.gtk),
                                              cookies=self.cookies, headers=qzone_headers).content  # 请求获取点赞列表
                 like_result = json.loads(like_response.decode('utf-8')[10:-3])
                 if like_result.get('code') == 0 and like_result.get('data').get('total_number') > 0:   # 请求成功且有人点赞
@@ -171,8 +171,8 @@ class QzoneSpider(SocialMediaSpider):
 
                 if emotion.get('cmtnum') > 0:       # 有评论
                     if emotion.get('commentlist') is None or emotion.get('cmtnum') > len(emotion.get('commentlist')): # 评论未加载完毕
-                        comments_response = requests.get(qzone_comment_base_url.format(qq=qq, tid=emotion.get('tid'),
-                                                                                       num=emotion.get('cmtnum'), gtk=self.gtk),
+                        comments_response = requests.get(qzone_comment_url.format(qq=qq, tid=emotion.get('tid'),
+                                                                                  num=emotion.get('cmtnum'), gtk=self.gtk),
                                                          cookies=self.cookies, headers=qzone_headers).text
                         comments_result = json.loads(comments_response[17:-2])
                         comments = comments_result.get('commentlist')
@@ -219,7 +219,7 @@ class QzoneSpider(SocialMediaSpider):
         if qq is None:
             qq = self.qq
         logging.info('Scraping messages of %d...' % qq)
-        response = requests.get(qzone_message_base_url.format(qq1=self.qq, qq2=qq, pos=0, gtk=self.gtk),
+        response = requests.get(qzone_message_url.format(qq1=self.qq, qq2=qq, pos=0, gtk=self.gtk),
                                 cookies=self.cookies).text
         result = json.loads(response[10:-2])
 
@@ -241,7 +241,7 @@ class QzoneSpider(SocialMediaSpider):
         for i in range(page_number):
             if finish_count >= need_count:
                 break
-            message_response = requests.get(qzone_message_base_url.format(qq1=self.qq, qq2=qq, pos=pos, gtk=self.gtk),
+            message_response = requests.get(qzone_message_url.format(qq1=self.qq, qq2=qq, pos=pos, gtk=self.gtk),
                                             cookies=self.cookies, headers=qzone_headers).text
             message_result = json.loads(message_response[10:-2])
             pos += 10
