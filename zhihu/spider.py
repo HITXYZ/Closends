@@ -16,10 +16,10 @@ from base_spider import SocialMediaSpider
 from configs import zhihu_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
     zhihu_followers_url, zhihu_follows_query, zhihu_follows_url, zhihu_headers, zhihu_question_answers_url, \
     zhihu_question_query, zhihu_question_url, zhihu_user_answers_url, zhihu_user_query, zhihu_user_questions_url, \
-    zhihu_user_url
+    zhihu_user_url, log_path
 
 
-log_file = "./logs/zhihu-log-%s.log" % (datetime.date.today())
+log_file = log_path + "/zhihu-log-%s.log" % (datetime.date.today())
 logging.basicConfig(filename=log_file, format="%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S %p", level=10)
 
@@ -35,11 +35,10 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_question_answers = {}
         self.scraped_user_answers = {}
 
-    def scrape_info(self, user=None):
-        if user is None:
-            return None
+    def scrape_user_info(self, user):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         logging.info('Scraping info of zhihu user: %s...' % user)
-        print(zhihu_user_url.format(user=user, include=zhihu_user_query))
         response = requests.get(zhihu_user_url.format(user=user, include=zhihu_user_query), headers=zhihu_headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -95,11 +94,14 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_infos[user] = item
         return item
 
-    def scrape_follows(self, user=None, number=0):
-        if user is None:
-            return []
+    def scrape_user_follows(self, user, number=0):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping follows of zhihu user: %s...' % user)
-        response = requests.get(zhihu_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20), headers=zhihu_headers)
+        response = requests.get(zhihu_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
+                                headers=zhihu_headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -129,15 +131,17 @@ class ZhihuSpider(SocialMediaSpider):
                     finish_count += 1
         follows = []
         for url_token in url_tokens:
-            item = self.scrape_info(user=url_token)
+            item = self.scrape_user_info(user=url_token)
             follows.append(item)
         logging.info('Succeed in scraping follows of zhihu user: %s.' % user)
         self.scraped_follows[user] = follows
         return follows
 
-    def scrape_followers(self, user=None, number=0):
-        if user is None:
-            return []
+    def scrape_user_fans(self, user, number=0):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping followers of zhihu user: %s...' % user)
         response = requests.get(zhihu_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
@@ -167,17 +171,17 @@ class ZhihuSpider(SocialMediaSpider):
                         break
                     url_tokens.append(data.get('url_token'))
                     finish_count += 1
-        followers = []
+        fans = []
         for url_token in url_tokens:
-            item = self.scrape_info(user=url_token)
-            followers.append(item)
+            item = self.scrape_user_info(user=url_token)
+            fans.append(item)
         logging.info('Succeed in scraping followers of zhihu user: %s.' % user)
-        self.scraped_followers[user] = followers
-        return followers
+        self.scraped_followers[user] = fans
+        return fans
 
-    def scrape_activities(self, user=None):
+    def scrape_user_activities(self, user):
         if not isinstance(user, str):
-            raise MethodParamError('Parameter \'user\' must be an instance of \'str\'')
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         timestamp = int(time.time())
         response = requests.get(zhihu_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_headers)
         result = response.json()
@@ -247,8 +251,8 @@ class ZhihuSpider(SocialMediaSpider):
         return activities
 
     def scrape_question_by_id(self, id=0):
-        if id == 0:
-            return None
+        if not isinstance(id, int):
+            raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping question of id: %d...' % id)
         response = requests.get(zhihu_question_url.format(id=id, include=zhihu_question_query), headers=zhihu_headers)
         if response.status_code == 404:
@@ -262,22 +266,25 @@ class ZhihuSpider(SocialMediaSpider):
         item.update_time = time.ctime(result.get('updated_time'))
         page = requests.get('https://www.zhihu.com/question/%d' % id, headers=zhihu_headers)
         bs = BeautifulSoup(page.text, 'lxml')
-        content_span = bs.find('div', {'class': 'QuestionRichText'}).div.span
-        content = re.search(r'<span.*?>(.*)</span>', str(content_span)).group(1)
-        item.content = content
+        content_div = bs.find('div', {'class': 'QuestionRichText'})
+        if content_div is not None:
+            item.content = re.search(r'<span.*?>(.*)</span>', str(content_div.div.span)).group(1)
         item.follower_count = result.get('follower_count')
         item.visit_count = result.get('visit_count')
         item.comment_count = result.get('comment_count')
         topics = result.get('topics')
-        for topic in topics:
-            item.topics.append(topic.get('name'))
+        if topics is not None:
+            for topic in topics:
+                item.topics.append(topic.get('name'))
         logging.info('Succeed in scraping question of id: %d.' % id)
         self.scraped_questions[id] = item
         return item
 
-    def scrape_questions_by_user(self, user=None, number=0):
-        if user is None:
-            return []
+    def scrape_questions_by_user(self, user, number=0):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping questions of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_questions_url.format(user=user, offset=0, limit=20), headers=zhihu_headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
@@ -317,9 +324,9 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_user_questions[user] = questions
         return questions
 
-    def scrape_answer_by_id(self, id=0):
-        if id == 0:
-            return None
+    def scrape_answer_by_id(self, id):
+        if not isinstance(id, int):
+            raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping answer of id: %d...' % id)
         response = requests.get(zhihu_answer_url.format(id=id, include=zhihu_answer_query), headers=zhihu_headers)
         if response.status_code == 404:
@@ -343,9 +350,11 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_answers[id] = item
         return item
 
-    def scrape_answers_by_question(self, id=0, number=0):
-        if id == 0:
-            return []
+    def scrape_answers_by_question(self, id, number=0):
+        if not isinstance(id, int):
+            raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping answers of question: %d...' % id)
         response = requests.get(zhihu_question_answers_url.format(id=id, offset=0, limit=20), headers=zhihu_headers)
         if response.status_code == 404:     # 问题不存在
@@ -383,9 +392,11 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_question_answers[id] = answers
         return answers
 
-    def scrape_answers_by_user(self, user=None, number=0):
-        if user is None:
-            return []
+    def scrape_answers_by_user(self, user, number=0):
+        if not isinstance(user, str):
+            raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         logging.info('Scraping answers of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_answers_url.format(user=user, offset=0, limit=20), headers=zhihu_headers)
         if response.status_code == 404:     # 用户不存在或账号被封禁
@@ -425,7 +436,7 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_user_answers[user] = answers
         return answers
 
-    def save_info(self, user=None, directory='./products/'):
+    def save_user_info(self, user=None, directory='./products/'):
         if self.scraped_infos == {}:  # 未爬取过任何用户信息
             logging.warning('Haven\'t scraped info of any zhihu user.')
             return
@@ -514,7 +525,7 @@ class ZhihuSpider(SocialMediaSpider):
         csv_file.close()
         logging.info('Succeed in saving follows of zhihu user: %s.' % user)
 
-    def save_user_followers(self, user, directory='./products/'):
+    def save_user_fans(self, user, directory='./products/'):
         if self.scraped_followers == {}:
             logging.warning('Haven\'t scraped followers of any zhihu user.')
             return
@@ -545,29 +556,3 @@ class ZhihuSpider(SocialMediaSpider):
                              '; '.join([str(loc) for loc in info.locations])))
         csv_file.close()
         logging.info('Succeed in saving followers of zhihu user: %s.' % user)
-
-
-if __name__ == '__main__':
-    spider = ZhihuSpider()
-    # info = spider.scrape_info(user='qing-shen-jue-qian')
-    # print(info)
-    # spider.save_info()
-
-    # follows = spider.scrape_follows(user='qing-shen-jue-qian', number=1)
-    # for follow in follows:
-    #     print(follow)
-    # spider.save_user_follows('qing-shen-jue-qian')
-
-    # followers = spider.scrape_followers(user='qing-shen-jue-qian', number=1)
-    # for follower in followers:
-    #     print(follower)
-    # spider.save_user_followers('qing-shen-jue-qian')
-
-    # question = spider.scrape_question_by_id(67684166)
-    # print(question)
-
-    # answer = spider.scrape_answer_by_id(255562932)
-    # print(answer)
-    activities = spider.scrape_activities('aphrodite-54-57')
-    for activity in activities:
-        print(activity)

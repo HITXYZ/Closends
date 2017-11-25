@@ -11,7 +11,7 @@ from exceptions import MethodParamError
 from configs import zhihu_search_url, zhihu_headers
 
 
-def get_user_by_search(user=None, number=1):
+def get_user_by_search(user, number=1):
     if not isinstance(user, str):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
