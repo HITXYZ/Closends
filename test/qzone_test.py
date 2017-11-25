@@ -1,7 +1,7 @@
 """
 @author: Jiale Xu
 @date: 2017/11/25
-@desc: Test qzone spider
+@desc: Test qzone spider.
 """
 from qzone.spider import QzoneSpider
 

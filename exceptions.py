@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/10/23
-    @desc: Exceptions of scraping
+@author: Jiale Xu
+@date: 2017/10/23
+@desc: Exceptions of scraping.
 """
 
 

@@ -1,7 +1,7 @@
 """
 @author: Jiale Xu
 @date: 2017/11/25
-@desc: Test tieba spider
+@desc: Test tieba spider.
 """
 from tieba.spider import TiebaSpider
 
