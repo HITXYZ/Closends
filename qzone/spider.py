@@ -17,13 +17,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from qzone.items import *
 from base_spider import SocialMediaSpider
 from configs import qzone_comment_url, qzone_emotion_url, qzone_headers, qzone_like_url, \
-    qzone_message_url, qzone_visitor_url
+    qzone_message_url, qzone_visitor_url, log_path
 
 
 driver = webdriver.PhantomJS(executable_path='../phantomjs', service_log_path=os.path.devnull)
 
 
-log_file = './logs/qzone-log-%s.log' % (datetime.date.today())
+log_file = log_path + '/qzone-log-%s.log' % (datetime.date.today())
 logging.basicConfig(filename=log_file, format='%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S %p', level=10)
 
@@ -306,19 +306,3 @@ class QzoneSpider(SocialMediaSpider):
         logging.info('Stop scrapping.')
         if hasattr(self, 'driver'):
             self.driver.quit()
-
-
-if __name__ == '__main__':
-    from exceptions import SpiderInitError
-    spider = QzoneSpider(cookie='./cookie.txt')
-    try:
-        emotions = spider.scrape_emotion(690147660, 10)
-        for emotion in emotions:
-            print(emotion)
-        messages = spider.scrape_message(690147660, 10)
-        for message in messages:
-            print(message)
-    except SpiderInitError:
-        traceback.print_exc()
-    finally:
-        spider.quit()
