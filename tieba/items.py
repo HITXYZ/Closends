@@ -12,14 +12,14 @@ class TiebaItem(SocialMediaItem):
 
 class TiebaUserItem(TiebaItem):
     def __init__(self):
-        self.name = ''
-        self.sex = ''
-        self.tieba_age = 0
-        self.avatar_url = ''
-        self.follow_count = 0
-        self.fans_count = 0
-        self.forum_count = 0
-        self.post_count = 0
+        self.name = ''          # 百度ID
+        self.sex = ''           # 性别
+        self.tieba_age = 0      # 吧龄
+        self.avatar_url = ''    # 头像链接
+        self.follow_count = 0   # 关注数
+        self.fans_count = 0     # 粉丝数
+        self.forum_count = 0    # 关注的吧数
+        self.post_count = 0     # 发帖数
 
     def __str__(self):
         string = ''
@@ -39,13 +39,13 @@ class TiebaUserItem(TiebaItem):
 
 class TiebaPostItem(TiebaItem):
     def __init__(self):
-        self.time = 0
-        self.title = ''
-        self.title_url = ''
-        self.content = ''
-        self.content_url = ''
-        self.forum = ''
-        self.forum_url = ''
+        self.time = 0           # 发帖时间
+        self.title = ''         # 帖子标题
+        self.title_url = ''     # 帖子链接
+        self.content = ''       # 帖子内容
+        self.content_url = ''   # 内容链接
+        self.forum = ''         # 贴吧名
+        self.forum_url = ''     # 贴吧链接
 
     def __str__(self):
         string = ''
