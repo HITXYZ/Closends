@@ -154,9 +154,11 @@ class Preprocess(object):
             for filename in files:
                 with codecs.open(cnt_folder + '/' + filename, encoding='utf8') as fr:
                     vector = []
-                    for word, num in [line.strip().split('\t') for line in fr.readlines()]:
+                    words_num = [line.strip().split('\t') for line in fr.readlines()]
+                    total_num = sum([int(num) for _, num in words_num])
+                    for word, num in words_num:
                         if word in category_feature_words[i]:
-                            TF_IDF = float(num) * float(feature_words[word][1])
+                            TF_IDF = round(float(num)/total_num * float(feature_words[word][1]), 4)
                             vector.append((int(feature_words[word][0]), TF_IDF))
                     if len(vector) < 5: continue
                     vector = sorted(vector, key=lambda item: item[0])
@@ -219,15 +221,15 @@ def run_preprocess(sample_num = 100):
         os.mkdir(tmp_root_catelogue)
 
     lab = Preprocess(stop_words, sample_num)
-    lab.pos_all_text(src_root_catelogue, des_root_catelogue, cnt_root_catelogue)
-    lab.extract_feature_words(cnt_root_catelogue)
+    # lab.pos_all_text(src_root_catelogue, des_root_catelogue, cnt_root_catelogue)
+    # lab.extract_feature_words(cnt_root_catelogue)
     lab.generate_text_vector(cnt_root_catelogue)
 
 
 if __name__ == '__main__':
-    run_preprocess(1000)
+    # run_preprocess(1000)
 
     svm_lab = SVM()
-    param_str = '-c 200 -g 9.0e-6 -q'
+    param_str = '-c 150000 -g 3.6e-5 -q'
     svm_lab.train('train_scale', 'svm.model', param_str)
     svm_lab.predict('test_scale', 'svm.model')
