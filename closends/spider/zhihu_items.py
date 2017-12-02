@@ -1,7 +1,7 @@
 """
-    @author: Jiale Xu
-    @date: 2017/11/04
-    @desc: Items of zhihu scraping
+@author: Jiale Xu
+@date: 2017/11/04
+@desc: Items of zhihu scraping.
 """
 
 from closends.spider.base_item import SocialMediaItem
@@ -16,12 +16,12 @@ class ZhihuItem(SocialMediaItem):
 class ZhihuUserItem(ZhihuItem):
     def __init__(self):
         self.id = id  # ID
-        self.name = None  # 用户名
+        self.name = ''  # 用户名
         self.gender = 0  # 性别 0为女 1为男 -1为未知
-        self.avatar_url = None  # 头像链接
-        self.business = None  # 行业
-        self.headline = None  # 一句话描述
-        self.description = None  # 个人介绍
+        self.avatar_url = ''  # 头像链接
+        self.business = ''  # 行业
+        self.headline = ''  # 一句话描述
+        self.description = ''  # 个人介绍
         self.question_count = 0  # 提问数
         self.answer_count = 0  # 回答数
         self.article_count = 0  # 文章数
@@ -43,11 +43,11 @@ class ZhihuUserItem(ZhihuItem):
         string += 'ID: ' + str(self.id) + '\n'
         string += 'Name: ' + str(self.name) + '\n'
         if self.gender == 0:
-            string += 'Gender: female' + '\n'
+            string += 'Gender: 男' + '\n'
         elif self.gender == 1:
-            string += 'Gender: male' + '\n'
+            string += 'Gender: 女' + '\n'
         else:
-            string += 'Gender: unknown' + '\n'
+            string += 'Gender: 未知' + '\n'
         string += 'Avatar Url: ' + str(self.avatar_url) + '\n'
         string += 'Business: ' + str(self.business) + '\n'
         string += 'Headline: ' + str(self.headline) + '\n'
@@ -60,7 +60,7 @@ class ZhihuUserItem(ZhihuItem):
         string += 'Favorited Count: ' + str(self.favorited_count) + '\n'
         string += 'Following Count: ' + str(self.following_count) + '\n'
         string += 'Follower Count: ' + str(self.follower_count) + '\n'
-        string += 'Following Topic Count:' + str(self.following_topic_count) + '\n'
+        string += 'Following Topic Count: ' + str(self.following_topic_count) + '\n'
         string += 'Following Column Count: ' + str(self.following_column_count) + '\n'
         string += 'Following Question Count: ' + str(self.following_question_count) + '\n'
         string += 'Following Favlist Count: ' + str(self.following_favlist_count) + '\n'
@@ -76,8 +76,8 @@ class ZhihuUserItem(ZhihuItem):
 # 知乎用户教育经历条目类
 class ZhihuEducationItem(ZhihuItem):
     def __init__(self):
-        self.school = None  # 学校
-        self.major = None  # 专业
+        self.school = ''  # 学校
+        self.major = ''  # 专业
 
     def __str__(self):
         string = 'School: ' + str(self.school) + ', Major:' + str(self.major)
@@ -90,8 +90,8 @@ class ZhihuEducationItem(ZhihuItem):
 # 知乎用户职业经历条目类
 class ZhihuEmploymentItem(ZhihuItem):
     def __init__(self):
-        self.company = None  # 公司名
-        self.job = None  # 职位名
+        self.company = ''  # 公司名
+        self.job = ''  # 职位名
 
     def __str__(self):
         string = 'Company: ' + str(self.company) + ', Job: ' + str(self.job)
@@ -105,10 +105,10 @@ class ZhihuEmploymentItem(ZhihuItem):
 class ZhihuQuestionItem(ZhihuItem):
     def __init__(self):
         self.id = 0  # 问题ID
-        self.title = None  # 标题
-        self.create_time = None  # 创建时间
-        self.update_time = None  # 更新时间
-        self.content = None  # 内容
+        self.title = ''  # 标题
+        self.create_time = ''  # 创建时间
+        self.update_time = ''  # 更新时间
+        self.content = ''  # 内容
         self.follower_count = 0  # 关注数
         self.visit_count = 0  # 浏览数
         self.comment_count = 0  # 评论数
@@ -135,13 +135,13 @@ class ZhihuQuestionItem(ZhihuItem):
 class ZhihuAnswerItem(ZhihuItem):
     def __init__(self):
         self.id = 0  # 答案ID
-        self.author = None  # 答主
+        self.author = ''  # 答主
         self.question_id = 0  # 问题ID
-        self.create_time = None  # 创建时间
-        self.update_time = None  # 更新时间
-        self.content = None  # 内容
-        self.voteup_count = None  # 赞同数
-        self.comment_count = None  # 评论数
+        self.create_time = ''  # 创建时间
+        self.update_time = ''  # 更新时间
+        self.content = ''  # 内容
+        self.voteup_count = ''  # 赞同数
+        self.comment_count = ''  # 评论数
 
     def __str__(self):
         string = ''
@@ -162,20 +162,20 @@ class ZhihuAnswerItem(ZhihuItem):
 # 知乎用户动态条目
 class ZhihuActivityItem(ZhihuItem):
     def __init__(self):
-        self.id = 0
-        self.verb = None
-        self.create_time = None
-        self.actor = None
-        self.target_user_name = None
-        self.target_user_avatar = None
-        self.target_user_headline = None
-        self.target_user_url = None
-        self.target_title = None
-        self.target_title_url = None
-        self.target_content = None
-        self.target_content_url = None
-        self.action_text = None
-        self.thumbnail = None
+        self.id = 0  # 动态ID（时间戳）
+        self.verb = ''  # 动态类型
+        self.create_time = ''  # 时间
+        self.actor = ''  # 主人
+        self.target_user_name = ''  # 目标用户名
+        self.target_user_avatar = ''  # 目标头像链接
+        self.target_user_headline = ''  # 目标用户简介
+        self.target_user_url = ''  # 目标用户主页链接
+        self.target_title = ''  # 目标标题内容
+        self.target_title_url = ''  # 目标标题链接
+        self.target_content = ''  # 目标内容
+        self.target_content_url = ''  # 目标内容链接
+        self.action_text = ''  # 动态类型文字
+        self.thumbnail = ''  # 缩略图
 
     def __str__(self):
         string = ''
@@ -197,12 +197,3 @@ class ZhihuActivityItem(ZhihuItem):
 
     def __hash__(self):
         return hash(self.id)
-
-    def convert_format(self):
-        pub_date = self.create_time
-        title = self.target_title
-        title_link = self.target_content_url
-        cover_image = ""
-        content = self.target_content
-
-        return pub_date, title, title_link, cover_image, content
