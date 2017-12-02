@@ -162,20 +162,20 @@ class ZhihuAnswerItem(ZhihuItem):
 # 知乎用户动态条目
 class ZhihuActivityItem(ZhihuItem):
     def __init__(self):
-        self.id = 0  # 动态ID（时间戳）
-        self.verb = ''  # 动态类型
-        self.create_time = ''  # 时间
-        self.actor = ''  # 主人
-        self.target_user_name = ''  # 目标用户名
-        self.target_user_avatar = ''  # 目标头像链接
+        self.id = 0                     # 动态ID（时间戳）
+        self.verb = ''                  # 动态类型
+        self.create_time = ''           # 时间
+        self.actor = ''                 # 主人
+        self.target_user_name = ''      # 目标用户名
+        self.target_user_avatar = ''    # 目标头像链接
         self.target_user_headline = ''  # 目标用户简介
-        self.target_user_url = ''  # 目标用户主页链接
-        self.target_title = ''  # 目标标题内容
-        self.target_title_url = ''  # 目标标题链接
-        self.target_content = ''  # 目标内容
-        self.target_content_url = ''  # 目标内容链接
-        self.action_text = ''  # 动态类型文字
-        self.thumbnail = ''  # 缩略图
+        self.target_user_url = ''       # 目标用户主页链接
+        self.target_title = ''          # 目标标题内容
+        self.target_title_url = ''      # 目标标题链接
+        self.target_content = ''        # 目标内容
+        self.target_content_url = ''    # 目标内容链接
+        self.action_text = ''           # 动态类型文字
+        self.thumbnail = ''             # 缩略图
 
     def __str__(self):
         string = ''
@@ -194,6 +194,23 @@ class ZhihuActivityItem(ZhihuItem):
         string += 'Action Text: ' + str(self.action_text) + '\n'
         string += 'Thumbnail: ' + str(self.thumbnail) + '\n'
         return string
+
+    def convert_format(self):
+        zhihu = {}
+        zhihu['pub_data'] = str(self.create_time)
+        zhihu['action_type'] = str(self.action_text)
+
+        zhihu['target_user_name'] = str(self.target_user_name)
+        zhihu['target_user_head'] = str(self.target_user_avatar)
+        zhihu['target_user_url'] = str(self.target_user_url)
+        zhihu['target_user_headline'] = str(self.target_user_headline)
+
+        zhihu['target_title'] = str(self.target_title)
+        zhihu['target_title_url'] = str(self.target_title_url)
+        zhihu['target_content'] = str(self.target_content)
+        zhihu['target_content_url'] = str(self.target_content_url)
+        zhihu['cover_image'] = str(self.thumbnail)
+
 
     def __hash__(self):
         return hash(self.id)

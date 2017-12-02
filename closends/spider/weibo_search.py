@@ -13,8 +13,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from closends.spider.base_exceptions import MethodParamError
 from closends.spider.base_configs import weibo_search_url
+from django.conf import settings
 
-driver = webdriver.PhantomJS(executable_path='phantomjs', service_log_path=os.path.devnull)
+driver_path = settings.BASE_DIR + '/closends/spider/phantomjs.exe'
+driver = webdriver.PhantomJS(executable_path= driver_path, service_log_path=os.path.devnull)
 
 
 def get_user_by_account(user=None, number=1):

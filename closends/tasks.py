@@ -10,7 +10,7 @@ def weibo_spider():
     friends = Friend.objects.all().exclude(weibo_account='')
     spider = WeiboSpider()
     for friend in friends:
-        weibos = spider.scrape_weibo(int(friend.weibo_ID), 20)
+        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 20)
         for weibo in weibos:
             weibo = weibo.convert_format()
             if len(weibo) == 6:
@@ -40,7 +40,7 @@ def weibo_spider():
 @task(name="weibo_spider_friend")
 def weibo_spider_friend(friend):
     spider = WeiboSpider()
-    weibos = spider.scrape_weibo(int(friend['weibo_ID']), 20)
+    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 20)
     for weibo in weibos:
         weibo = weibo.convert_format()
         if len(weibo) == 6:

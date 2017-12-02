@@ -598,6 +598,6 @@ class ZhihuSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = ZhihuSpider()
-    activities = spider.scrape_user_activities('excited-vczh')
+    activities = spider.scrape_user_activities('miloyip')
     for activity in activities:
         print(activity)

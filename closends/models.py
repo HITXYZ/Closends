@@ -88,21 +88,6 @@ class Friend(models.Model):
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
-# class QQContent(models.Model):
-#     """QQ动态"""
-#
-#     def __str__(self):
-#         return self.content[:20]
-#
-#     def nickname(self):
-#         return self.friend.nickname
-#
-#     content = models.TextField()
-#     video_url = models.URLField(blank=True)
-#     publish_date = models.DateField('date published')
-#     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
-
-
 class WeiboContent(models.Model):
     """微博动态"""
 
@@ -127,7 +112,7 @@ class WeiboContent(models.Model):
 
     # basic post
     pub_date = models.CharField(max_length=20)
-    src_url = models.URLField(max_length=500, blank=True)
+    src_url = models.URLField(max_length=500)
     content = models.TextField()
 
     # check video/image or is reposted
@@ -159,10 +144,18 @@ class ZhihuContent(models.Model):
         return self.friend.nickname
 
     pub_date = models.DateField(default=timezone.now)
-    title = models.CharField(max_length=50)
-    title_link = models.CharField(max_length=100)
-    cover_image = models.CharField(max_length=100, blank=True)
-    content = models.TextField()
+    action_type = models.CharField(max_length=10)
+
+    target_user_name = models.CharField(max_length=50)
+    target_user_head = models.URLField(max_length=500)
+    target_user_url = models.URLField(max_length=500)
+    target_user_headline = models.CharField(max_length=100)
+
+    target_title = models.CharField(max_length=50)
+    target_title_url = models.CharField(max_length=500)
+    target_content = models.TextField()
+    target_content_url = models.URLField(max_length=500)
+    cover_image = models.URLField(max_length=500)
 
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 

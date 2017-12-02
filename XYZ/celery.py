@@ -1,8 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 
+import os
 from celery import Celery
 from django.conf import settings
-import os
 
 # 获取当前文件夹名，即为该Django的项目名
 project_name = os.path.split(os.path.abspath('.'))[-1]
