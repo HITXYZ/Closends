@@ -59,5 +59,15 @@ class TiebaPostItem(TiebaItem):
         string += 'Forum Url: ' + str(self.forum_url) + '\n'
         return string
 
+    def convert_format(self):
+        tieba = {}
+        tieba['forum'] = str(self.forum)
+        tieba['forum_url'] = str(self.forum_url)
+        tieba['title'] = str(self.title)
+        tieba['title_url'] = str(self.title_url)
+        tieba['content'] = str(self.content)
+        tieba['content_url'] = str(self.content_url)
+        return tieba
+
     def __hash__(self):
         return hash(self.title)

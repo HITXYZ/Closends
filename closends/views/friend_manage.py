@@ -1,5 +1,6 @@
 import json
-from ..tasks import weibo_spider_friend
+
+from ..tasks import weibo_spider_friend, zhihu_spider_friend, tieba_spider_friend
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -196,10 +197,7 @@ def add_found_friend_weibo(request):
         friend.weibo_head = request.POST['head']
         friend.save()
 
-        args = {}
-        args['id'] = friend.id
-        args['weibo_ID'] = friend.weibo_ID
-
+        args = {'id': friend.id, 'weibo_ID': friend.weibo_ID}
         weibo_spider_friend.delay(args)
         return HttpResponse("")
 
@@ -245,6 +243,9 @@ def add_found_friend_zhihu(request):
         friend.zhihu_link = request.POST['link']
         friend.zhihu_head = request.POST['head']
         friend.save()
+
+        args = {'id': friend.id, 'zhihu_ID': friend.zhihu_ID}
+        zhihu_spider_friend.delay(args)
         return HttpResponse("")
 
 
@@ -258,5 +259,52 @@ def query_exist_friend_zhihu(request):
         account = friend.zhihu_account
         link = friend.zhihu_link
         head = friend.zhihu_head
+        result = {'account': account, 'link': link, 'head': head}
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
+
+@csrf_exempt
+@login_required
+def delete_friend_tieba(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.tieba_ID = ""
+        friend.tieba_account = ""
+        friend.tieba_link = ""
+        friend.tieba_head = ""
+        friend.save()
+        return HttpResponse("")
+
+
+@csrf_exempt
+@login_required
+def add_found_friend_tieba(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        friend.tieba_ID = request.POST['ID']
+        friend.tieba_account = request.POST['account']
+        friend.tieba_link = request.POST['link']
+        friend.tieba_head = request.POST['head']
+        friend.save()
+
+        args = {'id': friend.id, 'tieba_ID': friend.tieba_ID}
+        tieba_spider_friend.delay(args)
+        return HttpResponse("")
+
+
+@csrf_exempt
+@login_required
+def query_exist_friend_tieba(request):
+    if request.method == 'POST':
+        user = request.user.userinfo
+        friend_name = request.POST['friend_name']
+        friend = user.friend_set.filter(nickname=friend_name)[0]
+        account = friend.tieba_account
+        link = friend.tieba_link
+        head = friend.tieba_head
         result = {'account': account, 'link': link, 'head': head}
         return HttpResponse(json.dumps(result), content_type='application/json')

@@ -9,8 +9,9 @@ setting_patterns = [
     url(r'user_info/set_head_image$', person_info.set_head_image, name='set_head_image'),
     url(r'user_info/update_username$', person_info.update_username, name='update_username'),
 
-    # weibo binding
     url(r'user_binding$', user_binding.user_binding, name='user_binding'),
+
+    # weibo binding
     url(r'user_binding/query_weibo_user$', user_binding.query_weibo_user, name='query_weibo_user'),
     url(r'user_binding/weibo_binding$', user_binding.weibo_binding, name='weibo_binding'),
     url(r'user_binding/weibo_unbinding$', user_binding.weibo_unbinding, name='weibo_unbinding'),
@@ -21,6 +22,12 @@ setting_patterns = [
     url(r'user_binding/zhihu_binding$', user_binding.zhihu_binding, name='zhihu_binding'),
     url(r'user_binding/zhihu_unbinding$', user_binding.zhihu_unbinding, name='zhihu_unbinding'),
     url(r'user_binding/query_bound_zhihu_info$', user_binding.query_bound_zhihu_info, name='query_bound_zhihu_info'),
+
+    # tieba binding
+    url(r'user_binding/query_tieba_user$', user_binding.query_tieba_user, name='query_tieba_user'),
+    url(r'user_binding/tieba_binding$', user_binding.tieba_binding, name='tieba_binding'),
+    url(r'user_binding/tieba_unbinding$', user_binding.tieba_unbinding, name='tieba_unbinding'),
+    url(r'user_binding/query_bound_tieba_info$', user_binding.query_bound_tieba_info, name='query_bound_tieba_info'),
 
     # group manage
     url(r'friend_manage$', friend_manage.friend_manage, name='friend_manage'),
@@ -44,6 +51,12 @@ setting_patterns = [
     url(r'friend_manage/delete_friend_zhihu$', friend_manage.delete_friend_zhihu, name='delete_friend_zhihu'),
     url(r'friend_manage/add_found_friend_zhihu$', friend_manage.add_found_friend_zhihu, name='add_found_friend_zhihu'),
     url(r'friend_manage/query_exist_friend_zhihu$', friend_manage.query_exist_friend_zhihu, name='query_exist_friend_zhihu'),
+
+    # tieba accounts manage
+    url(r'friend_manage/delete_friend_tieba$', friend_manage.delete_friend_tieba, name='delete_friend_tieba'),
+    url(r'friend_manage/add_found_friend_tieba$', friend_manage.add_found_friend_tieba, name='add_found_friend_tieba'),
+    url(r'friend_manage/query_exist_friend_tieba$', friend_manage.query_exist_friend_tieba, name='query_exist_friend_tieba'),
+
 ]
 
 content_patterns = [

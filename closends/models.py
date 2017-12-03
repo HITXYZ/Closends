@@ -35,9 +35,9 @@ class Website(models.Model):
     site_choices = (('weibo', '微博'), ('zhihu', '知乎'), ('tieba', '贴吧'))
     site = models.CharField(max_length=5, default='weibo', choices=site_choices)
     site_account = models.CharField(max_length=20)
-    site_link = models.URLField(max_length=500, blank=True)
-    site_ID = models.CharField(max_length=20, blank=True)
-    site_head = models.URLField(max_length=500, blank=True)
+    site_link = models.URLField(max_length=500)
+    site_ID = models.CharField(max_length=20)
+    site_head = models.URLField(max_length=500)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
 
@@ -109,7 +109,6 @@ class WeiboContent(models.Model):
     def friend_link(self):
         return self.friend.weibo_link
 
-
     # basic post
     pub_date = models.CharField(max_length=20)
     src_url = models.URLField(max_length=500)
@@ -138,29 +137,64 @@ class ZhihuContent(models.Model):
     """知乎动态"""
 
     def __str__(self):
-        return self.content[:20]
+        return self.action_type
 
-    def nickname(self):
+    def friend_nickname(self):
         return self.friend.nickname
 
-    pub_date = models.DateField(default=timezone.now)
+    def friend_account(self):
+        return self.friend.zhihu_account
+
+    def friend_head(self):
+        return self.friend.image_name()
+
+    def friend_link(self):
+        return self.friend.zhihu_link
+
+    pub_date = models.DateTimeField(default=timezone.now)
     action_type = models.CharField(max_length=10)
 
     target_user_name = models.CharField(max_length=50)
     target_user_head = models.URLField(max_length=500)
     target_user_url = models.URLField(max_length=500)
-    target_user_headline = models.CharField(max_length=100)
+    target_user_headline = models.CharField(max_length=100, blank=True)
 
     target_title = models.CharField(max_length=50)
     target_title_url = models.CharField(max_length=500)
     target_content = models.TextField()
     target_content_url = models.URLField(max_length=500)
-    cover_image = models.URLField(max_length=500)
+    cover_image = models.URLField(max_length=500, blank=True)
 
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
 class TiebaContent(models.Model):
+    """贴吧动态"""
+
+    def __str__(self):
+        return self.title
+
+    def friend_nickname(self):
+        return self.friend.nickname
+
+    def friend_account(self):
+        return self.friend.tieba_account
+
+    def friend_head(self):
+        return self.friend.image_name()
+
+    def friend_link(self):
+        return self.friend.tieba_link
+
+    pub_date = models.CharField(max_length=20)
+
+    forum = models.CharField(max_length=20)
+    forum_url = models.URLField(max_length=500)
+    title = models.CharField(max_length=100)
+    title_url = models.URLField(max_length=500)
+    content = models.TextField()
+    content_url = models.URLField(max_length=500)
+
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 

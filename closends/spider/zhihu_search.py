@@ -17,8 +17,7 @@ def get_user_by_search(user=None, number=1):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
         raise MethodParamError('Parameter \'number\' must be an instance of \'int\'!')
-    if number <= 0:
-        number = 1
+    number = 1 if number < 1 else number
     response = requests.get(zhihu_search_url.format(key=quote(user)), headers=zhihu_headers)
     bs = BeautifulSoup(response.text, 'lxml')
     user_tokens = []
@@ -56,4 +55,6 @@ def get_user_by_homepage(url):
 
 
 if __name__ == '__main__':
-    print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
+    print(get_user_by_search('江枫', 1))
+    # print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
+    # print(get_user_by_homepage('https://www.zhihu.com/people/jiang-feng-72-58'))

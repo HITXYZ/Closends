@@ -4,8 +4,9 @@
 @desc: Items of zhihu scraping.
 """
 
+import re
 from closends.spider.base_item import SocialMediaItem
-
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 # 知乎条目基类
 class ZhihuItem(SocialMediaItem):
@@ -196,8 +197,12 @@ class ZhihuActivityItem(ZhihuItem):
         return string
 
     def convert_format(self):
+        time_str = re.split('\s+', self.create_time)
+        time_str[1] = str(months.index(time_str[1]))
+        pub_date = time_str[-1] + '-' + time_str[1] + '-' + time_str[2] + ' ' + time_str[-2]
+
         zhihu = {}
-        zhihu['pub_data'] = str(self.create_time)
+        zhihu['pub_date'] = pub_date
         zhihu['action_type'] = str(self.action_text)
 
         zhihu['target_user_name'] = str(self.target_user_name)
@@ -210,7 +215,7 @@ class ZhihuActivityItem(ZhihuItem):
         zhihu['target_content'] = str(self.target_content)
         zhihu['target_content_url'] = str(self.target_content_url)
         zhihu['cover_image'] = str(self.thumbnail)
-
+        return zhihu
 
     def __hash__(self):
         return hash(self.id)

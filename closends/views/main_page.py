@@ -47,6 +47,8 @@ def query_all(request, page=1):
     return render(request, 'closends/index.html', result)
 
 
+@csrf_exempt
+@login_required
 def query_by_group(request, group, page=1):
     user = request.user.userinfo
     group_name = user.group_list.split(',')

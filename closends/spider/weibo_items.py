@@ -98,7 +98,6 @@ class WeiboContentItem(WeiboItem):
         weibo['is_repost'] = False
         weibo['images'] = self.pictures
         weibo['video_image'] = str(self.media_pic)
-
         return weibo
 
 
@@ -142,5 +141,4 @@ class WeiboRepostContentItem(WeiboContentItem):
         weibo['origin_content'] = basic['content']
         weibo['origin_images'] = basic['images']
         weibo['origin_video_image'] = basic['video_image']
-
         return weibo
