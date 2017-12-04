@@ -130,6 +130,7 @@ class WeiboContent(models.Model):
     origin_has_image = models.BooleanField(default=False)
     origin_video_image = models.URLField(max_length=500, blank=True)
 
+    topic = models.CharField(max_length=10, blank=True)
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
@@ -151,6 +152,15 @@ class ZhihuContent(models.Model):
     def friend_link(self):
         return self.friend.zhihu_link
 
+    def has_cover_image(self):
+        return not (not self.cover_image)
+
+    def author_operation(self):
+        return self.action_type == '回答了问题' or self.action_type == '发表了文章'
+
+    def has_headline(self):
+        return not self.target_user_headline
+
     pub_date = models.DateTimeField(default=timezone.now)
     action_type = models.CharField(max_length=10)
 
@@ -165,6 +175,7 @@ class ZhihuContent(models.Model):
     target_content_url = models.URLField(max_length=500)
     cover_image = models.URLField(max_length=500, blank=True)
 
+    topic = models.CharField(max_length=10, blank=True)
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 
@@ -195,6 +206,7 @@ class TiebaContent(models.Model):
     content = models.TextField()
     content_url = models.URLField(max_length=500)
 
+    topic = models.CharField(max_length=10, blank=True)
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
 
 

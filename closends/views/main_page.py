@@ -12,20 +12,44 @@ from ..models import WeiboContent, Image
         平台、分组、主题、时间、关键字查询
 """
 
+topic_name = ['IT', '人文艺术', '传媒', '体育', '健康',
+              '动漫', '女性', '娱乐', '广告公共', '房产',
+              '教育', '文学出版', '旅游', '时尚', '校园',
+              '汽车', '游戏', '生活', '美食', '育儿', '财经'] # 21 categories
 
 @csrf_exempt
 @login_required
 def query_all(request, page=1):
     user = request.user.userinfo
+    friends = user.friend_set.all()
     group_name = user.group_list.split(',')
     group_index = ['group_' + str(index) for index in range(len(group_name))]
     group_list = list(zip(group_index, group_name))
+    topic_list = list(enumerate(topic_name))
 
-    friends = user.friend_set.all()
     all_contents = []
     for friend in friends:
-        all_contents += friend.weibocontent_set.all()
-    all_contents.sort(key= lambda content: content.pub_date)
+        weibo_contents = friend.weibocontent_set.all()
+        zhihu_contents = friend.zhihucontent_set.all()
+        tieba_contents = friend.tiebacontent_set.all()
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in weibo_contents:
+            content.type = 'weibo'
+            if not content.is_repost:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+
+        for content in zhihu_contents: content.type = 'zhihu'
+        for content in tieba_contents: content.type = 'tieba'
+        all_contents += weibo_contents
+        all_contents += zhihu_contents
+        all_contents += tieba_contents
+
+    # all_contents.sort(key= lambda content: content.pub_date)
+
     paginator = Paginator(all_contents, 20)
     try:
         contents = paginator.page(page)
@@ -34,16 +58,9 @@ def query_all(request, page=1):
     except EmptyPage:
         contents = paginator.page(paginator.num_pages)
 
-    content_type = ContentType.objects.get_for_model(WeiboContent)
-    for content in contents:
-        if not content.is_repost:
-            if content.has_image:
-                content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
-        else:
-            if content.origin_has_image:
-                content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
-
-    result = {'group_list': group_list, 'contents': contents, 'option':'index'}
+    result = {'group_list': group_list,
+              'topic_list': topic_list,
+              'contents': contents}
     return render(request, 'closends/index.html', result)
 
 
@@ -51,16 +68,36 @@ def query_all(request, page=1):
 @login_required
 def query_by_group(request, group, page=1):
     user = request.user.userinfo
+    friends = user.friend_set.all()
     group_name = user.group_list.split(',')
     group_index = ['group_' + str(index) for index in range(len(group_name))]
     group_list = list(zip(group_index, group_name))
+    topic_list = list(enumerate(topic_name))
 
-    friends = user.friend_set.all()
     all_contents = []
     for friend in friends:
         if friend.group == group:
-            all_contents += friend.weibocontent_set.all()
-    all_contents.sort(key=lambda content: content.pub_date)
+            weibo_contents = friend.weibocontent_set.all()
+            zhihu_contents = friend.zhihucontent_set.all()
+            tieba_contents = friend.tiebacontent_set.all()
+            content_type = ContentType.objects.get_for_model(WeiboContent)
+            for content in weibo_contents:
+                content.type = 'weibo'
+                if not content.is_repost:
+                    if content.has_image:
+                        content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+                else:
+                    if content.origin_has_image:
+                        content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+
+            for content in zhihu_contents: content.type = 'zhihu'
+            for content in tieba_contents: content.type = 'tieba'
+            all_contents += weibo_contents
+            all_contents += zhihu_contents
+            all_contents += tieba_contents
+
+    # all_contents.sort(key=lambda content: content.pub_date)
+
     paginator = Paginator(all_contents, 20)
     try:
         contents = paginator.page(page)
@@ -69,14 +106,91 @@ def query_by_group(request, group, page=1):
     except EmptyPage:
         contents = paginator.page(paginator.num_pages)
 
-    content_type = ContentType.objects.get_for_model(WeiboContent)
-    for content in contents:
-        if not content.is_repost:
-            if content.has_image:
-                content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
-        else:
-            if content.origin_has_image:
-                content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+    result = {'group_list': group_list,
+              'topic_list': topic_list,
+              'current_group': group,
+              'contents': contents}
+    return render(request, 'closends/display_group.html', result)
 
-    result = {'group_list': group_list, 'current_group': group, 'contents': contents, 'option': 'group'}
-    return render(request, 'closends/index.html', result)
+
+@csrf_exempt
+@login_required
+def query_by_platform(request, platform, page=1):
+    user = request.user.userinfo
+    friends = user.friend_set.all()
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    topic_list = list(enumerate(topic_name))
+
+    all_contents = []
+    if platform == 'weibo':
+        for friend in friends:
+            all_contents += friend.weibocontent_set.all()
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in all_contents:
+            if not content.is_repost and content.has_image:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+    elif platform == 'zhihu':
+        for friend in friends:
+            all_contents += friend.zhihucontent_set.all()
+    else:
+        for friend in friends:
+            all_contents += friend.tiebacontent_set.all()
+
+    # all_contents.sort(key=lambda content: content.pub_date)
+
+    paginator = Paginator(all_contents, 20)
+    try:
+        contents = paginator.page(page)
+    except PageNotAnInteger:
+        contents = paginator.page(1)
+    except EmptyPage:
+        contents = paginator.page(paginator.num_pages)
+
+    result = {'group_list': group_list,
+              'topic_list': topic_list,
+              'current_platform': platform,
+              'contents': contents}
+    return render(request, 'closends/display_platform.html', result)
+
+
+@csrf_exempt
+@login_required
+def query_by_topic(request, topic, page=1):
+    user = request.user.userinfo
+    friends = user.friend_set.all()
+    group_name = user.group_list.split(',')
+    group_index = ['group_' + str(index) for index in range(len(group_name))]
+    group_list = list(zip(group_index, group_name))
+    topic_list = list(enumerate(topic_name))
+
+    all_contents = []
+    for friend in friends:
+        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic]
+        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic]
+        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic]
+        for content in weibo_contents: content.type = 'weibo'
+        for content in zhihu_contents: content.type = 'zhihu'
+        for content in tieba_contents: content.type = 'tieba'
+        all_contents += weibo_contents
+        all_contents += zhihu_contents
+        all_contents += tieba_contents
+
+    paginator = Paginator(all_contents, 20)
+    try:
+        contents = paginator.page(page)
+    except PageNotAnInteger:
+        contents = paginator.page(1)
+    except EmptyPage:
+        contents = paginator.page(paginator.num_pages)
+
+    result = {'group_list': group_list,
+              'topic_list': topic_list,
+              'current_topic': topic,
+              'contents': contents}
+    return render(request, 'closends/display_topic.html', result)

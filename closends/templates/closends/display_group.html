@@ -1,0 +1,203 @@
+{% extends 'closends/display_base.html' %}
+
+{% block main_content %}
+    <div class="main_content">
+        {% for content in contents %}
+            {% ifequal content.type 'weibo' %}
+                {% if not content.is_repost %}
+                    <div class="WB_original_post">
+                        <div class="WB_friend_info row">
+                            <div class="col-md-2">
+                                <a target="_blank" href="#">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3 WB_name">
+                                <a href="" target="_blank">{{ content.friend_account }}</a>
+                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                            </div>
+                            <div class="col-md-3 WB_from">
+                                <a href="" target="_blank">15:57</a>
+                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                            </div>
+                        </div>
+                        <div class="WB_origin_detail">
+                            <div class="WB_text">{{ content.content | safe }}</div>
+                            <div class="WB_media">
+                                {% if content.has_image %}
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"0:3" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"3:6" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"6:9" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% elif not content.video_image %}
+                                    <img src="{{ content.video_image }}">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="WB_transmit_post">
+                        <div class="WB_friend_info row">
+                            <div class="col-md-2">
+                                <a target="_blank" href="#">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3 WB_name">
+                                <a href="" target="_blank">{{ content.friend_account }}</a>
+                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                            </div>
+                            <div class="col-md-3 WB_from">
+                                <a href="" target="_blank">15:57</a>
+                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                            </div>
+                        </div>
+                        <div class="WB_repost_detail">
+                            <div class="WB_origin_text">{{ content.content | safe }}</div>
+                            <div class="WB_feed_expand">
+                                <div class="WB_feed">
+                                    <div class="WB_info">
+                                        <a class="W_fb" href="{{ content.origin_link }}" title="阿里技术">@{{ content.origin_account }}</a>
+                                    </div>
+                                    <div class="WB_func clearfix">
+                                        <a href="" target="_blank" >14:28</a>
+                                        <a href="{{ content.origin_src_url }}" target="_blank" >原文链接</a>
+                                    </div>
+                                    <div class="WB_text">
+                                        {{ content.origin_content|safe }}
+                                    </div>
+                                    <div class="WB_media">
+                                        {% if content.origin_has_image %}
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"0:3" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"3:6" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"6:9" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif not content.origin_video_image %}
+                                            <img src="{{ content.origin_video_image }}">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endifequal %}
+
+            {% ifequal content.type 'zhihu' %}
+                <div class="zhihu_item">
+                    <div class="friend_info row">
+                        <div class="col-md-2">
+                            <a target="_blank" href="#">
+                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="" target="_blank">{{ content.friend_account }}</a>
+                            <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="" target="_blank">15:57</a>
+                            <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                        </div>
+                        <div class="col-md-3">
+                            {{ content.action_type }}
+                        </div>
+                    </div>
+                    <div class="zhihu_content">
+                        {% comment %}
+                            {% if not content.author_operation %}
+                                <div class="author_info row">
+                                    <div class="author_info_link col-md-1">
+                                    <a href="{{ content.target_user_url }}"><img src="{{ content.target_user_head }}"></a>
+                                </div>
+                                    <div class="author_info_head col-md-2">
+                                        <a class="userlink_link" href="{{ content.target_user_url }}">{{content.target_user_name}}</a>
+                                </div>
+                                    {% if content.has_headline %}
+                                        <div class="author_info_text col-md-6">{{ content.target_user_headline }}</div>
+                                    {% else %}
+                                        <div class="author_info_text col-md-6">作者还没有个性签名哦</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endcomment %}
+
+                        <div class="topic">
+                            <h5 class="content_item_title">
+                                <a href="{{ content.target_title_url }}" target="_blank">{{ content.target_title|safe }}</a>
+                            </h5>
+                        </div>
+
+                        <div class="rich_content row">
+                            <div class="rich_content_inner col-md-11">
+                                <span class="rich_text">{{ content.target_content|safe }}
+                                    <a href="{{ content.target_content_url }}">阅读原文</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endifequal %}
+
+            {% ifequal content.type 'tieba' %}
+                <div class="tieba_item"></div>
+            {% endifequal %}
+        {% endfor %}
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li>
+                    {% if contents.has_previous %}
+                        <a href="{% url 'closends:content:query_by_group' group=current_group page=contents.previous_page_number %}">上一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
+                </li>
+                <li>
+                    <span>{{ contents.number }} / {{ contents.paginator.num_pages }}</span>
+                </li>
+                <li>
+                    {% if contents.has_next %}
+                        <a href="{% url 'closends:content:query_by_group' group=current_group page=contents.next_page_number %}">下一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

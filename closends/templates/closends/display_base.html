@@ -1,0 +1,406 @@
+{% extends 'closends/base.html' %}
+
+{% block css_load %}
+    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/closends/js/bootstrap.js"></script>
+    <script src="/static/closends/js/jquery.min.js"></script>
+
+    <!--main layout-->
+    <style>
+        .left_sidebar{
+            width: 200px;
+            height: 800px;
+            margin-left: 20%;
+            border: 1px solid;
+            position: fixed;
+        }
+
+        .main_content{
+            width: 600px;
+            margin-left: 35%;
+            margin-top: 6.7%;
+            border: 1px solid;
+        }
+
+        .main_content nav{
+            margin-left: 35%;
+        }
+    </style>
+
+    <!--left sidebar-->
+    <style>
+        .platform{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .platform span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .platform span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .platform span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .platform .all_sites .site{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .platform .all_sites button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+        .friend_groups{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .friend_groups span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .friend_groups span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .friend_groups span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .friend_groups .group_list .group{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .friend_groups .group_list button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+        .topics{
+            margin-top: 10%;
+            margin-left: 10%;
+        }
+
+        .topics span{
+            width: 100px;
+            margin-left: 20px;
+        }
+
+        .topics span button{
+            width: 100px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .topics span img{
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+        }
+
+        .topics .topic_list .topic{
+            margin-top: 2%;
+            margin-left: 50px;
+        }
+
+        .topics .topic_list button{
+            width: 100px;
+            font-size: 18px;
+        }
+
+    </style>
+
+    <!--weibo-->
+    <style>
+        .WB_transmit_post, .WB_original_post, .zhihu_item{
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            border-radius:5px;
+            background-color: white;
+        }
+
+        .WB_friend_info{
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .WB_friend_info img{
+            width: 50px;
+            height: 50px;
+        }
+
+        .WB_friend_info .WB_name{
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -35px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .WB_friend_info .WB_from{
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -32px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .WB_origin_detail{
+            margin-left: 70px;
+            padding-bottom: 10px;
+        }
+
+        .WB_origin_detail .WB_text {
+            font-size: 14px;
+            margin-right: 20px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_repost_detail {
+            margin-left: 45px;
+            padding-bottom: 10px;
+        }
+
+        .WB_repost_detail .WB_feed_expand{
+            margin-left: -45px;
+            background-color: #f2f2f5;
+        }
+
+        .WB_repost_detail .WB_feed{
+            margin-left: 70px;
+        }
+
+        .WB_repost_detail .WB_origin_text {
+            font-size: 14px;
+            margin-right: 20px;
+            margin-left: 30px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_repost_detail .WB_feed_expand .WB_text {
+            font-size: 14px;
+            margin-right: 20px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_text img {
+            vertical-align: text-bottom;
+            width: 15px;
+            height: 15px;
+        }
+
+        .WB_media .media-box{
+            margin-top: 5px;
+        }
+
+        .WB_media .media-box .col-md-3{
+            width: 115px;
+        }
+
+        .WB_media .media-box img{
+            width: 110px;
+            height: 110px;
+        }
+    </style>
+
+    <!--zhihu-->
+    <style>
+        .friend_info{
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .friend_info img{
+            width: 50px;
+            height: 50px;
+        }
+
+        .friend_info .col-md-3{
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -35px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .friend_info .col-md-4{
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .zhihu_content{
+            margin-top: -10px;
+        }
+
+        .zhihu_content .author_info{
+            padding-left: 80px;
+        }
+
+        .zhihu_content .author_info .author_info_link{
+            margin-top: 5px;
+            margin-left: -20px;
+        }
+
+        .zhihu_content .author_info .author_info_link img{
+            width: 25px;
+            height: 25px;
+        }
+
+        .zhihu_content .author_info .author_info_head{
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .zhihu_content .author_info .author_info_text{
+            margin-top: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: "Consolas", sans-serif;
+        }
+
+        .zhihu_content .topic{
+            padding-left: 80px;
+            padding-right: 10px;
+        }
+
+        .zhihu_content .topic .content_item_title a{
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+        }
+
+        .zhihu_content .rich_content{
+            padding-bottom: 10px;
+            padding-right: 10px;
+        }
+
+        .zhihu_content .rich_content .col-md-11{
+            padding-right: 50px;
+        }
+
+        .zhihu_content .rich_content .rich_content_inner{
+            margin-left: 80px;
+            margin-top: 5px;
+        }
+
+        .zhihu_content .rich_content .rich_text{
+            font-family: "Consolas", sans-serif;
+            font-style: normal;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+
+    <!--tieba-->
+    <style>
+
+    </style>
+
+{% endblock %}
+
+{% block content_body %}
+    <div class="main_box">
+        <div class="left_sidebar">
+            <div class="platform">
+                <span>
+                    <button id="unfold_platform" class="btn-link">平台
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="all_sites">
+                    <div class="site">
+                        <a href="{% url 'closends:content:query_by_platform' platform='weibo' page=1%}">
+                            <button class="btn-link text-left">微博</button>
+                        </a>
+                    </div>
+                    <div class="site">
+                        <a href="{% url 'closends:content:query_by_platform' platform='zhihu' page=1%}">
+                            <button class="btn-link text-left">知乎</button>
+                        </a>
+                    </div>
+                    <div class="site">
+                        <a href="{% url 'closends:content:query_by_platform' platform='tieba' page=1%}">
+                            <button class="btn-link text-left">贴吧</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="friend_groups">
+                <span>
+                    <button id="unfold_groups" class="btn-link">分组
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="group_list">
+                    {% for group in group_list %}
+                        <div class="group">
+                            <a href="{% url 'closends:content:query_by_group' group=group.0 page=1 %}">
+                                <button class="btn-link text-left">{{ group.1 }}</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="topics">
+                <span>
+                    <button id="unfold_topics" class="btn-link">话题
+                        <img class="img-circle" src="/static/closends/img/unfold.png">
+                    </button>
+                </span>
+                <div class="topic_list">
+                    {% for topic in topic_list %}
+                        <div class="topic">
+                            <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
+                                <button class="btn-link text-left">{{ topic.1 }}</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% block main_content %}
+
+        {% endblock %}
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#unfold_platform").on("click", function () {
+                $(".all_sites").toggle();
+            });
+
+            $("#unfold_groups").on("click", function () {
+                $(".group_list").toggle();
+            });
+
+            $("#unfold_topics").on("click", function () {
+                $(".topic_list").toggle();
+            });
+        })
+    </script>
+{% endblock %}

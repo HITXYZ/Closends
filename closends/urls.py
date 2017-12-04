@@ -60,8 +60,10 @@ setting_patterns = [
 ]
 
 content_patterns = [
-    url(r'all_query/(?:page-(?P<page>\d+)/)?$', main_page.query_all, name='index'),
-    url(r'group_query/(?P<group>\w+)/(?:page-(?P<page>\d+)/)$', main_page.query_by_group, name='query_by_group')
+    url(r'query_all/(?:page-(?P<page>\d+)/)?$', main_page.query_all, name='index'),
+    url(r'query_by_group/(?P<group>\w+)/(?:page-(?P<page>\d+)/)$', main_page.query_by_group, name='query_by_group'),
+    url(r'query_by_platform/(?P<platform>\w+)/(?:page-(?P<page>\d+)/)', main_page.query_by_platform, name='query_by_platform'),
+    url(r'query_by_topic/(?:topic-(?P<topic>\w+))/(?:page-(?P<page>\d+)/)', main_page.query_by_topic, name='query_by_topic'),
 ]
 
 app_name = 'closends'

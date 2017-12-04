@@ -7,7 +7,7 @@ from closends.spider.tieba_spider import TiebaSpider
 from .models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name="weibo_spider")
+@periodic_task(run_every=(crontab(minute='*/1')), name="weibo_spider")
 def weibo_spider():
     friends = Friend.objects.all().exclude(weibo_account='')
     spider = WeiboSpider()
@@ -50,7 +50,7 @@ def weibo_spider():
                         Image(content_object=content, image_url=image_url).save()
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name="zhihu_spider")
+@periodic_task(run_every=(crontab(minute='*/1')), name="zhihu_spider")
 def zhihu_spider():
     friends = Friend.objects.all().exclude(zhihu_account='')
     spider = ZhihuSpider()
@@ -107,7 +107,7 @@ def weibo_spider_friend(friend):
                                    is_repost    = weibo['is_repost'],
                                    has_image    = has_image,
                                    video_image  = weibo['video_image'],
-                                   friend_id    = friend.id)
+                                   friend_id    = friend['id'])
             content.save()
             if has_image:
                 for image_url in weibo['images']:
