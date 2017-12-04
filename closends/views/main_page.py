@@ -181,6 +181,8 @@ def query_by_topic(request, topic, page=1):
         all_contents += zhihu_contents
         all_contents += tieba_contents
 
+    # all_contents.sort(key=lambda content: content.pub_date)
+
     paginator = Paginator(all_contents, 20)
     try:
         contents = paginator.page(page)

@@ -114,7 +114,8 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}            {% endfor %}
+                {% endif %}
+            {% endfor %}
         {% endifequal %}
 
         {% ifequal current_platform 'zhihu'%}
@@ -177,7 +178,35 @@
 
         {% ifequal current_platform 'tieba'%}
             {% for content in contents %}
-                <div class="tieba_item"></div>
+                <div class="tieba_item">
+                    <div class="tieba_friend_info row">
+                        <div class="col-md-2">
+                            <a target="_blank" href="#">
+                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                            </a>
+                        </div>
+                        <div class="col-md-3 tieba_name">
+                            <a href="" target="_blank">{{ content.friend_account }}</a>
+                            <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                        </div>
+                        <div class="col-md-3 tieba_from ">
+                            <a href="" target="_blank">15:57</a>
+                            <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                        </div>
+                    </div>
+
+                    <div class="tieba_content row">
+                        <div class="col-md-2 friend_tieba_info">
+                            <div class="tieba_head">
+                                <a href="">
+                                    <img src="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 friend_tieba_answer">
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         {% endifequal %}
 

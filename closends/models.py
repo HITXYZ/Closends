@@ -109,21 +109,17 @@ class WeiboContent(models.Model):
     def friend_link(self):
         return self.friend.weibo_link
 
-    # basic post
     pub_date = models.CharField(max_length=20)
     src_url = models.URLField(max_length=500)
     content = models.TextField()
 
-    # check video/image or is reposted
     is_repost = models.BooleanField()
     has_image = models.BooleanField()
     video_image = models.URLField(max_length=500, blank=True)
 
-    # original author
     origin_account = models.CharField(max_length=20, blank=True)
     origin_link = models.URLField(max_length=500, blank=True)
 
-    # original post
     origin_pub_date = models.CharField(max_length=20, blank=True)
     origin_src_url = models.URLField(max_length=500, blank=True)
     origin_content = models.TextField(blank=True)
