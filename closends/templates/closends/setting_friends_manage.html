@@ -1,7 +1,7 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
-{#    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">#}
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="/static/closends/js/jquery.min.js"></script>
     <script src="/static/closends/js/bootstrap.js"></script>
 
@@ -476,6 +476,185 @@
         }
     </style>
 
+    <!--tieba-->
+
+    <style>
+        #tieba_display_modal .modal-content {
+            margin-top: 20%;
+            margin-left: 20%;
+        }
+
+        #tieba_display_modal .modal-body .form-group {
+            margin-top: 5%;
+        }
+
+        #tieba_display_modal .modal-body .friend_name {
+            display: none;
+        }
+
+        #tieba_display_modal .modal-body img {
+            width: 180px;
+            height: 180px;
+        }
+
+    </style>
+
+    <style>
+        #tieba_search_modal {
+            margin-top: -27%;
+            position: fixed;
+        }
+
+        #tieba_search_modal .modal-content {
+            margin-left: 15%;
+            width: 80%;
+        }
+
+        #tieba_search_modal .modal-body .friend_name {
+            display: none;
+        }
+
+        #tieba_search_modal .search_result {
+            margin-top: 2%;
+            display: none;
+        }
+
+        #tieba_search_modal .search_result .person {
+            height: 100px;
+            width: 80%;
+            margin-left: 10%;
+            background-color: lightblue;
+        }
+
+        #tieba_search_modal .search_result .person img{
+            margin-top: 10px;
+            height:80px;
+            width: 80px;
+        }
+
+        #tieba_search_modal .search_result .person .username{
+            margin-left: -60px;
+            margin-top: 15px;
+            height: 30px;
+            font-size: 18px;
+        }
+
+        #tieba_search_modal .search_result .person .userinfo{
+            margin-left: -60px;
+            margin-top: 25px;
+            height: 30px;
+            font-size: 18px;
+        }
+
+        #tieba_search_modal .search_result .person span{
+            margin-left: 30px;
+        }
+
+        #tieba_search_modal .search_result .feedback {
+            height: 50px;
+            width: 60%;
+            margin-top: 1%;
+            margin-left: 20%;
+            background-color: lightblue;
+            display: none;
+        }
+
+        #tieba_search_modal .search_result .feedback strong {
+            font-size: 20px;
+            margin-top: 50%;
+        }
+
+        #tieba_search_modal .modal-body .check_found_tieba_user {
+            margin-top: 2%;
+            display: none;
+        }
+    </style>
+
+    <style>
+        #tieba_update_modal .modal-content {
+            margin-top: 20%;
+            margin-left: 10%;
+            width: 80%;
+
+        }
+
+        #tieba_update_modal .modal-body .head_image {
+            margin-top: 5%;
+            margin-left: 5%;
+        }
+
+        #tieba_update_modal .modal-body .head_image img {
+            width: 140px;
+            height: 140px;
+        }
+
+        #tieba_update_modal .modal-body .head_image form {
+            margin-top: -20%;
+        }
+
+        #tieba_update_modal .modal-body .head_image input {
+            margin-left: 20%;
+            position: absolute;
+            clip: rect(0 0 0 0);
+        }
+
+        #tieba_update_modal .modal-body .head_image .ui_button {
+            display: inline-block;
+            width: 20px;
+            line-height: 28px;
+            font-size: 12px;
+            text-align: center;
+            color: grey;
+            border: 1px solid #d0d0d5;
+            border-radius: 4px;
+            padding: 0 15px;
+            min-width: 50px;
+            background: white no-repeat center;
+            -webkit-transition: border-color .15s, background-color .15s;
+            transition: border-color .15s, background-color .15s;
+            outline: 0 none;
+            cursor: pointer;
+            overflow: visible;
+            opacity: 0.7;
+        }
+
+        #tieba_update_modal .modal-body .friend_mark {
+            width: 50%;
+            margin-top: 15%;
+            margin-left: 25%;
+        }
+
+        #tieba_update_modal .modal-body .friend_mark input {
+            margin-left: 5%;
+            width: 60%;
+        }
+
+        #tieba_update_modal .modal-body .friend_mark select {
+            margin-left: 5%;
+            width: 60%;
+        }
+
+        #tieba_update_modal .modal-body .friend_mark button {
+            width: 40%;
+        }
+
+        #tieba_update_modal .modal-body .friend_mark strong {
+            display: none;
+        }
+
+    </style>
+
+    <style>
+        #tieba_delete_modal .modal-content {
+            margin-left: 20%;
+            margin-top: 35%;
+        }
+
+        #tieba_delete_modal button {
+            margin-left: 5%;
+        }
+    </style>
+
 {% endblock %}
 
 {% block group_list %}
@@ -628,7 +807,7 @@
                                     <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
                                 </div>
                                 <div class="col-md-1">
-                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <p>{{ friend.tieba_is_blank }}</p>
                                     <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
                                 </div>
                             </div>
@@ -1008,6 +1187,137 @@
         </div>
     </div>
 
+    <div id="tieba_display_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <form id="account_display_form" class="form-inline tab-pane active">
+                        <div class="friend_name"></div>
+                        <div class="form-group" style="margin-right: 5%">
+                            <a href="#">
+                                <img class="img-circle" src="/static/closends/img/default_head.svg">
+                            </a>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="update_friend_tieba" type="button" class="btn btn-default">更改</button>
+                            <button id="check_delete_friend_tieba" type="button" class="btn btn-default">删除</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tieba_search_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="friend_name"></div>
+
+                    <form id="tieba_binding_form" class="form-inline tab-pane active">
+                        <div class="form-group">
+                            <select name="adding_option" class="form-control">
+                                <option>账号</option>
+                                <option>链接</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input name="tieba_account" type="text" class="form-control" placeholder="Tieba Account">
+                        </div>
+                        <div class="form-group">
+                            <button id="query_friend_tieba" type="button" class="btn btn-default">查询</button>
+                        </div>
+                    </form>
+
+                    <div class="search_result text-left">
+                        <div class="person row">
+                            <div class="col-md-4">
+                                <img src="http://tb.himg.baidu.com/sys/portrait/item/99f74e0c">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="username">
+                                    <span>
+                                        <a href="" id="person_id"></a>
+                                    </span>
+                                     <span class="userinfo_sex">
+                                        <i class="fa fa-venus" style="font-size:24px; color: cornflowerblue"></i>
+                                    </span>
+                                </div>
+                                <div class="userinfo">
+                                    <span class="userinfo_age"></span>
+                                    <span class="userinfo_num"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feedback text-center">
+                            <strong></strong>
+                        </div>
+                    </div>
+
+                    <div class="check_found_tieba_user">
+                        <button id="adding_found_friend_tieba" type="button" class="btn btn-default">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tieba_update_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="friend_name" style="display: none"></div>
+                    <div class="head_image">
+                        <img id="friend_head_image" class="img-circle" src="/static/closends/img/default_head.svg">
+                        <form>
+                            <label class="ui_button ui_button_primary" for="upload_friend_head_img">+</label>
+                            <input id="upload_friend_head_img" name="head_image" type="file">
+                        </form>
+                    </div>
+                    <div class="friend_mark">
+                        <form class="form-horizontal">
+                            <div class="form-group form-inline">
+                                <label for="nickname">昵称</label>
+                                <input type="text" class="form-control" id="nickname" placeholder="昵称">
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <label for="group">分组</label>
+                                <select id="group" class="form-control">
+                                    {% for _, group_name in group_list %}
+                                        <option>{{ group_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <strong></strong>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <button id="update_friend_info" type="button" class="btn">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tieba_delete_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <div class="friend_name" style="display: none"></div>
+                    <button id="delete_friend_tieba" class="btn btn-default">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function () {
             //显示好友基本信息
@@ -1344,6 +1654,132 @@
                 let friend_name = $(this).prev().text();
                 $.ajax({
                     url: "{% url 'closends:setting:delete_friend_zhihu' %}",
+                    type: "post",
+                    datatype: "json",
+                    data: {'friend_name': friend_name},
+                    async: false,
+                    success: function () {
+                        window.location.reload();
+                    }
+                });//ajax
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            //已添加显示贴吧信息, 否则显示贴吧添加表单
+            $(".tieba_logo").on("click", function () {
+                let friend_name = $(this).parentsUntil(".person_box").find("strong").eq(0).text();
+                if ($(this).prev().text() === "True") {
+                    $("#tieba_search_modal").modal("show");
+                    $("#tieba_search_modal input").val("");
+                    $("#tieba_search_modal .search_result").hide();
+                    $("#tieba_search_modal .check_found_tieba_user").hide();
+                    $("#tieba_search_modal .friend_name").text(friend_name);
+                }
+                else {
+                    $.ajax({
+                        url: "{% url 'closends:setting:query_exist_friend_tieba' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: {'friend_name': friend_name},
+                        async: false,
+                        success: function (ret) {
+                            $("#tieba_display_modal #account_display_form .friend_name").text(friend_name);
+                            $("#tieba_display_modal #account_display_form a").attr('href', ret.link);
+                            $("#tieba_display_modal #account_display_form img").attr('src', ret.head);
+                        }
+                    });//ajax
+                    $("#tieba_display_modal").modal("show");
+                }
+            });
+
+            //更新好友贴吧信息
+            $("#update_friend_tieba").on("click", function () {
+                let friend_name = $("#tieba_display_modal .friend_name").text();
+                $("#tieba_search_modal").modal("show");
+                $("#tieba_display_modal").modal("hide");
+                $("#tieba_search_modal .friend_name").text(friend_name);
+            });
+
+            //查询好友贴吧账号
+            $("#query_friend_tieba").on("click", function () {
+                let account = $("#tieba_binding_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_tieba_user' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: account,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                $("#tieba_search_modal .search_result").show();
+                                $(".check_found_tieba_user").show();
+                                $("#tieba_search_modal img").attr('src', ret.user_html[0]);
+                                $("#tieba_search_modal #person_id").text(ret.person_id).attr('href', ret.user_html[1]);
+                                if(ret.user_html[2] === 'male')
+                                    $("#tieba_search_modal .userinfo_sex").children().eq(0).attr('class', 'fa fa-mars');
+                                $("#tieba_search_modal .userinfo_age").text(ret.user_html[3]);
+                                $("#tieba_search_modal .userinfo_num").text(ret.user_html[4]);
+                            }
+                            else{
+                                $("#tieba_search_modal .search_result .feedback strong").text("查询失败,请直接添加链接!");
+                                $("#tieba_search_modal #adding_found_tieba_user").text("重新查询");
+                            }
+                        }
+                    });//ajax
+            });
+            
+            //添加好友贴吧账号
+            $("#adding_found_friend_tieba").on("click", function () {
+                if ($(this).text() === "确认") {
+                    let ID = $("#tieba_search_modal #person_id").text();
+                    let link = $("#tieba_search_modal #person_id").attr('href');
+                    let head = $("#tieba_search_modal img").attr('src');
+                    let friend_name = $("#tieba_search_modal .friend_name").text();
+                    let tieba_friend = {
+                        'friend_name': friend_name,
+                        'account': ID,
+                        'ID': ID,
+                        'link': link,
+                        'head': head
+                    };
+                    $.ajax({
+                        url: "{% url 'closends:setting:add_found_friend_tieba' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: tieba_friend,
+                        async: false,
+                        success: function () {
+                            $("#tieba_search_modal .search_result").hide();
+                            $("#tieba_search_modal .search_result .person").empty();
+                            $("#tieba_search_modal .search_result .feedback").show();
+                            $("#tieba_search_modal .search_result .feedback strong").text("成功!");
+                            $("#tieba_search_modal #adding_found_friend_tieba").text("返回");
+                        }
+                    });//ajax
+                }//if
+                else if ($(this).text() === "返回") {
+                    window.location.reload();
+                }
+                else {
+                    //查询失败
+                }
+            });
+
+            //删除好友贴吧账号
+            $("#check_delete_friend_tieba").on("click", function () {
+                let friend_name = $(this).parent().prev().prev().text();
+                $("#tieba_delete_modal .friend_name").text(friend_name);
+                $("#tieba_delete_modal").modal('show');
+            });
+
+            //确认删除好友贴吧账号
+            $("#delete_friend_tieba").on("click", function () {
+                let friend_name = $(this).prev().text();
+                $.ajax({
+                    url: "{% url 'closends:setting:delete_friend_tieba' %}",
                     type: "post",
                     datatype: "json",
                     data: {'friend_name': friend_name},

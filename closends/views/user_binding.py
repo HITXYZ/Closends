@@ -172,19 +172,14 @@ def query_tieba_user(request):
     if request.method == "POST":
         tieba_account = request.POST['tieba_account']
         if request.POST['adding_option'] == "账号":
-            user_ids, user_htmls = get_tieba_user_by_account(tieba_account)
-            if not user_ids:
-                result = {'status':'error', 'error_msg': 'user_not_exist'}
-            else:
-                result = {'status': 'success', 'htmls': user_htmls[0], 'person_id': user_ids[0]}
-            return HttpResponse(json.dumps(result), content_type='application/json')
+            user_id, user_html = get_tieba_user_by_account(tieba_account)
         else:
             user_id, user_html = get_tieba_user_by_homepage(tieba_account)
-            if user_id is None:
-                result = {'status': 'error', 'error_msg': 'user_not_exist'}
-            else:
-                result = {'status': 'success', 'person_html': user_html, 'person_id': user_id}
-            return HttpResponse(json.dumps(result), content_type='application/json')
+        if not user_id:
+            result = {'status':'error', 'error_msg': 'user_not_exist'}
+        else:
+            result = {'status':'success', 'user_html': user_html, 'person_id': user_id}
+        return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @csrf_exempt

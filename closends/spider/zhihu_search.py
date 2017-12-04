@@ -23,6 +23,7 @@ def get_user_by_search(user=None, number=1):
     user_tokens = []
     user_htmls = []
     user_ul = bs.find('ul', {'class': 'users'})
+    print(user_ul)
     if user_ul is None:  # 未搜索到任何用户
         return [], []
     user_lis = user_ul.find_all('li')
@@ -55,6 +56,6 @@ def get_user_by_homepage(url):
 
 
 if __name__ == '__main__':
-    print(get_user_by_search('江枫', 1))
+    print(get_user_by_search('少年行风', 1))
     # print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
     # print(get_user_by_homepage('https://www.zhihu.com/people/jiang-feng-72-58'))

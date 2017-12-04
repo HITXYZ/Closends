@@ -1,6 +1,7 @@
 {% extends 'closends/setting_base.html' %}
 
 {% block style_load %}
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="/static/closends/js/jquery.min.js"></script>
     <script src="/static/closends/js/bootstrap.js"></script>
 
@@ -89,8 +90,17 @@
         }
 
         .bound_weibo_info{
-            margin-left: 40%;
+            margin-left: 35%;
             display: none;
+        }
+
+        .bound_weibo_info img{
+            height: 150px;
+            width: 150px;
+        }
+
+        .bound_weibo_info button{
+            margin-left: -3%;
         }
     </style>
 
@@ -160,8 +170,99 @@
         }
 
         .bound_zhihu_info{
+            margin-left: 35%;
+            display: none;
+        }
+
+        .bound_zhihu_info img{
+            margin-left: -4%;
+            height: 150px;
+            width: 150px;
+        }
+
+        .bound_zhihu_info button{
+            margin-left: 6%;
+        }
+
+    </style>
+
+    <style>
+        .tieba_binding{
+            display: none;
+        }
+
+        .tieba_binding #tieba_binding_form{
+            width: 80%;
+            margin-left: 25%;
+            margin-top: 2%;
+        }
+
+        .tieba_binding .search_result{
+            margin-top: 2%;
+            display: none;
+        }
+
+        .tieba_binding .search_result .person{
+            height: 100px;
+            width: 60%;
+            margin-left: 20%;
+            background-color: lightblue;
+        }
+
+        .tieba_binding .search_result .person img{
+            margin-top: 10px;
+            height:80px;
+            width: 80px;
+        }
+
+        .tieba_binding .search_result .person .username{
+            margin-left: -60px;
+            margin-top: 15px;
+            height: 30px;
+            font-size: 18px;
+        }
+
+        .tieba_binding .search_result .person .userinfo{
+            margin-left: -60px;
+            margin-top: 25px;
+            height: 30px;
+            font-size: 18px;
+        }
+
+        .tieba_binding .search_result .person span{
+            margin-left: 30px;
+        }
+
+        .tieba_binding .search_result .feedback{
+            height: 50px;
+            width: 60%;
+            margin-top: 1%;
+            margin-left: 20%;
+            background-color: lightblue;
+            display: none;
+        }
+
+        .tieba_binding .search_result .feedback strong{
+            font-size: 20px;
+            margin-top: 50%;
+        }
+
+        .tieba_binding #adding_found_tieba_user{
+            width: 20%;
+            margin-top: 1%;
             margin-left: 40%;
             display: none;
+        }
+
+        .bound_tieba_info{
+            margin-left: 39%;
+            display: none;
+        }
+
+        .bound_tieba_info img{
+            height: 150px;
+            width: 150px;
+            margin-left: -7%;
         }
     </style>
 
@@ -241,7 +342,7 @@
                 </div>
             {% endif %}
         </div>
-        
+
         <div class="zhihu_binding">
             <form id="zhihu_binding_form" class="form-inline tab-pane active">
                 <div class="form-group">
@@ -313,6 +414,66 @@
                     <button id="show_tieba_binding_form" class="btn btn-primary">取消绑定</button>
                 </div>
             {% endif %}
+        </div>
+
+        <div class="tieba_binding">
+            <form id="tieba_binding_form" class="form-inline tab-pane active">
+                <div class="form-group">
+                    <select name="adding_option" class="form-control">
+                        <option>账号</option>
+                        <option>链接</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input name="tieba_account" type="text" class="form-control" placeholder="Tieba Account">
+                </div>
+                <div class="form-group">
+                    <button id="query_tieba_user" type="button" class="btn btn-default">查询</button>
+                </div>
+            </form>
+
+            <div class="search_result text-left">
+                <div class="person row">
+                    <div class="col-md-4">
+                        <img src="http://tb.himg.baidu.com/sys/portrait/item/99f74e0c">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="username">
+                            <span>
+                                <a href="" id="person_id"></a>
+                            </span>
+                             <span class="userinfo_sex">
+                                <i class="fa fa-venus" style="font-size:24px; color: cornflowerblue"></i>
+                            </span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="userinfo_age"></span>
+                            <span class="userinfo_num"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback text-center">
+                    <strong></strong>
+                </div>
+            </div>
+
+            <div class="check_found_tieba_user">
+                <button id="adding_found_tieba_user" type="button" class="btn btn-default">确认</button>
+            </div>
+        </div>
+
+        <div class="bound_tieba_info">
+            <form class="form-horizontal">
+                <div class="form-group" style="margin-top: 2%">
+                     <a href="#">
+                         <img class="img-circle" src="/static/closends/img/default_head.svg">
+                     </a>
+                </div>
+
+                <div class="form-group" style="margin-left: -4%">
+                    <button id="update_tieba_user" type="button" class="btn btn-default">更改账号</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -410,7 +571,11 @@
                         }
                     });//ajax
             });
+        });
+    </script>
 
+    <script>
+        $(document).ready(function () {
             $("#show_zhihu_binding_form").on("click", function () {
                 if($(this).text() === "绑定"){
                     $(".zhihu_binding").show();
@@ -466,7 +631,6 @@
                                 $(".zhihu_binding .search_result").show();
                                 $("#adding_found_zhihu_user").show();
                                 $("#zhihu_person_id").text(ret.person_id);
-                                alert($("#zhihu_person_id").text());
                                 $(".zhihu_binding .head_img").append(ret.htmls[0]);
                                 $(".zhihu_binding .body").children().eq(0).append(ret.htmls[1]);
                                 $(".zhihu_binding .body").children().eq(1).append(ret.htmls[2]);
@@ -507,4 +671,100 @@
             });
         })
     </script>
+    
+    <script>
+        $(document).ready(function () {
+            $("#show_tieba_binding_form").on("click", function () {
+                if($(this).text() === "绑定"){
+                    $(".tieba_binding").show();
+                    $(this).text("收起");
+                }
+                else if($(this).text() === "收起"){
+                    $(this).text("绑定");
+                    $(".tieba_binding").hide();
+                    $(".tieba_binding select").val("账号");
+                    $(".tieba_binding input").val("");
+                    $(".tieba_binding .person").empty();
+                    $(".tieba_binding .search_result").hide();
+                    $(".tieba_binding strong").text("");
+                    $(".tieba_binding #adding_found_tieba_user").hide();
+                }
+                else
+                    window.location.href = '{% url 'closends:setting:tieba_unbinding' %}';
+            });
+
+            $("#show_bound_tieba_info").on("click", function () {
+                if($(".bound_tieba_info").css('display') === 'block')
+                    $(".bound_tieba_info").hide();
+                else{
+                     $.ajax({
+                        url: "{% url 'closends:setting:query_bound_tieba_info' %}",
+                        type: "post",
+                        datatype: "json",
+                        async: false,
+                        success: function (ret) {
+                            $(".bound_tieba_info a").attr('href', ret.link);
+                            $(".bound_tieba_info img").attr('src', ret.head);
+                            $(".bound_tieba_info").show();
+                        }
+                    });//ajax
+                }
+            });
+
+            $("#update_tieba_user").on("click", function () {
+                $(".bound_tieba_info").hide();
+                $(".tieba_binding").show();
+            });
+
+            $("#query_tieba_user").on("click", function () {
+                let account = $("#tieba_binding_form").serialize();
+                $.ajax({
+                        url: "{% url 'closends:setting:query_tieba_user' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: account,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                $(".tieba_binding .search_result").show();
+                                $("#adding_found_tieba_user").show();
+                                $(".tieba_binding img").attr('src', ret.user_html[0]);
+                                $(".tieba_binding #person_id").text(ret.person_id).attr('href', ret.user_html[1]);
+                                if(ret.user_html[2] === 'male')
+                                    $(".tieba_binding .userinfo_sex").children().eq(0).attr('class', 'fa fa-mars');
+                                $(".tieba_binding .userinfo_age").text(ret.user_html[3]);
+                                $(".tieba_binding .userinfo_num").text(ret.user_html[4]);
+                            }
+                            else{
+                                $(".tieba_binding .search_result .feedback strong").text("查询失败,请直接添加链接!");
+                                $(".tieba_binding #adding_found_tieba_user").text("重新查询");
+                            }
+                        }
+                    });//ajax
+            });
+            
+            $("#adding_found_tieba_user").on("click", function () {
+                let ID = $(".tieba_binding #person_id").text();
+                let link = $(".tieba_binding #person_id").attr('href');
+                let head = $(".tieba_binding img").attr('src');
+                let tieba_user = {'account':ID, 'ID':ID, 'link':link, 'head': head};
+                $.ajax({
+                        url: "{% url 'closends:setting:tieba_binding' %}",
+                        type: "post",
+                        datatype: "json",
+                        data: tieba_user,
+                        async: false,
+                        success: function (ret) {
+                            if(ret.status === 'success'){
+                                window.location.href = '{% url 'closends:setting:user_binding' %}';
+                            }
+                            else{
+                                //pass
+                            }
+                        }
+                    });//ajax
+            });
+        })
+    </script>
+
 {% endblock %}

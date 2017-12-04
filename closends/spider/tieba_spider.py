@@ -96,6 +96,7 @@ class TiebaSpider(SocialMediaSpider):
         while finish < number:
             response = requests.get(tieba_user_post_url.format(user=user, page=page))
             result = response.json()
+            if isinstance(result.get('data'), bool): break
             for thread in result.get('data').get('thread_list'):
                 if finish >= number:
                     break
@@ -120,6 +121,7 @@ class TiebaSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = TiebaSpider()
-    posts = spider.scrape_user_posts('愛你沒法說', 10)
+    # posts = spider.scrape_user_posts('愛你沒法說', 10)
+    posts = spider.scrape_user_posts('允允晴', 10)
     for post in posts:
         print(post)
