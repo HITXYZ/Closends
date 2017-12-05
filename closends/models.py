@@ -139,13 +139,13 @@ class ZhihuContent(models.Model):
     def friend_nickname(self):
         return self.friend.nickname
 
-    def friend_account(self):
-        return self.friend.zhihu_account
-
     def friend_head(self):
         return self.friend.image_name()
 
-    def friend_link(self):
+    def friend_zhihu_account(self):
+        return self.friend.zhihu_account
+
+    def friend_zhihu_link(self):
         return self.friend.zhihu_link
 
     def has_cover_image(self):
@@ -184,13 +184,16 @@ class TiebaContent(models.Model):
     def friend_nickname(self):
         return self.friend.nickname
 
-    def friend_account(self):
-        return self.friend.tieba_account
-
     def friend_head(self):
         return self.friend.image_name()
 
-    def friend_link(self):
+    def friend_tieba_account(self):
+        return self.friend.tieba_account
+
+    def friend_tieba_head(self):
+        return self.friend.tieba_head
+
+    def friend_tieba_link(self):
         return self.friend.tieba_link
 
     pub_date = models.CharField(max_length=20)

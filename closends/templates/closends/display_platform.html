@@ -8,17 +8,17 @@
                     <div class="WB_original_post">
                         <div class="WB_friend_info row">
                             <div class="col-md-2">
-                                <a target="_blank" href="#">
+                                <a href="">
                                     <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                                 </a>
                             </div>
                             <div class="col-md-3 WB_name">
-                                <a href="" target="_blank">{{ content.friend_account }}</a>
-                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                                <a href="" >{{ content.friend_nickname }}</a>
+                                <a href="" target="_blank">({{ content.friend_account }})</a>
                             </div>
                             <div class="col-md-3 WB_from">
-                                <a href="" target="_blank">15:57</a>
-                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
                             </div>
                         </div>
                         <div class="WB_origin_detail">
@@ -56,17 +56,17 @@
                     <div class="WB_transmit_post">
                         <div class="WB_friend_info row">
                             <div class="col-md-2">
-                                <a target="_blank" href="#">
+                                <a href="">
                                     <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                                 </a>
                             </div>
                             <div class="col-md-3 WB_name">
-                                <a href="" target="_blank">{{ content.friend_account }}</a>
-                                <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                                <a href="" >{{ content.friend_nickname }}</a>
+                                <a href="" target="_blank">({{ content.friend_account }})</a>
                             </div>
                             <div class="col-md-3 WB_from">
-                                <a href="" target="_blank">15:57</a>
-                                <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
                             </div>
                         </div>
                         <div class="WB_repost_detail">
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="WB_func clearfix">
                                         <a href="" target="_blank" >14:28</a>
-                                        <a href="{{ content.origin_src_url }}" target="_blank" >原文链接</a>
+                                        <a href="{{ content.origin_src_url }}" target="_blank">原文链接</a>
                                     </div>
                                     <div class="WB_text">
                                         {{ content.origin_content|safe }}
@@ -123,17 +123,17 @@
                 <div class="zhihu_item">
                     <div class="friend_info row">
                         <div class="col-md-2">
-                            <a target="_blank" href="#">
+                            <a href="" target="_blank" >
                                 <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="" target="_blank">{{ content.friend_account }}</a>
-                            <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                            <a href="">{{ content.friend_nickname }}</a>
+                            <a href="{{ content.friend_zhihu_link }}" target="_blank">({{ content.friend_zhihu_account }})</a>
                         </div>
                         <div class="col-md-3">
-                            <a href="" target="_blank">15:57</a>
-                            <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                            <a href="javascript:void(0)">15:57</a>
+                            <a href="{{ content.target_content_url }}" class="zhihu_link" target="_blank">查看原文</a>
                         </div>
                         <div class="col-md-3">
                             {{ content.action_type }}
@@ -167,7 +167,7 @@
                         <div class="rich_content row">
                             <div class="rich_content_inner col-md-11">
                                 <span class="rich_text">{{ content.target_content|safe }}
-                                    <a href="{{ content.target_content_url }}">阅读原文</a>
+                                    <a href="{{ content.target_content_url }}" target="_blank">阅读原文</a>
                                 </span>
                             </div>
                         </div>
@@ -181,29 +181,32 @@
                 <div class="tieba_item">
                     <div class="tieba_friend_info row">
                         <div class="col-md-2">
-                            <a target="_blank" href="#">
+                            <a href="">
                                 <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                             </a>
                         </div>
-                        <div class="col-md-3 tieba_name">
-                            <a href="" target="_blank">{{ content.friend_account }}</a>
-                            <a href="" target="_blank">({{ content.friend_nickname }})</a>
+                        <div class="col-md-3 friend_name">
+                            <a href="">{{ content.friend_nickname }}</a>
                         </div>
                         <div class="col-md-3 tieba_from ">
-                            <a href="" target="_blank">15:57</a>
-                            <a href="{{ content.src_url }}" target="_blank">原文链接</a>
+                            <a href="javascript:void(0)">15:57</a>
+                            <a href="{{ content.content_url }}" class="tieba_link" target="_blank">查看原文</a>
                         </div>
                     </div>
 
                     <div class="tieba_content row">
                         <div class="col-md-2 friend_tieba_info">
                             <div class="tieba_head">
-                                <a href="">
-                                    <img src="">
-                                </a>
+                                <a href="{{ content.friend_tieba_link }}" target="_blank"><img src="{{ content.friend_tieba_head }}"></a>
+                            </div>
+                            <div class="tieba_account">
+                                <a href="{{ content.friend_tieba_link }}" target="_blank">{{ content.friend_tieba_account }}</a>
                             </div>
                         </div>
-                        <div class="col-md-6 friend_tieba_answer">
+                        <div class="col-md-8 friend_tieba_answer">
+                            <div class="tieba_title"><a href="{{ content.title_url }}" target="_blank">{{ content.title }}</a></div>
+                            <div class="tieba_text">{{ content.content }}</div>
+                            <div class="tieba_forum">来自<a href="{{ content.forum_url }}" target="_blank">{{ content.forum }}</a>吧</div>
                         </div>
                     </div>
                 </div>

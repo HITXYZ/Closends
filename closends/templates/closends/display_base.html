@@ -163,6 +163,10 @@
             font-weight: bold;
         }
 
+        .WB_friend_info .weibo_link{
+            margin-left: 10px;
+        }
+
         .WB_origin_detail{
             margin-left: 70px;
             padding-bottom: 10px;
@@ -261,6 +265,10 @@
             font-weight: bold;
         }
 
+        .friend_info .zhihu_link{
+            margin-left: 10px;
+        }
+
         .zhihu_content{
             margin-top: -10px;
         }
@@ -344,7 +352,7 @@
             height: 50px;
         }
 
-        .tieba_friend_info .tieba_name{
+        .tieba_friend_info .friend_name{
             width: 180px;
             margin-top: 10px;
             margin-left: -20px;
@@ -355,8 +363,13 @@
         .tieba_friend_info .tieba_from{
             width: 180px;
             margin-top: 10px;
+            margin-left: -100px;
             font-size: 16px;
             font-weight: bold;
+        }
+
+        .tieba_friend_info .tieba_from .tieba_link{
+            margin-left: 40px;
         }
 
         .tieba_content{
@@ -367,13 +380,33 @@
 
         .tieba_content .friend_tieba_info{
             margin-left: 80px;
-            background-color: black;
+            margin-top: 20px;
+        }
+
+        .tieba_content .friend_tieba_info img{
+            width: 60px;
+            height: 60px;
+        }
+
+        .tieba_content .friend_tieba_info .tieba_account{
+            margin-top: 20px;
+            padding-bottom: 20px;
+            font-weight: bold;
         }
 
         .tieba_content .friend_tieba_answer{
-
+            margin-top: 20px;
         }
 
+        .tieba_content .friend_tieba_answer .tieba_text{
+            padding-top: 20px;
+        }
+
+        .tieba_content .friend_tieba_answer .tieba_forum{
+            margin-top: 20px;
+            margin-left: 200px;
+            padding-bottom: 20px;
+        }
     </style>
 
 {% endblock %}
