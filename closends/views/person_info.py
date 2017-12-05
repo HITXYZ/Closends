@@ -1,9 +1,8 @@
 import json
 from ..models import *
-
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 """
     个人信息设置模块：
@@ -14,8 +13,6 @@ from django.shortcuts import render, HttpResponse
 @csrf_exempt
 @login_required
 def user_info(request):
-    # user = request.user.userinfo
-    # context = {'user': user}
     return render(request, 'closends/setting_user_info.html')
 
 

@@ -1,15 +1,13 @@
 import json
-
+from django.shortcuts import render, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from closends.spider.weibo_search import get_user_by_account as get_weibo_user_by_account
 from closends.spider.weibo_search import get_user_by_homepage as get_weibo_user_by_homepage
 from closends.spider.zhihu_search import get_user_by_search as get_zhihu_user_by_account
 from closends.spider.zhihu_search import get_user_by_homepage as get_zhihu_user_by_homepage
 from closends.spider.tieba_search import get_user_by_search as get_tieba_user_by_account
 from closends.spider.tieba_search import get_user_by_homepage as get_tieba_user_by_homepage
-
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, HttpResponse
 
 """ 
     账号绑定模块:

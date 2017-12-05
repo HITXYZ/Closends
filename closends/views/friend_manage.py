@@ -1,13 +1,11 @@
 import json
-
-from ..tasks import weibo_spider_friend, zhihu_spider_friend, tieba_spider_friend
-
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from ..tasks import weibo_spider_friend, zhihu_spider_friend, tieba_spider_friend
 
 """
     好友管理模块:
