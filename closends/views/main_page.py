@@ -34,7 +34,6 @@ def query_all(request, page=1):
         tieba_contents = friend.tiebacontent_set.all()
         content_type = ContentType.objects.get_for_model(WeiboContent)
         for content in weibo_contents:
-            content.type = 'weibo'
             if not content.is_repost:
                 if content.has_image:
                     content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
@@ -42,8 +41,6 @@ def query_all(request, page=1):
                 if content.origin_has_image:
                     content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
 
-        for content in zhihu_contents: content.type = 'zhihu'
-        for content in tieba_contents: content.type = 'tieba'
         all_contents += weibo_contents
         all_contents += zhihu_contents
         all_contents += tieba_contents
@@ -82,7 +79,6 @@ def query_by_group(request, group, page=1):
             tieba_contents = friend.tiebacontent_set.all()
             content_type = ContentType.objects.get_for_model(WeiboContent)
             for content in weibo_contents:
-                content.type = 'weibo'
                 if not content.is_repost:
                     if content.has_image:
                         content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
@@ -90,8 +86,6 @@ def query_by_group(request, group, page=1):
                     if content.origin_has_image:
                         content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
 
-            for content in zhihu_contents: content.type = 'zhihu'
-            for content in tieba_contents: content.type = 'tieba'
             all_contents += weibo_contents
             all_contents += zhihu_contents
             all_contents += tieba_contents
@@ -129,7 +123,7 @@ def query_by_platform(request, platform, page=1):
             all_contents += friend.weibocontent_set.all()
         content_type = ContentType.objects.get_for_model(WeiboContent)
         for content in all_contents:
-            if not content.is_repost and content.has_image:
+            if not content.is_repost:
                 if content.has_image:
                     content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
             else:
@@ -138,7 +132,7 @@ def query_by_platform(request, platform, page=1):
     elif platform == 'zhihu':
         for friend in friends:
             all_contents += friend.zhihucontent_set.all()
-    else:
+    elif platform == 'tieba':
         for friend in friends:
             all_contents += friend.tiebacontent_set.all()
 
@@ -174,9 +168,14 @@ def query_by_topic(request, topic, page=1):
         weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic]
         zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic]
         tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic]
-        for content in weibo_contents: content.type = 'weibo'
-        for content in zhihu_contents: content.type = 'zhihu'
-        for content in tieba_contents: content.type = 'tieba'
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in weibo_contents:
+            if not content.is_repost:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
         all_contents += weibo_contents
         all_contents += zhihu_contents
         all_contents += tieba_contents

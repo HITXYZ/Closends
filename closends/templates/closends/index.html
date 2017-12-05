@@ -3,123 +3,121 @@
 {% block main_content %}
     <div class="main_content">
         {% for content in contents %}
-            {% ifequal content.type 'weibo' %}
-                {% for content in contents %}
-            {% if not content.is_repost %}
-                <div class="WB_original_post">
-                    <div class="WB_friend_info row">
-                        <div class="col-md-2">
-                            <a href="">
-                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
-                            </a>
+            {% ifequal content.platform 'weibo' %}
+                {% if not content.is_repost %}
+                    <div class="WB_original_post">
+                        <div class="WB_friend_info row">
+                            <div class="col-md-2">
+                                <a href="">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3 WB_name">
+                                <a href="" >{{ content.friend_nickname }}</a>
+                                <a href="" target="_blank">({{ content.friend_account }})</a>
+                            </div>
+                            <div class="col-md-3 WB_from">
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
+                            </div>
                         </div>
-                        <div class="col-md-3 WB_name">
-                            <a href="" >{{ content.friend_nickname }}</a>
-                            <a href="" target="_blank">({{ content.friend_account }})</a>
-                        </div>
-                        <div class="col-md-3 WB_from">
-                            <a href="javascript:void(0)">15:57</a>
-                            <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
-                        </div>
-                    </div>
-                    <div class="WB_origin_detail">
-                        <div class="WB_text">{{ content.content | safe }}</div>
-                        <div class="WB_media">
-                            {% if content.has_image %}
-                                <div class="media-box row">
-                                    {% for image in content.images|slice:"0:3" %}
-                                        <div class="col-md-3 pic">
-                                            <img src="{{ image.image_url }}">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="media-box row">
-                                    {% for image in content.images|slice:"3:6" %}
-                                        <div class="col-md-3 pic">
-                                            <img src="{{ image.image_url }}">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="media-box row">
-                                    {% for image in content.images|slice:"6:9" %}
-                                        <div class="col-md-3 pic">
-                                            <img src="{{ image.image_url }}">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% elif not content.video_image %}
-                                <img src="{{ content.video_image }}">
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="WB_transmit_post">
-                    <div class="WB_friend_info row">
-                        <div class="col-md-2">
-                            <a href="">
-                                <img src="/media/head/{{ content.friend_head }}" class="img-circle">
-                            </a>
-                        </div>
-                        <div class="col-md-3 WB_name">
-                            <a href="" >{{ content.friend_nickname }}</a>
-                            <a href="" target="_blank">({{ content.friend_account }})</a>
-                        </div>
-                        <div class="col-md-3 WB_from">
-                            <a href="javascript:void(0)">15:57</a>
-                            <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
+                        <div class="WB_origin_detail">
+                            <div class="WB_text">{{ content.content | safe }}</div>
+                            <div class="WB_media">
+                                {% if content.has_image %}
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"0:3" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"3:6" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="media-box row">
+                                        {% for image in content.images|slice:"6:9" %}
+                                            <div class="col-md-3 pic">
+                                                <img src="{{ image.image_url }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% elif not content.video_image %}
+                                    <img src="{{ content.video_image }}">
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="WB_repost_detail">
-                        <div class="WB_origin_text">{{ content.content | safe }}</div>
-                        <div class="WB_feed_expand">
-                            <div class="WB_feed">
-                                <div class="WB_info">
-                                    <a class="W_fb" href="{{ content.origin_link }}" title="阿里技术">@{{ content.origin_account }}</a>
-                                </div>
-                                <div class="WB_func clearfix">
-                                    <a href="" target="_blank" >14:28</a>
-                                    <a href="{{ content.origin_src_url }}" target="_blank">原文链接</a>
-                                </div>
-                                <div class="WB_text">
-                                    {{ content.origin_content|safe }}
-                                </div>
-                                <div class="WB_media">
-                                    {% if content.origin_has_image %}
-                                        <div class="media-box row">
-                                            {% for image in content.origin_images|slice:"0:3" %}
-                                                <div class="col-md-3 pic">
-                                                    <img src="{{ image.image_url }}">
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="media-box row">
-                                            {% for image in content.origin_images|slice:"3:6" %}
-                                                <div class="col-md-3 pic">
-                                                    <img src="{{ image.image_url }}">
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="media-box row">
-                                            {% for image in content.origin_images|slice:"6:9" %}
-                                                <div class="col-md-3 pic">
-                                                    <img src="{{ image.image_url }}">
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    {% elif not content.origin_video_image %}
-                                        <img src="{{ content.origin_video_image }}">
-                                    {% endif %}
+                {% else %}
+                    <div class="WB_transmit_post">
+                        <div class="WB_friend_info row">
+                            <div class="col-md-2">
+                                <a href="">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3 WB_name">
+                                <a href="" >{{ content.friend_nickname }}</a>
+                                <a href="" target="_blank">({{ content.friend_account }})</a>
+                            </div>
+                            <div class="col-md-3 WB_from">
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
+                            </div>
+                        </div>
+                        <div class="WB_repost_detail">
+                            <div class="WB_origin_text">{{ content.content | safe }}</div>
+                            <div class="WB_feed_expand">
+                                <div class="WB_feed">
+                                    <div class="WB_info">
+                                        <a class="W_fb" href="{{ content.origin_link }}" title="阿里技术">@{{ content.origin_account }}</a>
+                                    </div>
+                                    <div class="WB_func clearfix">
+                                        <a href="" target="_blank" >14:28</a>
+                                        <a href="{{ content.origin_src_url }}" target="_blank">原文链接</a>
+                                    </div>
+                                    <div class="WB_text">
+                                        {{ content.origin_content|safe }}
+                                    </div>
+                                    <div class="WB_media">
+                                        {% if content.origin_has_image %}
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"0:3" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"3:6" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="media-box row">
+                                                {% for image in content.origin_images|slice:"6:9" %}
+                                                    <div class="col-md-3 pic">
+                                                        <img src="{{ image.image_url }}">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif not content.origin_video_image %}
+                                            <img src="{{ content.origin_video_image }}">
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% endif %}
             {% endifequal %}
 
-            {% ifequal content.type 'zhihu' %}
+            {% ifequal content.platform 'zhihu' %}
                 <div class="zhihu_item">
                 <div class="friend_info row">
                     <div class="col-md-2">
@@ -175,7 +173,7 @@
             </div>
             {% endifequal %}
 
-            {% ifequal content.type 'tieba' %}
+            {% ifequal content.platform 'tieba' %}
                 <div class="tieba_item">
                 <div class="tieba_friend_info row">
                     <div class="col-md-2">

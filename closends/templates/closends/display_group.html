@@ -3,8 +3,7 @@
 {% block main_content %}
     <div class="main_content">
         {% for content in contents %}
-            {% ifequal content.type 'weibo' %}
-                {% for content in contents %}
+            {% ifequal content.platform 'weibo' %}
                 {% if not content.is_repost %}
                     <div class="WB_original_post">
                         <div class="WB_friend_info row">
@@ -116,10 +115,9 @@
                         </div>
                     </div>
                 {% endif %}
-            {% endfor %}
             {% endifequal %}
 
-            {% ifequal content.type 'zhihu' %}
+            {% ifequal content.platform 'zhihu' %}
                 <div class="zhihu_item">
                     <div class="friend_info row">
                         <div class="col-md-2">
@@ -175,7 +173,7 @@
                 </div>
             {% endifequal %}
 
-            {% ifequal content.type 'tieba' %}
+            {% ifequal content.platform 'tieba' %}
                 <div class="tieba_item">
                     <div class="tieba_friend_info row">
                         <div class="col-md-2">

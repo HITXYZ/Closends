@@ -214,25 +214,25 @@
         {% endifequal %}
 
         <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li>
-                {% if contents.has_previous %}
-                    <a href="{% url 'closends:content:query_by_platform' platform=current_platform page=contents.previous_page_number %}">上一页</a>
-                {% else %}
-                    <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
-                {% endif %}
-            </li>
-            <li>
-                <span>{{ contents.number }} / {{ contents.paginator.num_pages }}</span>
-            </li>
-            <li>
-                {% if contents.has_next %}
-                    <a href="{% url 'closends:content:query_by_platform' platform=current_platform page=contents.next_page_number %}">下一页</a>
-                {% else %}
-                    <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
-                {% endif %}
-            </li>
-        </ul>
-    </nav>
+            <ul class="pagination">
+                <li>
+                    {% if contents.has_previous %}
+                        <a href="{% url 'closends:content:query_by_platform' platform=current_platform page=contents.previous_page_number %}">上一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
+                </li>
+                <li>
+                    <span>{{ contents.number }} / {{ contents.paginator.num_pages }}</span>
+                </li>
+                <li>
+                    {% if contents.has_next %}
+                        <a href="{% url 'closends:content:query_by_platform' platform=current_platform page=contents.next_page_number %}">下一页</a>
+                    {% else %}
+                        <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
     </div>
 {% endblock %}

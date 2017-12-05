@@ -109,6 +109,9 @@ class WeiboContent(models.Model):
     def friend_link(self):
         return self.friend.weibo_link
 
+    def platform(self):
+        return 'weibo'
+
     pub_date = models.CharField(max_length=20)
     src_url = models.URLField(max_length=500)
     content = models.TextField()
@@ -157,6 +160,9 @@ class ZhihuContent(models.Model):
     def has_headline(self):
         return not self.target_user_headline
 
+    def platform(self):
+        return 'zhihu'
+
     pub_date = models.DateTimeField(default=timezone.now)
     action_type = models.CharField(max_length=10)
 
@@ -195,6 +201,9 @@ class TiebaContent(models.Model):
 
     def friend_tieba_link(self):
         return self.friend.tieba_link
+
+    def platform(self):
+        return 'tieba'
 
     pub_date = models.CharField(max_length=20)
 
