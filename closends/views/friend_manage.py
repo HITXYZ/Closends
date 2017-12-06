@@ -238,7 +238,7 @@ def add_found_friend_zhihu(request):
         friend = user.friend_set.filter(nickname=friend_name)[0]
         friend.zhihu_ID = request.POST['ID']
         friend.zhihu_account = request.POST['account']
-        friend.zhihu_link = request.POST['link']
+        friend.zhihu_link = 'https://www.zhihu.com' + request.POST['link']
         friend.zhihu_head = request.POST['head']
         friend.save()
 

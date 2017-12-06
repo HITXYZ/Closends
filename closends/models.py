@@ -100,13 +100,13 @@ class WeiboContent(models.Model):
     def friend_nickname(self):
         return self.friend.nickname
 
-    def friend_account(self):
-        return self.friend.weibo_account
-
     def friend_head(self):
         return self.friend.image_name()
 
-    def friend_link(self):
+    def friend_weibo_account(self):
+        return self.friend.weibo_account
+
+    def friend_weibo_link(self):
         return self.friend.weibo_link
 
     def platform(self):

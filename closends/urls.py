@@ -77,4 +77,5 @@ urlpatterns = [
 
     url(r'^index/', include(content_patterns, namespace='content')),
     url(r'^setting/', include(setting_patterns, namespace='setting')),
+    url(r'^friend_index/(?P<friend>\w+)$', friend_index.friend_index, name='friend_index'),
 ]
