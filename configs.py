@@ -46,7 +46,7 @@ zhihu_follows_query = 'data[*].answer_count,articles_count,gender,follower_count
 zhihu_followers_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge'
 zhihu_question_query = 'comment_count,follower_count,visit_count,topics'
 zhihu_answer_query = 'voteup_count,comment_count'
-zhihu_search_url = 'https://www.zhihu.com/search?type=people&q={key}'
+zhihu_search_url = 'https://www.zhihu.com/r/search?q={key}&sort=1&correction=1&type=people&offset={offset}'
 
 
 # qzone configurations

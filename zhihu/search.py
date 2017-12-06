@@ -11,26 +11,32 @@ from exceptions import MethodParamError
 from configs import zhihu_search_url, zhihu_headers
 
 
-def get_user_by_search(user, number=1):
+def get_user_by_search(user, number=1, start=0):
     if not isinstance(user, str):
         raise MethodParamError('Parameter \'user\' must be an instance of \'str\'!')
     if not isinstance(number, int):
         raise MethodParamError('Parameter \'number\' must be an instance of \'int\'!')
     if number <= 0:
         number = 1
-    response = requests.get(zhihu_search_url.format(key=quote(user)), headers=zhihu_headers)
-    bs = BeautifulSoup(response.text, 'lxml')
+    position = start
+    response = requests.get(zhihu_search_url.format(key=quote(user), offset=position), headers=zhihu_headers)
+    result = response.json()
     user_tokens = []
     user_htmls = []
-    user_ul = bs.find('ul', {'class': 'users'})
-    if user_ul is None:     # 未搜索到任何用户
-        return [], []
-    user_lis = user_ul.find_all('li')
-    if len(user_lis) > number:
-        user_lis = user_lis[:number]
-    for user_li in user_lis:
-        user_tokens.append(user_li.attrs['data-token'])
-        user_htmls.append(user_li.prettify())
+    while len(user_tokens) < number:
+        for html in result.get('htmls'):
+            bs = BeautifulSoup(html, 'lxml')
+            user_tokens.append(bs.li.attrs['data-token'])
+            user_htmls.append(bs.li.prettify())
+        if len(result.get('htmls')) < 10:
+            break
+        if len(user_tokens) < number:
+            position += 10
+            response = requests.get(zhihu_search_url.format(key=quote(user), offset=position), headers=zhihu_headers)
+            result = response.json()
+    if len(user_tokens) > number:
+        user_tokens = user_tokens[:number]
+        user_htmls = user_htmls[:number]
     return user_tokens, user_htmls
 
 
@@ -43,11 +49,20 @@ def get_user_by_homepage(url):
     response = requests.get('https://www.zhihu.com/people/' + user + '/activities', headers=zhihu_headers)
     if response.status_code == 404:     # 用户不存在
         return None, None
-    user_tokens, user_htmls = get_user_by_search(user=user, number=1)
-    if len(user_tokens) > 0 and len(user_htmls) > 0:
-        return user_tokens[0], user_htmls[0]
+    bs = BeautifulSoup(response.text, 'lxml')
+    user_name = bs.find('span', {'class': 'ProfileHeader-name'}).get_text()
+    start = 0
+    while True:
+        user_tokens, user_htmls = get_user_by_search(user=user_name, number=10, start=start)
+        if len(user_tokens) == 0:
+            break
+        for user_token, user_html in zip(user_tokens, user_htmls):
+            if re.search(r'data-token=\"(.*?)\"', str(user_html)).group(1) == user:
+                return user_token, user_html
+        start += 10
     return None, None
 
 
 if __name__ == '__main__':
-    print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
+    print(get_user_by_homepage('https://www.zhihu.com/people/jiang-feng-72-58/activities'))
+    print(get_user_by_search('江枫', 10))
