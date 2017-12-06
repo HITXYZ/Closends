@@ -8,12 +8,12 @@
                     <div class="WB_original_post">
                         <div class="WB_friend_info row">
                             <div class="col-md-2">
-                                <a href="{% url 'closends:friend_index' content.friend_nickname %}">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1%}">
                                     <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                                 </a>
                             </div>
                             <div class="col-md-3 WB_name">
-                                <a href="{% url 'closends:friend_index' content.friend_nickname %} " >{{ content.friend_nickname }}</a>
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %} " >{{ content.friend_nickname }}</a>
                                 <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
                             </div>
                             <div class="col-md-3 WB_from">
@@ -56,12 +56,12 @@
                     <div class="WB_transmit_post">
                         <div class="WB_friend_info row">
                             <div class="col-md-2">
-                                <a href="{% url 'closends:friend_index' content.friend_nickname %}">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1%}">
                                     <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                                 </a>
                             </div>
                             <div class="col-md-3 WB_name">
-                                <a href="{% url 'closends:friend_index' content.friend_nickname %}" >{{ content.friend_nickname }}</a>
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}" >{{ content.friend_nickname }}</a>
                                 <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
                             </div>
                             <div class="col-md-3 WB_from">
@@ -123,12 +123,12 @@
                 <div class="zhihu_item">
                 <div class="friend_info row">
                     <div class="col-md-2">
-                        <a href="{% url 'closends:friend_index' content.friend_nickname %}">
+                        <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
                             <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a href="{% url 'closends:friend_index' content.friend_nickname %}">{{ content.friend_nickname }}</a>
+                        <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
                         <a href="{{ content.friend_zhihu_link }}" target="_blank">({{ content.friend_zhihu_account }})</a>
                     </div>
                     <div class="col-md-3">
@@ -181,12 +181,12 @@
                 <div class="tieba_item">
                 <div class="tieba_friend_info row">
                     <div class="col-md-2">
-                        <a href="{% url 'closends:friend_index' content.friend_nickname %}">
+                        <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
                             <img src="/media/head/{{ content.friend_head }}" class="img-circle">
                         </a>
                     </div>
                     <div class="col-md-3 friend_name">
-                        <a href="{% url 'closends:friend_index' content.friend_nickname %}">{{ content.friend_nickname }}</a>
+                        <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
                     </div>
                     <div class="col-md-3 tieba_from ">
                         <a href="javascript:void(0)">15:57</a>

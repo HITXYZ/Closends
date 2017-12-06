@@ -1,9 +1,695 @@
 {% extends 'closends/base.html' %}
 
 {% block css_load %}
-    
+    <link href="/static/closends/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/closends/js/bootstrap.js"></script>
+    <script src="/static/closends/js/jquery.min.js"></script>
+
+    <!--main layout-->
+    <style>
+        .friend_head {
+            width: 1040px;
+            height: 320px;
+            margin-top: 5%;
+            margin-left: 15%;
+            background: url('/static/closends/img/default_friend_head.jpg') center 0;
+        }
+
+        .left_sidebar {
+            width: 400px;
+{#            height: 800px;#}
+            margin-left: 15.5%;
+            margin-top: 2%;
+            padding-bottom: 1%;
+            border: 1px solid;
+        }
+
+        .main_content {
+            width: 620px;
+            margin-left: 45%;
+            margin-top: -57.8%;
+            margin-bottom: 10%;
+            border: 1px solid;
+        }
+
+        .main_content nav {
+            margin-left: 35%;
+        }
+    </style>
+
+    <!--friend head-->
+    <style>
+        .friend_head .friend_img {
+            margin-left: 42%;
+            margin-top: 3%;
+        }
+
+        .friend_head .friend_img img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .friend_head .friend_name {
+            margin-left: 46%;
+            margin-top: 2%;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+
+    <!--left sidebar-->
+    <style>
+        .liveness {
+            width: 100%;
+            height: 250px;
+            margin-top: 3%;
+            background-color: whitesmoke;
+        }
+
+        .liveness .row{
+            padding-top: 2%;
+            margin-left: 15%;
+        }
+
+        .liveness .row .col-md-1{
+            width: 60px;
+            margin-left: 5px;
+        }
+
+
+        #total_liveness, #weibo_liveness, #zhihu_liveness, #tieba_liveness{
+            width: 90%;
+            height: 200px;
+            margin-left: 5%;
+            background-color: grey;
+        }
+
+        #weibo_liveness, #zhihu_liveness, #tieba_liveness{
+            display: none;
+        }
+
+
+        .interest{
+            width: 100%;
+            height: 520px;
+            margin-top: 5%;
+        }
+
+        .interest .interest_bar_graph{
+            width: 100%;
+            height: 250px;
+            background-color: whitesmoke;
+        }
+
+        .interest .interest_word_cloud{
+            width: 100%;
+            height: 250px;
+            margin-top: 5%;
+            background-color: whitesmoke;
+        }
+    </style>
+
+    <!--weibo-->
+    <style>
+        .WB_transmit_post, .WB_original_post {
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .WB_friend_info {
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .WB_friend_info img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .WB_friend_info .WB_name {
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -35px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .WB_friend_info .WB_from {
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -32px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .WB_friend_info .weibo_link {
+            margin-left: 10px;
+        }
+
+        .WB_origin_detail {
+            margin-left: 70px;
+            padding-bottom: 10px;
+        }
+
+        .WB_origin_detail .WB_text {
+            font-size: 14px;
+            margin-right: 20px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_repost_detail {
+            margin-left: 45px;
+            padding-bottom: 10px;
+        }
+
+        .WB_repost_detail .WB_feed_expand {
+            margin-left: -45px;
+            background-color: #f2f2f5;
+        }
+
+        .WB_repost_detail .WB_feed {
+            margin-left: 70px;
+        }
+
+        .WB_repost_detail .WB_origin_text {
+            font-size: 14px;
+            margin-right: 20px;
+            margin-left: 30px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_repost_detail .WB_feed_expand .WB_text {
+            font-size: 14px;
+            margin-right: 20px;
+            overflow: hidden;
+            line-height: 23px;
+            word-wrap: break-word;
+        }
+
+        .WB_text img {
+            vertical-align: text-bottom;
+            width: 15px;
+            height: 15px;
+        }
+
+        .WB_media .media-box {
+            margin-top: 5px;
+        }
+
+        .WB_media .media-box .col-md-3 {
+            width: 115px;
+        }
+
+        .WB_media .media-box img {
+            width: 110px;
+            height: 110px;
+        }
+    </style>
+
+    <!--zhihu-->
+    <style>
+        .zhihu_item {
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .friend_info {
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .friend_info img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .friend_info .col-md-3 {
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -35px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .friend_info .col-md-4 {
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .friend_info .zhihu_link {
+            margin-left: 10px;
+        }
+
+        .zhihu_content {
+            margin-top: -10px;
+        }
+
+        .zhihu_content .author_info {
+            padding-left: 80px;
+        }
+
+        .zhihu_content .author_info .author_info_link {
+            margin-top: 5px;
+            margin-left: -20px;
+        }
+
+        .zhihu_content .author_info .author_info_link img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .zhihu_content .author_info .author_info_head {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .zhihu_content .author_info .author_info_text {
+            margin-top: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: "Consolas", sans-serif;
+        }
+
+        .zhihu_content .topic {
+            padding-left: 80px;
+            padding-right: 10px;
+        }
+
+        .zhihu_content .topic .content_item_title a {
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+        }
+
+        .zhihu_content .rich_content {
+            padding-bottom: 10px;
+            padding-right: 10px;
+        }
+
+        .zhihu_content .rich_content .col-md-11 {
+            padding-right: 50px;
+        }
+
+        .zhihu_content .rich_content .rich_content_inner {
+            margin-left: 80px;
+            margin-top: 5px;
+        }
+
+        .zhihu_content .rich_content .rich_text {
+            font-family: "Consolas", sans-serif;
+            font-style: normal;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+
+    <!--tieba-->
+    <style>
+        .tieba_item {
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .tieba_friend_info {
+            margin-left: 5px;
+            padding-top: 10px;
+        }
+
+        .tieba_friend_info img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .tieba_friend_info .friend_name {
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .tieba_friend_info .tieba_from {
+            width: 180px;
+            margin-top: 10px;
+            margin-left: -100px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .tieba_friend_info .tieba_from .tieba_link {
+            margin-left: 40px;
+        }
+
+        .tieba_content {
+            width: 100%;
+            margin-left: 0;
+            background-color: #f2f2f5;
+        }
+
+        .tieba_content .friend_tieba_info {
+            margin-left: 80px;
+            margin-top: 20px;
+        }
+
+        .tieba_content .friend_tieba_info img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .tieba_content .friend_tieba_info .tieba_account {
+            margin-top: 20px;
+            padding-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .tieba_content .friend_tieba_answer {
+            margin-top: 20px;
+        }
+
+        .tieba_content .friend_tieba_answer .tieba_text {
+            padding-top: 20px;
+        }
+
+        .tieba_content .friend_tieba_answer .tieba_forum {
+            margin-top: 20px;
+            margin-left: 200px;
+            padding-bottom: 20px;
+        }
+    </style>
+
 {% endblock %}
 
 {% block content_body %}
+    <div class="friend_head">
+        <div class="friend_info">
+            <div class="friend_img">
+                <img src="/media/head/{{ friend.image_name }}" class="img-circle">
+            </div>
+            <div class="friend_name">
+                {{ friend.nickname }}
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="left_sidebar col-md-2">
+            <div class="liveness">
+                <div class="row text-center">
+                    <button id="show_total" class="btn col-md-1 text-center">Total</button>
+                    <button id="show_weibo" class="btn col-md-1 text-center">Weibo</button>
+                    <button id="show_zhihu" class="btn col-md-1 text-center">Zhihu</button>
+                    <button id="show_tieba" class="btn col-md-1 text-center">Tieba</button>
+                </div>
+
+                <div class="liveness_contents">
+                    <div id="total_liveness">total</div>
+                    <div id="weibo_liveness">weibo</div>
+                    <div id="zhihu_liveness">zhihu</div>
+                    <div id="tieba_liveness">tieba</div>
+                </div>
+            </div>
+
+            <div class="interest">
+                <div class="interest_bar_graph"></div>
+                <div class="interest_word_cloud"></div>
+            </div>
+        </div>
+
+        <div class="main_content col-md-8">
+            {% for content in contents %}
+                {% ifequal content.platform 'weibo' %}
+                    {% if not content.is_repost %}
+                        <div class="WB_original_post">
+                            <div class="WB_friend_info row">
+                                <div class="col-md-2">
+                                    <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
+                                        <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                    </a>
+                                </div>
+                                <div class="col-md-3 WB_name">
+                                    <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %} ">{{ content.friend_nickname }}</a>
+                                    <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
+                                </div>
+                                <div class="col-md-3 WB_from">
+                                    <a href="javascript:void(0)">15:57</a>
+                                    <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
+                                </div>
+                            </div>
+                            <div class="WB_origin_detail">
+                                <div class="WB_text">{{ content.content | safe }}</div>
+                                <div class="WB_media">
+                                    {% if content.has_image %}
+                                        <div class="media-box row">
+                                            {% for image in content.images|slice:"0:3" %}
+                                                <div class="col-md-3 pic">
+                                                    <img src="{{ image.image_url }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="media-box row">
+                                            {% for image in content.images|slice:"3:6" %}
+                                                <div class="col-md-3 pic">
+                                                    <img src="{{ image.image_url }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="media-box row">
+                                            {% for image in content.images|slice:"6:9" %}
+                                                <div class="col-md-3 pic">
+                                                    <img src="{{ image.image_url }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% elif not content.video_image %}
+                                        <img src="{{ content.video_image }}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="WB_transmit_post">
+                            <div class="WB_friend_info row">
+                                <div class="col-md-2">
+                                    <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
+                                        <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                    </a>
+                                </div>
+                                <div class="col-md-3 WB_name">
+                                    <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
+                                    <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
+                                </div>
+                                <div class="col-md-3 WB_from">
+                                    <a href="javascript:void(0)">15:57</a>
+                                    <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
+                                </div>
+                            </div>
+                            <div class="WB_repost_detail">
+                                <div class="WB_origin_text">{{ content.content | safe }}</div>
+                                <div class="WB_feed_expand">
+                                    <div class="WB_feed">
+                                        <div class="WB_info">
+                                            <a class="W_fb" href="{{ content.origin_link }}" title="阿里技术">@{{ content.origin_account }}</a>
+                                        </div>
+                                        <div class="WB_func clearfix">
+                                            <a href="" target="_blank">14:28</a>
+                                            <a href="{{ content.origin_src_url }}" target="_blank">原文链接</a>
+                                        </div>
+                                        <div class="WB_text">
+                                            {{ content.origin_content|safe }}
+                                        </div>
+                                        <div class="WB_media">
+                                            {% if content.origin_has_image %}
+                                                <div class="media-box row">
+                                                    {% for image in content.origin_images|slice:"0:3" %}
+                                                        <div class="col-md-3 pic">
+                                                            <img src="{{ image.image_url }}">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="media-box row">
+                                                    {% for image in content.origin_images|slice:"3:6" %}
+                                                        <div class="col-md-3 pic">
+                                                            <img src="{{ image.image_url }}">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="media-box row">
+                                                    {% for image in content.origin_images|slice:"6:9" %}
+                                                        <div class="col-md-3 pic">
+                                                            <img src="{{ image.image_url }}">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% elif not content.origin_video_image %}
+                                                <img src="{{ content.origin_video_image }}">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endifequal %}
+
+                {% ifequal content.platform 'zhihu' %}
+                    <div class="zhihu_item">
+                        <div class="friend_info row">
+                            <div class="col-md-2">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
+                                <a href="{{ content.friend_zhihu_link }}" target="_blank">({{ content.friend_zhihu_account }})</a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.target_content_url }}" class="zhihu_link" target="_blank">查看原文</a>
+                            </div>
+                            <div class="col-md-3">
+                                {{ content.action_type }}
+                            </div>
+                        </div>
+                        <div class="zhihu_content">
+                            {% comment %}
+                            {% if not content.author_operation %}
+                                <div class="author_info row">
+                                    <div class="author_info_link col-md-1">
+                                    <a href="{{ content.target_user_url }}"><img src="{{ content.target_user_head }}"></a>
+                                </div>
+                                    <div class="author_info_head col-md-2">
+                                        <a class="userlink_link" href="{{ content.target_user_url }}">{{content.target_user_name}}</a>
+                                </div>
+                                    {% if content.has_headline %}
+                                        <div class="author_info_text col-md-6">{{ content.target_user_headline }}</div>
+                                    {% else %}
+                                        <div class="author_info_text col-md-6">作者还没有个性签名哦</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endcomment %}
+
+                            <div class="topic">
+                                <h5 class="content_item_title">
+                                    <a href="{{ content.target_title_url }}" target="_blank">{{ content.target_title|safe }}</a>
+                                </h5>
+                            </div>
+
+                            <div class="rich_content row">
+                                <div class="rich_content_inner col-md-11">
+                                <span class="rich_text">{{ content.target_content|safe }}
+                                    <a href="{{ content.target_content_url }}" target="_blank">阅读原文</a>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endifequal %}
+
+                {% ifequal content.platform 'tieba' %}
+                    <div class="tieba_item">
+                        <div class="tieba_friend_info row">
+                            <div class="col-md-2">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">
+                                    <img src="/media/head/{{ content.friend_head }}" class="img-circle">
+                                </a>
+                            </div>
+                            <div class="col-md-3 friend_name">
+                                <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
+                            </div>
+                            <div class="col-md-3 tieba_from ">
+                                <a href="javascript:void(0)">15:57</a>
+                                <a href="{{ content.content_url }}" class="tieba_link" target="_blank">查看原文</a>
+                            </div>
+                        </div>
+
+                        <div class="tieba_content row">
+                            <div class="col-md-2 friend_tieba_info">
+                                <div class="tieba_head">
+                                    <a href="{{ content.friend_tieba_link }}" target="_blank"><img src="{{ content.friend_tieba_head }}"></a>
+                                </div>
+                                <div class="tieba_account">
+                                    <a href="{{ content.friend_tieba_link }}" target="_blank">{{ content.friend_tieba_account }}</a>
+                                </div>
+                            </div>
+                            <div class="col-md-8 friend_tieba_answer">
+                                <div class="tieba_title"><a href="{{ content.title_url }}" target="_blank">{{ content.title }}</a></div>
+                                <div class="tieba_text">{{ content.content }}</div>
+                                <div class="tieba_forum">来自<a href="{{ content.forum_url }}" target="_blank">{{ content.forum }}</a>吧</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endifequal %}
+            {% endfor %}
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        {% if contents.has_previous %}
+                            <a href="{% url 'closends:friend_index' friend=current_friend page=contents.previous_page_number %}">上一页</a>
+                        {% else %}
+                            <a href="javascript:void(0)">首&nbsp;&nbsp;&nbsp;页</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <span>{{ contents.number }} / {{ contents.paginator.num_pages }}</span>
+                    </li>
+                    <li>
+                        {% if contents.has_next %}
+                            <a href="{% url 'closends:friend_index' friend=current_friend page=contents.next_page_number %}">下一页</a>
+                        {% else %}
+                            <a href="javascript:void(0)">尾&nbsp;&nbsp;&nbsp;页</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#show_total").on("click", function () {
+                $("#total_liveness").show();
+                $("#weibo_liveness").hide();
+                $("#zhihu_liveness").hide();
+                $("#tieba_liveness").hide();
+            });
+
+            $("#show_weibo").on("click", function () {
+                $("#total_liveness").hide();
+                $("#weibo_liveness").show();
+                $("#zhihu_liveness").hide();
+                $("#tieba_liveness").hide();
+            });
+
+            $("#show_zhihu").on("click", function () {
+                $("#total_liveness").hide();
+                $("#weibo_liveness").hide();
+                $("#zhihu_liveness").show();
+                $("#tieba_liveness").hide();
+            });
+
+            $("#show_tieba").on("click", function () {
+                $("#total_liveness").hide();
+                $("#weibo_liveness").hide();
+                $("#zhihu_liveness").hide();
+                $("#tieba_liveness").show();
+            });
+        });
+    </script>
 {% endblock %}

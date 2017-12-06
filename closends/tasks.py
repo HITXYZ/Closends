@@ -96,7 +96,7 @@ def tieba_spider():
 @task(name="weibo_spider_friend")
 def weibo_spider_friend(friend):
     spider = WeiboSpider()
-    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 20)
+    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 100)
     for weibo in weibos:
         weibo = weibo.convert_format()
         if len(weibo) == 6:
