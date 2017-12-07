@@ -783,7 +783,7 @@
                         <div class="col-md-8 person_info">
                             <div class="row">
                                 <div class="friend_name text-center col-md-6">
-                                    <a href="#">
+                                    <a href="{% url 'closends:friend_index' friend=friend.nickname page=1 %}">
                                         <strong>{{ friend.nickname }}</strong>
                                     </a>
                                 </div>
@@ -826,7 +826,7 @@
                         <div class="col-md-8 person_info">
                             <div class="row">
                                 <div class="friend_name text-center col-md-6">
-                                    <a href="#">
+                                    <a href="{% url 'closends:friend_index' friend=friend.nickname page=1 %}">
                                         <strong>{{ friend.nickname }}</strong>
                                     </a>
                                 </div>
@@ -869,7 +869,7 @@
                         <div class="col-md-8 person_info">
                             <div class="row">
                                 <div class="friend_name text-center col-md-6">
-                                    <a href="#">
+                                    <a href="{% url 'closends:friend_index' friend=friend.nickname page=1 %}">
                                         <strong>{{ friend.nickname }}</strong>
                                     </a>
                                 </div>

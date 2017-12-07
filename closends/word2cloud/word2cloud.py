@@ -13,7 +13,7 @@ def generate_cloud(word_num):
 
     word_list = []
     for word, num in word_num:
-        word_list += [word] * num * 10
+        word_list += [word] * num * 30
     shuffle(word_list)
 
     text = ' '.join(word_list) + words

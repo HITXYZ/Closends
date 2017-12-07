@@ -12,10 +12,9 @@ from django.contrib.contenttypes.models import ContentType
         平台、分组、主题、时间、关键字查询
 """
 
-topic_name = ['IT', '人文艺术', '传媒', '体育', '健康',
-              '动漫', '女性', '娱乐', '广告公共', '房产',
-              '教育', '文学出版', '旅游', '时尚', '校园',
-              '汽车', '游戏', '生活', '美食', '育儿', '财经'] # 21 categories
+topic_name = ['体育', '健康', '动漫', '女性', '娱乐', '房产',
+              '教育', '文学', '新闻', '旅游', '时尚', '校园',
+              '汽车', '游戏', '生活', '科技', '美食', '育儿', '财经']
 
 @csrf_exempt
 @login_required
@@ -156,6 +155,7 @@ def query_by_platform(request, platform, page=1):
 @csrf_exempt
 @login_required
 def query_by_topic(request, topic, page=1):
+    print(topic)
     user = request.user.userinfo
     friends = user.friend_set.all()
     group_name = user.group_list.split(',')
@@ -165,9 +165,9 @@ def query_by_topic(request, topic, page=1):
 
     all_contents = []
     for friend in friends:
-        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic]
-        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic]
-        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic]
+        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic_name[int(topic)]]
+        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic_name[int(topic)]]
+        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic_name[int(topic)]]
         content_type = ContentType.objects.get_for_model(WeiboContent)
         for content in weibo_contents:
             if not content.is_repost:
