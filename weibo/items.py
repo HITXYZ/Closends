@@ -62,10 +62,9 @@ class WeiboUserItem(WeiboPosterItem):
 class WeiboContentItem(WeiboItem):
     def __init__(self):
         self.id = 0                     # 微博ID
-        self.order = 0                  # 用于比较时间先后的16位整数
         self.url = ''                   # 微博链接
         self.owner = WeiboPosterItem()  # 博主
-        self.time = ''                  # 时间
+        self.time = 0                   # 时间
         self.content = ''               # 内容
         self.source = ''                # 来源
         self.pictures = []              # 图片列表
@@ -75,7 +74,6 @@ class WeiboContentItem(WeiboItem):
     def __str__(self):
         string = ''
         string += 'ID: ' + str(self.id) + '\n'
-        string += 'Order: ' + str(self.order) + '\n'
         string += 'Url: ' + str(self.url) + '\n'
         string += 'Owner: ' + str(self.owner.name) + '\n'
         string += 'Time: ' + str(self.time) + '\n'

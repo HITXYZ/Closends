@@ -5,10 +5,11 @@
 """
 import re
 import requests
+from bs4 import BeautifulSoup
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
-from configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
+from configs import weibo_header, weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
     weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo
 
 
@@ -253,13 +254,13 @@ class WeiboSpider(SocialMediaSpider):
                         else:
                             item.media_url = page_url
                 item.id = mblog.get('bid')
-                item.order = int(mblog.get('id'))
                 item.owner.id = mblog.get('user').get('id')
                 item.owner.name = mblog.get('user').get('screen_name')
                 item.owner.avatar_url = mblog.get('user').get('profile_image_url')
                 item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
                 item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                item.time = mblog.get('created_at')
+                response = requests.get(item.url, headers=weibo_header)
+                item.time = int(re.search(r'date=\\\"(\d+)\\\"', response.text).group(1)[:-3])
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
