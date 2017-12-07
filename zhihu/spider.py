@@ -12,7 +12,7 @@ from zhihu.items import *
 from exceptions import MethodParamError
 from base_spider import SocialMediaSpider
 from configs import zhihu_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
-    zhihu_followers_url, zhihu_follows_query, zhihu_follows_url, zhihu_headers, zhihu_question_answers_url, \
+    zhihu_followers_url, zhihu_follows_query, zhihu_follows_url, zhihu_header, zhihu_question_answers_url, \
     zhihu_question_query, zhihu_question_url, zhihu_user_answers_url, zhihu_user_query, zhihu_user_questions_url, \
     zhihu_user_url, log_path, log_zhihu
 
@@ -41,7 +41,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if log_zhihu:
             logging.info('Scraping info of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_url.format(user=user, include=zhihu_user_query), headers=zhihu_headers)
+        response = requests.get(zhihu_user_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -107,7 +107,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping follows of zhihu user: %s...' % user)
         response = requests.get(zhihu_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
-                                headers=zhihu_headers)
+                                headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -130,7 +130,7 @@ class ZhihuSpider(SocialMediaSpider):
                 if finish_count >= need_count:
                     break
                 next_page = result.get('paging').get('next')
-                result = requests.get(next_page, headers=zhihu_headers).json()
+                result = requests.get(next_page, headers=zhihu_header).json()
                 for data in result.get('data'):
                     if finish_count >= need_count:
                         break
@@ -152,7 +152,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping followers of zhihu user: %s...' % user)
-        response = requests.get(zhihu_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_headers)
+        response = requests.get(zhihu_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -175,7 +175,7 @@ class ZhihuSpider(SocialMediaSpider):
                 if finish_count >= need_count:
                     break
                 next_page = result.get('paging').get('next')
-                result = requests.get(next_page, headers=zhihu_headers).json()
+                result = requests.get(next_page, headers=zhihu_header).json()
                 for data in result.get('data'):
                     if finish_count >= need_count:
                         break
@@ -196,14 +196,14 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping activities of zhihu user: %s...' % user)
         timestamp = int(time.time())
-        response = requests.get(zhihu_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_headers)
+        response = requests.get(zhihu_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_header)
         result = response.json()
         activities = []
         for data in result.get('data'):
             item = ZhihuActivityItem()
             item.id = int(data.get('id'))
             item.verb = data.get('verb')
-            item.create_time = time.ctime(data.get('created_time'))
+            item.create_time = data.get('created_time')
             item.actor = data.get('actor').get('url_token')
             target = data.get('target')
             if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
@@ -270,7 +270,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping question of id: %d...' % id)
-        response = requests.get(zhihu_question_url.format(id=id, include=zhihu_question_query), headers=zhihu_headers)
+        response = requests.get(zhihu_question_url.format(id=id, include=zhihu_question_query), headers=zhihu_header)
         if response.status_code == 404:
             if log_zhihu:
                 logging.warning('404 error. The question doesn\'t exist.')
@@ -279,9 +279,9 @@ class ZhihuSpider(SocialMediaSpider):
         item = ZhihuQuestionItem()
         item.id = result.get('id')
         item.title = result.get('title')
-        item.create_time = time.ctime(result.get('created'))
-        item.update_time = time.ctime(result.get('updated_time'))
-        page = requests.get('https://www.zhihu.com/question/%d' % id, headers=zhihu_headers)
+        item.create_time = result.get('created')
+        item.update_time = result.get('updated_time')
+        page = requests.get('https://www.zhihu.com/question/%d' % id, headers=zhihu_header)
         bs = BeautifulSoup(page.text, 'lxml')
         content_div = bs.find('div', {'class': 'QuestionRichText'})
         if content_div is not None:
@@ -305,7 +305,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping questions of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_questions_url.format(user=user, offset=0, limit=20), headers=zhihu_headers)
+        response = requests.get(zhihu_user_questions_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -330,7 +330,7 @@ class ZhihuSpider(SocialMediaSpider):
                     break
                 position += 20
                 next_page = zhihu_user_questions_url.format(user=user, offset=position, limit=20)
-                result = requests.get(next_page, headers=zhihu_headers).json()
+                result = requests.get(next_page, headers=zhihu_header).json()
                 for data in result.get('data'):
                     if finish_count >= need_count:
                         break
@@ -350,7 +350,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping answer of id: %d...' % id)
-        response = requests.get(zhihu_answer_url.format(id=id, include=zhihu_answer_query), headers=zhihu_headers)
+        response = requests.get(zhihu_answer_url.format(id=id, include=zhihu_answer_query), headers=zhihu_header)
         if response.status_code == 404:
             if log_zhihu:
                 logging.warning('404 error. The answer doesn\'t exist.')
@@ -360,9 +360,9 @@ class ZhihuSpider(SocialMediaSpider):
         item.id = result.get('id')
         item.author = result.get('author').get('name')
         item.question_id = result.get('question').get('id')
-        item.create_time = time.ctime(result.get('created_time'))
-        item.update_time = time.ctime(result.get('updated_time'))
-        page = requests.get('https://www.zhihu.com/question/%d/answer/%d' % (item.question_id, id), headers=zhihu_headers)
+        item.create_time = result.get('created_time')
+        item.update_time = result.get('updated_time')
+        page = requests.get('https://www.zhihu.com/question/%d/answer/%d' % (item.question_id, id), headers=zhihu_header)
         bs = BeautifulSoup(page.text, 'lxml')
         content_span = bs.find('div', {'class': 'RichContent'}).div.span
         content = re.search(r'<span.*?>(.*)</span>', str(content_span)).group(1)
@@ -381,7 +381,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping answers of question: %d...' % id)
-        response = requests.get(zhihu_question_answers_url.format(id=id, offset=0, limit=20), headers=zhihu_headers)
+        response = requests.get(zhihu_question_answers_url.format(id=id, offset=0, limit=20), headers=zhihu_header)
         if response.status_code == 404:     # 问题不存在
             if log_zhihu:
                 logging.warning('404 error. The question doesn\'t exist.')
@@ -404,7 +404,7 @@ class ZhihuSpider(SocialMediaSpider):
                 if finish_count >= need_count:
                     break
                 next_page = result.get('paging').get('next')
-                result = requests.get(next_page, headers=zhihu_headers).json()
+                result = requests.get(next_page, headers=zhihu_header).json()
                 for data in result.get('data'):
                     if finish_count >= need_count:
                         break
@@ -426,7 +426,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping answers of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_answers_url.format(user=user, offset=0, limit=20), headers=zhihu_headers)
+        response = requests.get(zhihu_user_answers_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -451,7 +451,7 @@ class ZhihuSpider(SocialMediaSpider):
                     break
                 position += 20
                 next_page = zhihu_user_answers_url.format(user=user, offset=position, limit=20)
-                result = requests.get(next_page, headers=zhihu_headers).json()
+                result = requests.get(next_page, headers=zhihu_header).json()
                 for data in result.get('data'):
                     if finish_count >= need_count:
                         break

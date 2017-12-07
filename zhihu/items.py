@@ -105,8 +105,8 @@ class ZhihuQuestionItem(ZhihuItem):
     def __init__(self):
         self.id = 0                 # 问题ID
         self.title = ''             # 标题
-        self.create_time = ''       # 创建时间
-        self.update_time = ''       # 更新时间
+        self.create_time = 0        # 创建时间
+        self.update_time = 0        # 更新时间
         self.content = ''           # 内容
         self.follower_count = 0     # 关注数
         self.visit_count = 0        # 浏览数
@@ -136,8 +136,8 @@ class ZhihuAnswerItem(ZhihuItem):
         self.id = 0                 # 答案ID
         self.author = ''            # 答主
         self.question_id = 0        # 问题ID
-        self.create_time = ''       # 创建时间
-        self.update_time = ''       # 更新时间
+        self.create_time = 0        # 创建时间
+        self.update_time = 0        # 更新时间
         self.content = ''           # 内容
         self.voteup_count = ''      # 赞同数
         self.comment_count = ''     # 评论数
@@ -163,7 +163,7 @@ class ZhihuActivityItem(ZhihuItem):
     def __init__(self):
         self.id = 0                         # 动态ID（时间戳）
         self.verb = ''                      # 动态类型
-        self.create_time = ''               # 时间
+        self.create_time = 0                # 时间
         self.actor = ''                     # 主人
         self.target_user_name = ''          # 目标用户名
         self.target_user_avatar = ''        # 目标头像链接
