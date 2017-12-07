@@ -5,10 +5,20 @@ import codecs
 from libsvm.svmutil import *
 from collections import Counter
 from itertools import chain, zip_longest
+from django.conf import settings
 
 import os
+
 DEBUG = False
 DIR = os.getcwd()
+
+topic_name = ['体育', '健康', '动漫', '女性', '娱乐', '房产',
+              '教育', '文学', '新闻', '旅游', '时尚', '校园',
+              '汽车', '游戏', '生活', '科技', '美食', '育儿', '财经']
+
+true_labels = ['科技', '体育', '娱乐', '新闻', '科技', '财经', '游戏',
+               '动漫', '生活', '汽车', '房产', '健康', '旅游', '时尚',
+               '女性', '育儿', '文学', '校园', '文学', '**']
 
 
 class Preprocess(object):
@@ -89,7 +99,7 @@ class Preprocess(object):
         for i in range(category_num):
             for file_words in all_category_words[i]:
                 for word in file_words:
-                        cnt_category_words[i][word] += 1
+                    cnt_category_words[i][word] += 1
 
         all_feature_words = []
         for i in range(category_num):
@@ -100,13 +110,13 @@ class Preprocess(object):
                 b = sum([cnt_category_words[j].get(word, 0) for j in range(category_num)])
                 c = category_file_num - a
                 d = category_file_num * (category_num - 1) - b
-                chi_values.append((a*d - b*c)**2 * total_file_num / ((a+b) * (a+c) * (b+d) * (c+d)))
+                chi_values.append((a * d - b * c) ** 2 * total_file_num / ((a + b) * (a + c) * (b + d) * (c + d)))
 
             sort_key = lambda item: (item[1], item[0])  # sorted by primary key and secondary key
             word_chi_values = sorted(list(zip(unique_category_words[i], chi_values)), key=sort_key, reverse=True)
             category_feature_words = [word for word, _ in word_chi_values[:1000]]
             all_feature_words.extend(category_feature_words)
-            with codecs.open('data_tmp/category_feature_' + str(i+1) + '.txt', 'w', encoding='utf8') as fw:
+            with codecs.open('data_tmp/category_feature_' + str(i + 1) + '.txt', 'w', encoding='utf8') as fw:
                 fw.write('\n'.join(category_feature_words))
 
         all_feature_words = sorted(set(all_feature_words))
@@ -141,7 +151,7 @@ class Preprocess(object):
 
         all_folders = os.listdir(root_catelogue)
         category_feature_words = []
-        for i in range(1, len(all_folders)+1):
+        for i in range(1, len(all_folders) + 1):
             with codecs.open('data_tmp/category_feature_' + str(i) + '.txt', encoding='utf8') as fr:
                 category_feature_words.append([line.strip() for line in fr.readlines()])
 
@@ -158,19 +168,37 @@ class Preprocess(object):
                     total_num = sum([int(num) for _, num in words_num])
                     for word, num in words_num:
                         if word in category_feature_words[i]:
-                            TF_IDF = round(float(num)/total_num * float(feature_words[word][1]), 4)
+                            TF_IDF = round(float(num) / total_num * float(feature_words[word][1]), 4)
                             vector.append((int(feature_words[word][0]), TF_IDF))
                     if len(vector) < 5: continue
                     vector = sorted(vector, key=lambda item: item[0])
                     vector = [str(item[0]) + ':' + str(item[1]) for item in vector]
-                    category_vectors.append(str(i+1)+' ' + ' '.join(vector))
-            train_vectors += category_vectors[:len(category_vectors) * 9 //10]
-            test_vectors += category_vectors[ len(category_vectors) * 9 //10:]
+                    category_vectors.append(str(i + 1) + ' ' + ' '.join(vector))
+            train_vectors += category_vectors[:len(category_vectors) * 9 // 10]
+            test_vectors += category_vectors[len(category_vectors) * 9 // 10:]
 
         with codecs.open('train_scale', 'w', encoding='utf8') as fw:
-                fw.write('\n'.join(train_vectors))
+            fw.write('\n'.join(train_vectors))
         with codecs.open('test_scale', 'w', encoding='utf8') as fw:
-                fw.write('\n'.join(test_vectors))
+            fw.write('\n'.join(test_vectors))
+
+    def text_preprocess(self, text):
+        """convert the given text into vector(dict)"""
+
+        with codecs.open(settings.BASE_DIR + '/closends/svm/feature_words.txt', encoding='utf8') as fr:
+            feature_words = [re.split('\s+', line.strip()) for line in fr.readlines()]
+        feature_words = dict([(word[1], (word[0], word[2])) for word in feature_words])
+
+        word_list = list(feature_words.keys())
+        seg_list = list(jieba.cut(text, cut_all=False))
+        pos_result = [item for item in seg_list if self.is_useful(item) and item in word_list]
+        words_num = list(Counter(pos_result).items())
+        total_num = sum([num for _, num in words_num])
+        vector = []
+        for word, num in words_num:
+            TF_IDF = round(float(num) / total_num * float(feature_words[word][1]), 4)
+            vector.append((int(feature_words[word][0]), TF_IDF))
+        return dict(sorted(vector, key=lambda item: item[0]))
 
 
 class SVM(object):
@@ -198,7 +226,7 @@ class SVM(object):
         return p_label, p_acc, p_val
 
 
-def run_preprocess(sample_num = 100):
+def run_preprocess(sample_num=100):
     """
     run all needed preprocess
     """
@@ -221,15 +249,34 @@ def run_preprocess(sample_num = 100):
         os.mkdir(tmp_root_catelogue)
 
     lab = Preprocess(stop_words, sample_num)
-    # lab.pos_all_text(src_root_catelogue, des_root_catelogue, cnt_root_catelogue)
-    # lab.extract_feature_words(cnt_root_catelogue)
+    lab.pos_all_text(src_root_catelogue, des_root_catelogue, cnt_root_catelogue)
+    lab.extract_feature_words(cnt_root_catelogue)
     lab.generate_text_vector(cnt_root_catelogue)
+
+
+def classify_text(src_path, des_path):
+    lab = Preprocess([], 1000)
+    with codecs.open(src_path, encoding='utf8') as fr:
+        original_contents = fr.readlines()
+        all_contents = [line.strip()[8:] for line in original_contents]
+
+    vectors = [lab.text_preprocess(content) for content in all_contents]
+    random_labels = [0 for _ in range(len(vectors))]
+    svm_model = svm_load_model('svm.model')
+    p_label, _, _ = svm_predict(random_labels, vectors, svm_model)
+    labels = [topic_name[int(label) - 1] for label in p_label]
+
+    with codecs.open(des_path, 'w', encoding='utf8') as fw:
+        result = [content[:4] + '\t\t' + true_labels[int(content[5:7]) - 10] + '\t\t' + label + '\t\t' + content[8:]
+                  for label, content in zip(labels, original_contents)]
+        fw.write(''.join(result))
 
 
 if __name__ == '__main__':
     # run_preprocess(1000)
+    # svm_lab = SVM()
+    # param_str = '-c 150000 -g 3.6e-5 -q'
+    # svm_lab.train('train_scale', 'svm.model', param_str)
+    # svm_lab.predict('test_scale', 'svm.model')
 
-    svm_lab = SVM()
-    param_str = '-c 150000 -g 3.6e-5 -q'
-    svm_lab.train('train_scale', 'svm.model', param_str)
-    svm_lab.predict('test_scale', 'svm.model')
+    classify_text('../handle_data.txt', '../pred_result.txt')

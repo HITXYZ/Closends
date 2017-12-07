@@ -6,16 +6,18 @@
 
 import os
 from urllib.request import quote
+from django.conf import settings
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from closends.spider.base_exceptions import MethodParamError
 from closends.spider.base_configs import weibo_search_url
-from django.conf import settings
+
 
 driver_path = settings.BASE_DIR + '/closends/spider/phantomjs.exe'
+# driver_path = 'phantomjs.exe'
 driver = webdriver.PhantomJS(executable_path= driver_path, service_log_path=os.path.devnull)
 
 
@@ -63,6 +65,6 @@ def get_user_by_homepage(url):
 
 
 if __name__ == '__main__':
-    # _, html = get_user_by_account("理想三旬XU")
-    _, html = get_user_by_homepage("https://weibo.com/u/1749224837?refer_flag=1005055013_&is_all=1")
+    _, html = get_user_by_account("江苏校园事")
+    # _, html = get_user_by_homepage("https://weibo.com/u/1749224837?refer_flag=1005055013_&is_all=1")
     print(html)

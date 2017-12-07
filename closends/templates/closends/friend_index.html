@@ -76,7 +76,6 @@
             margin-left: 5px;
         }
 
-
         #total_liveness, #weibo_liveness, #zhihu_liveness, #tieba_liveness{
             width: 90%;
             height: 200px;
@@ -87,7 +86,6 @@
         #weibo_liveness, #zhihu_liveness, #tieba_liveness{
             display: none;
         }
-
 
         .interest{
             width: 100%;
@@ -106,6 +104,11 @@
             height: 250px;
             margin-top: 5%;
             background-color: whitesmoke;
+        }
+
+        .interest .interest_word_cloud img{
+            width: 100%;
+            height: 100%;
         }
     </style>
 
@@ -425,7 +428,9 @@
 
             <div class="interest">
                 <div class="interest_bar_graph"></div>
-                <div class="interest_word_cloud"></div>
+                <div class="interest_word_cloud">
+                    <img src="/static/closends/wordcloud/cloud.jpg">
+                </div>
             </div>
         </div>
 

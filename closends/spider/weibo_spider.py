@@ -10,7 +10,7 @@ from closends.spider.base_exceptions import MethodParamError
 from closends.spider.weibo_items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from closends.spider.base_spider import SocialMediaSpider
 from closends.spider.base_configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
-    weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo
+    weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo, weibo_header
 
 if log_weibo:
     import logging
@@ -254,13 +254,14 @@ class WeiboSpider(SocialMediaSpider):
                         else:
                             item.media_url = page_url
                 item.id = mblog.get('bid')
-                item.order = int(mblog.get('id'))
                 item.owner.id = mblog.get('user').get('id')
                 item.owner.name = mblog.get('user').get('screen_name')
                 item.owner.avatar_url = mblog.get('user').get('profile_image_url')
                 item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
-                item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                item.time = mblog.get('created_at')
+                # item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
+                # response = requests.get(item.url, headers=weibo_header)
+                # item.time = int(re.search(r'date=\\\"(\d+)\\\"', response.text).group(1)[:-3])
+                item.time = 1381419600
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
@@ -272,7 +273,9 @@ class WeiboSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = WeiboSpider()
-    weibos = spider.scrape_user_weibo(1749224837, 2)
-
+    import time
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+    weibos = spider.scrape_user_weibo(1747104004, 20)
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
     for weibo in weibos:
         print(weibo)

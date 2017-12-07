@@ -4,6 +4,7 @@
     @desc: Items of weibo scraping
 """
 
+from time import strftime, localtime
 from closends.spider.base_item import SocialMediaItem
 
 # 微博条目基类
@@ -61,24 +62,23 @@ class WeiboUserItem(WeiboPosterItem):
 # 微博内容条目类
 class WeiboContentItem(WeiboItem):
     def __init__(self):
-        self.id = None                  # 微博ID
-        self.order = 0                  # 用于比较时间先后的16位整数
-        self.url = None                 # 微博链接
+        self.id = 0                     # 微博ID
+        self.url = ''                   # 微博链接
         self.owner = WeiboPosterItem()  # 博主
-        self.time = None                # 时间
-        self.content = None             # 内容
-        self.source = None              # 来源
+        self.time = 0                   # 时间
+        self.content = ''               # 内容
+        self.source = ''                # 来源
         self.pictures = []              # 图片列表
-        self.media_pic = None           # 媒体封面截图
-        self.media_url = None           # 媒体内容链接
+        self.media_pic = ''             # 媒体封面截图
+        self.media_url = ''             # 媒体内容链接
+
 
     def __str__(self):
         string = ''
         string += 'ID: ' + str(self.id) + '\n'
-        string += 'Order: ' + str(self.order) + '\n'
         string += 'Url: ' + str(self.url) + '\n'
         string += 'Owner: ' + str(self.owner.name) + '\n'
-        string += 'Time: ' + str(self.time) + '\n'
+        string += 'Time: ' + strftime("%Y-%m-%d %H:%M:%S", localtime(self.time)) + '\n'
         string += 'Content: ' + str(self.content) + '\n'
         string += 'Source: ' + str(self.source) + '\n'
         string += 'Pictures: ' + '; '.join(str(pic) for pic in self.pictures) + '\n'
@@ -91,7 +91,7 @@ class WeiboContentItem(WeiboItem):
 
     def convert_format(self):
         weibo = {}
-        weibo['pub_date'] = str(self.order)
+        weibo['pub_date'] = strftime("%Y-%m-%d %H:%M:%S", localtime(self.time))
         weibo['src_url'] = str(self.url)
         weibo['content'] = str(self.content)
 

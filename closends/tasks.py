@@ -1,36 +1,48 @@
 from celery.task import task
 from celery.task import periodic_task
 from celery.schedules import crontab
+from closends.svm.svm import Preprocess, topic_name
+from libsvm.svmutil import *
 from closends.spider.weibo_spider import WeiboSpider
 from closends.spider.zhihu_spider import ZhihuSpider
 from closends.spider.tieba_spider import TiebaSpider
+from django.conf import settings
 from .models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image
-
 
 @periodic_task(run_every=(crontab(minute='*/1')), name="weibo_spider")
 def weibo_spider():
-    friends = Friend.objects.all().exclude(weibo_account='')
     spider = WeiboSpider()
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    friends = Friend.objects.all().exclude(weibo_account='')
     for friend in friends:
-        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 20)
+        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 100)
+        print(len(weibos))
         for weibo in weibos:
             weibo = weibo.convert_format()
-            try:
-                if len(weibo) == 6:  # original weibo
-                    has_image = len(weibo['images']) > 0
+            if len(weibo) == 6:  # original weibo
+                has_image = len(weibo['images']) > 0
+                vector = lab.text_preprocess(weibo['content'])
+                p_label, _, _ = svm_predict([0,], [vector,], svm_model)
+                try:
                     content = WeiboContent(pub_date     = weibo['pub_date'],
-                                           src_url      = weibo['src_url'],
-                                           content      = weibo['content'],
-                                           is_repost    = weibo['is_repost'],
-                                           has_image    = has_image,
-                                           video_image  = weibo['video_image'],
-                                           friend_id    = friend.id)
+                                       src_url      = weibo['src_url'],
+                                       content      = weibo['content'],
+                                       is_repost    = weibo['is_repost'],
+                                       has_image    = has_image,
+                                       video_image  = weibo['video_image'],
+                                       topic        = topic_name[int(p_label[0])-1],
+                                       friend_id    = friend.id)
                     content.save()
                     if has_image:
                         for image_url in weibo['images']:
                             Image(content_object=content, image_url=image_url).save()
-                else:               # reposted weibo
-                    has_image = len(weibo['origin_images']) > 0
+                except: pass
+            else:               # reposted weibo
+                has_image = len(weibo['origin_images']) > 0
+                vector = lab.text_preprocess(weibo['content'])
+                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
+                try:
                     content = WeiboContent(pub_date         = weibo['pub_date'],
                                            src_url          = weibo['src_url'],
                                            content          = weibo['content'],
@@ -44,15 +56,16 @@ def weibo_spider():
                                            origin_content   = weibo['origin_content'],
                                            origin_has_image = has_image,
                                            origin_video_image=weibo['origin_video_image'],
+                                           topic            = topic_name[int(p_label[0]) - 1],
                                            friend_id        = friend.id)
                     content.save()
                     if has_image:
                         for image_url in weibo['origin_images']:
                             Image(content_object=content, image_url=image_url).save()
-            except: pass
+                except: pass
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="zhihu_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
 def zhihu_spider():
     friends = Friend.objects.all().exclude(zhihu_account='')
     spider = ZhihuSpider()
@@ -77,7 +90,7 @@ def zhihu_spider():
                 content.save()
             except: pass
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="tieba_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
 def tieba_spider():
     friends = Friend.objects.all().exclude(tieba_account='')
     spider = TiebaSpider()
@@ -101,18 +114,23 @@ def tieba_spider():
 @task(name="weibo_spider_friend")
 def weibo_spider_friend(friend):
     spider = WeiboSpider()
-    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 100)
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 20)
     for weibo in weibos:
         weibo = weibo.convert_format()
         try:
             if len(weibo) == 6:
                 has_image = len(weibo['images']) > 0
+                vector = lab.text_preprocess(weibo['content'])
+                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
                 content = WeiboContent(pub_date     = weibo['pub_date'],
                                        src_url      = weibo['src_url'],
                                        content      = weibo['content'],
                                        is_repost    = weibo['is_repost'],
                                        has_image    = has_image,
                                        video_image  = weibo['video_image'],
+                                       topic        = topic_name[int(p_label[0]) - 1],
                                        friend_id    = friend['id'])
                 content.save()
                 if has_image:
@@ -120,6 +138,8 @@ def weibo_spider_friend(friend):
                         Image(content_object=content, image_url=image_url).save()
             else:
                 has_image = len(weibo['origin_images']) > 0
+                vector = lab.text_preprocess(weibo['content'])
+                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
                 content = WeiboContent(pub_date         = weibo['pub_date'],
                                        src_url          = weibo['src_url'],
                                        content          = weibo['content'],
@@ -133,6 +153,7 @@ def weibo_spider_friend(friend):
                                        origin_content   = weibo['origin_content'],
                                        origin_has_image = has_image,
                                        origin_video_image=weibo['origin_video_image'],
+                                       topic            = topic_name[int(p_label[0]) - 1],
                                        friend_id        = friend['id'])
                 content.save()
                 if has_image:

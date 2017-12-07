@@ -4,6 +4,7 @@
 @desc: Items for tieba scraping.
 """
 
+from time import strftime, localtime
 from closends.spider.base_item import SocialMediaItem
 
 
@@ -50,7 +51,7 @@ class TiebaPostItem(TiebaItem):
 
     def __str__(self):
         string = ''
-        string += 'Time: ' + str(self.time) + '\n'
+        string += 'Time: ' + strftime("%Y-%m-%d %H:%M:%S", localtime(self.time)) + '\n'
         string += 'Title: ' + str(self.title) + '\n'
         string += 'Title Url: ' + str(self.title_url) + '\n'
         string += 'Content: ' + str(self.content) + '\n'

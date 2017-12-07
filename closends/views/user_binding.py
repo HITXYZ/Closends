@@ -109,10 +109,11 @@ def query_zhihu_user(request):
             return HttpResponse(json.dumps(result), content_type='application/json')
         else:
             user_id, user_html = get_zhihu_user_by_homepage(zhihu_account)
+            print(user_id, user_html)
             if user_id is None:
                 result = {'status': 'error', 'error_msg': 'user_not_exist'}
             else:
-                result = {'status': 'success', 'person_html': user_html, 'person_id': user_id}
+                result = {'status': 'success', 'htmls': user_html, 'person_id': user_id}
             return HttpResponse(json.dumps(result), content_type='application/json')
 
 

@@ -121,7 +121,6 @@ class TiebaSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = TiebaSpider()
-    # posts = spider.scrape_user_posts('愛你沒法說', 10)
-    posts = spider.scrape_user_posts('允允晴', 10)
+    posts = spider.scrape_user_posts('愛你沒法說', 10)
     for post in posts:
         print(post)
