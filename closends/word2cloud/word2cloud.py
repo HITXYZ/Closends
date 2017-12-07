@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 
 def generate_cloud(word_num):
+    """generate wordcloud with the given word_num"""
+
     with codecs.open(settings.BASE_DIR + '/closends/word2cloud/words.txt', 'r', encoding='utf8') as fr:
         words = fr.read()
 

@@ -112,7 +112,7 @@ class WeiboContent(models.Model):
     def platform(self):
         return 'weibo'
 
-    pub_date = models.CharField(max_length=20)
+    pub_date = models.DateTimeField(default=timezone.now)
     src_url = models.URLField(max_length=500)
     content = models.TextField()
 
@@ -205,7 +205,7 @@ class TiebaContent(models.Model):
     def platform(self):
         return 'tieba'
 
-    pub_date = models.CharField(max_length=20)
+    pub_date = models.DateTimeField(default=timezone.now)
 
     forum = models.CharField(max_length=20)
     forum_url = models.URLField(max_length=500)

@@ -1,30 +1,30 @@
+from libsvm.svmutil import *
+from django.conf import settings
 from celery.task import task
 from celery.task import periodic_task
 from celery.schedules import crontab
 from closends.svm.svm import Preprocess, topic_name
-from libsvm.svmutil import *
 from closends.spider.weibo_spider import WeiboSpider
 from closends.spider.zhihu_spider import ZhihuSpider
 from closends.spider.tieba_spider import TiebaSpider
-from django.conf import settings
 from .models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="weibo_spider")
+
+@periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
     for friend in friends:
-        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 100)
-        print(len(weibos))
+        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 50)
         for weibo in weibos:
             weibo = weibo.convert_format()
-            if len(weibo) == 6:  # original weibo
-                has_image = len(weibo['images']) > 0
-                vector = lab.text_preprocess(weibo['content'])
-                p_label, _, _ = svm_predict([0,], [vector,], svm_model)
-                try:
+            try:
+                if len(weibo) == 6:  # original weibo
+                    has_image = len(weibo['images']) > 0
+                    vector = lab.text_preprocess(weibo['content'])
+                    p_label, _, _ = svm_predict([0,], [vector,], svm_model)
                     content = WeiboContent(pub_date     = weibo['pub_date'],
                                        src_url      = weibo['src_url'],
                                        content      = weibo['content'],
@@ -37,12 +37,10 @@ def weibo_spider():
                     if has_image:
                         for image_url in weibo['images']:
                             Image(content_object=content, image_url=image_url).save()
-                except: pass
-            else:               # reposted weibo
-                has_image = len(weibo['origin_images']) > 0
-                vector = lab.text_preprocess(weibo['content'])
-                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
-                try:
+                else:               # reposted weibo
+                    has_image = len(weibo['origin_images']) > 0
+                    vector = lab.text_preprocess(weibo['content'])
+                    p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
                     content = WeiboContent(pub_date         = weibo['pub_date'],
                                            src_url          = weibo['src_url'],
                                            content          = weibo['content'],
@@ -62,7 +60,7 @@ def weibo_spider():
                     if has_image:
                         for image_url in weibo['origin_images']:
                             Image(content_object=content, image_url=image_url).save()
-                except: pass
+            except: pass
 
 
 @periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
@@ -71,24 +69,25 @@ def zhihu_spider():
     spider = ZhihuSpider()
     for friend in friends:
         zhihus = spider.scrape_user_activities(friend.zhihu_ID)
-        for zhihu in zhihus:
-            zhihu = zhihu.convert_format()
-            try:
-                content = ZhihuContent(pub_date            = zhihu['pub_date'],
-                                       action_type         = zhihu['action_type'],
-                                       target_user_name    = zhihu['target_user_name'],
-                                       target_user_head    = zhihu['target_user_head'],
-                                       target_user_url     = zhihu['target_user_url'],
-                                       target_user_headline= zhihu['target_user_headline'],
-                                       target_title        = zhihu['target_title'],
-                                       target_title_url    = zhihu['target_title_url'],
-                                       target_content      = zhihu['target_content'],
-                                       target_content_url  = zhihu['target_content_url'],
-                                       friend_id           = friend.id)
-                if zhihu['cover_image']:
-                    content.cover_image = zhihu['cover_image']
-                content.save()
-            except: pass
+        # for zhihu in zhihus:
+        #     zhihu = zhihu.convert_format()
+        #     try:
+        #         content = ZhihuContent(pub_date            = zhihu['pub_date'],
+        #                                action_type         = zhihu['action_type'],
+        #                                target_user_name    = zhihu['target_user_name'],
+        #                                target_user_head    = zhihu['target_user_head'],
+        #                                target_user_url     = zhihu['target_user_url'],
+        #                                target_user_headline= zhihu['target_user_headline'],
+        #                                target_title        = zhihu['target_title'],
+        #                                target_title_url    = zhihu['target_title_url'],
+        #                                target_content      = zhihu['target_content'],
+        #                                target_content_url  = zhihu['target_content_url'],
+        #                                friend_id           = friend.id)
+        #         if zhihu['cover_image']:
+        #             content.cover_image = zhihu['cover_image']
+        #         content.save()
+        #     except: pass
+
 
 @periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
 def tieba_spider():
@@ -96,19 +95,19 @@ def tieba_spider():
     spider = TiebaSpider()
     for friend in friends:
         tiebas = spider.scrape_user_posts(friend.tieba_ID)
-        for tieba in tiebas:
-            tieba = tieba.convert_format()
-            try:
-                content = TiebaContent(pub_date     = tieba['pub_date'],
-                                       forum        = tieba['forum'],
-                                       forum_url    = tieba['forum_url'],
-                                       title        = tieba['title'],
-                                       title_url    = tieba['title_url'],
-                                       content      = tieba['content'],
-                                       content_url  = tieba['content_url'],
-                                       friend_id    = friend.id)
-                content.save()
-            except: pass
+        # for tieba in tiebas:
+        #     tieba = tieba.convert_format()
+        #     try:
+        #         content = TiebaContent(pub_date     = tieba['pub_date'],
+        #                                forum        = tieba['forum'],
+        #                                forum_url    = tieba['forum_url'],
+        #                                title        = tieba['title'],
+        #                                title_url    = tieba['title_url'],
+        #                                content      = tieba['content'],
+        #                                content_url  = tieba['content_url'],
+        #                                friend_id    = friend.id)
+        #         content.save()
+        #     except: pass
 
 
 @task(name="weibo_spider_friend")
@@ -116,7 +115,7 @@ def weibo_spider_friend(friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 20)
+    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 50)
     for weibo in weibos:
         weibo = weibo.convert_format()
         try:

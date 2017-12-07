@@ -7,6 +7,7 @@
 from time import strftime, localtime
 from closends.spider.base_item import SocialMediaItem
 
+
 # 微博条目基类
 class WeiboItem(SocialMediaItem):
     pass

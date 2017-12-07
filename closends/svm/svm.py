@@ -185,6 +185,8 @@ class Preprocess(object):
     def text_preprocess(self, text):
         """convert the given text into vector(dict)"""
 
+        text = re.sub(r'#', ' ', text)
+        text = re.sub(r'(<[^>]+>|【|】|\.\.\.全文|\?\?\?)', '', text)
         with codecs.open(settings.BASE_DIR + '/closends/svm/feature_words.txt', encoding='utf8') as fr:
             feature_words = [re.split('\s+', line.strip()) for line in fr.readlines()]
         feature_words = dict([(word[1], (word[0], word[2])) for word in feature_words])
@@ -273,10 +275,11 @@ def classify_text(src_path, des_path):
 
 
 if __name__ == '__main__':
-    # run_preprocess(1000)
-    # svm_lab = SVM()
-    # param_str = '-c 150000 -g 3.6e-5 -q'
-    # svm_lab.train('train_scale', 'svm.model', param_str)
-    # svm_lab.predict('test_scale', 'svm.model')
+    run_preprocess(1000)
 
-    classify_text('../handle_data.txt', '../pred_result.txt')
+    svm_lab = SVM()
+    param_str = '-c 150000 -g 3.6e-5 -q'
+    svm_lab.train('train_scale', 'svm.model', param_str)
+    svm_lab.predict('test_scale', 'svm.model')
+
+    # classify_text('../handle_data.txt', '../pred_result.txt')

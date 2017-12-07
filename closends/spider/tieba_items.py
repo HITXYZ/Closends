@@ -62,7 +62,7 @@ class TiebaPostItem(TiebaItem):
 
     def convert_format(self):
         tieba = {}
-        tieba['pub_date'] = str(self.time)
+        tieba['pub_date'] = strftime("%Y-%m-%d %H:%M:%S", localtime(self.time))
         tieba['forum'] = str(self.forum)
         tieba['forum_url'] = str(self.forum_url)
         tieba['title'] = str(self.title)
