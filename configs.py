@@ -23,12 +23,12 @@ zhihu_headers = {
                   '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     'authorization': 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20'
 }
-zhihu_user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
-zhihu_follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?' \
+zhihu_user_info_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
+zhihu_user_follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?' \
                     'include={include}&offset={offset}&limit={limit}'
-zhihu_followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?' \
+zhihu_user_followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?' \
                       'include={include}&offset={offset}&limit={limit}'
-zhihu_activity_url = 'https://www.zhihu.com/api/v4/members/{user}/activities?' \
+zhihu_user_activity_url = 'https://www.zhihu.com/api/v4/members/{user}/activities?' \
                      'limit={limit}&after_id={after}&desktop=True'
 zhihu_question_url = 'https://www.zhihu.com/api/v4/questions/{id}?include={include}'
 zhihu_user_questions_url = 'https://www.zhihu.com/api/v4/members/{user}' \

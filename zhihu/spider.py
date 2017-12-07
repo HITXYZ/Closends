@@ -11,10 +11,10 @@ from bs4 import BeautifulSoup
 from zhihu.items import *
 from exceptions import MethodParamError
 from base_spider import SocialMediaSpider
-from configs import zhihu_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
-    zhihu_followers_url, zhihu_follows_query, zhihu_follows_url, zhihu_header, zhihu_question_answers_url, \
+from configs import zhihu_user_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
+    zhihu_user_followers_url, zhihu_follows_query, zhihu_user_follows_url, zhihu_header, zhihu_question_answers_url, \
     zhihu_question_query, zhihu_question_url, zhihu_user_answers_url, zhihu_user_query, zhihu_user_questions_url, \
-    zhihu_user_url, log_path, log_zhihu
+    zhihu_user_info_url, log_path, log_zhihu
 
 
 if log_zhihu:
@@ -41,7 +41,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if log_zhihu:
             logging.info('Scraping info of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
+        response = requests.get(zhihu_user_info_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -106,7 +106,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping follows of zhihu user: %s...' % user)
-        response = requests.get(zhihu_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
+        response = requests.get(zhihu_user_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
                                 headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
@@ -152,7 +152,7 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping followers of zhihu user: %s...' % user)
-        response = requests.get(zhihu_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
+        response = requests.get(zhihu_user_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
         if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
@@ -196,7 +196,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping activities of zhihu user: %s...' % user)
         timestamp = int(time.time())
-        response = requests.get(zhihu_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_header)
+        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_header)
         result = response.json()
         activities = []
         for data in result.get('data'):
