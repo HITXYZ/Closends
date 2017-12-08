@@ -18,7 +18,7 @@ weibo_search_url = 'http://s.weibo.com/user/{user}&Refer=weibo_user'
 
 
 # zhihu configurations
-zhihu_headers = {
+zhihu_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     'authorization': 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20'

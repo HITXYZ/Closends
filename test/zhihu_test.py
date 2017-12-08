@@ -3,6 +3,7 @@
 @date: 2017/11/25
 @desc: Test zhihu spider.
 """
+import time
 from zhihu.spider import ZhihuSpider
 
 
@@ -26,8 +27,8 @@ def scrape_user_fans_test(user, number):
         print(fan)
 
 
-def scrape_user_activities_test(user):
-    activities = spider.scrape_user_activities(user)
+def scrape_user_activities_test(user, after, number):
+    activities = spider.scrape_user_activities(user, after, number)
     for activity in activities:
         print(activity)
 
@@ -63,6 +64,7 @@ def scrape_answers_by_user_test(user, number):
 scrape_user_info_test('excited-vczh')
 scrape_user_follows_test('excited-vczh', 10)
 scrape_user_fans_test('excited-vczh', 10)
+scrape_user_activities_test('excited-vczh', int(time.time()), 15)
 scrape_question_by_id_test(58035825)
 scrape_questions_by_user_test('excited-vczh', 10)
 scrape_answer_by_id_test(265325555)

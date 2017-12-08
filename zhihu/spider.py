@@ -190,77 +190,89 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_followers[user] = fans
         return fans
 
-    def scrape_user_activities(self, user):
+    def scrape_user_activities(self, user, after=None, number=1):
         if not isinstance(user, str):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
+        if after is None:
+            after = int(time.time())
+        if number <= 0:
+            number = 1
         if log_zhihu:
             logging.info('Scraping activities of zhihu user: %s...' % user)
-        timestamp = int(time.time())
-        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_header)
+        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=after), headers=zhihu_header)
         result = response.json()
         activities = []
-        for data in result.get('data'):
-            item = ZhihuActivityItem()
-            item.id = int(data.get('id'))
-            item.verb = data.get('verb')
-            item.create_time = data.get('created_time')
-            item.actor = data.get('actor').get('url_token')
-            target = data.get('target')
-            if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
-            elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':     # 赞同了回答，回答了问题
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('question').get('title')
-                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('question').get('id'))
-                item.target_content = target.get('excerpt')
-                item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
-                    qid=target.get('question').get('id'), aid=target.get('id'))
-                item.thumbnail = target.get('thumbnail')
-            elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':   # 赞了文章，发表了文章
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
-                item.target_content = target.get('excerpt')
-                item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
-                item.thumbnail = target.get('image_url')
-            elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':    # 关注了话题，创建了话题
-                item.target_title = target.get('name')
-                item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
-                    id=target.get('id'))
-                item.thumbnail = target.get('avatar_url')
-            elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':    # 关注了收藏夹，创建了收藏夹
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://zhuanlan.zhihu.com/{id}'.format(id=target.get('id'))
-                item.thumbnail = target.get('image_url')
-            elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':      # 发布了想法，关注了想法
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_content = target.get('excerpt_new')
-                item.target_content_url = 'https://www.zhihu.com/pin/{id}'.format(id=target.get('id'))
-            item.action_text = data.get('action_text')
-            activities.append(item)
+        while len(activities) < number:
+            for data in result.get('data'):
+                item = ZhihuActivityItem()
+                item.id = int(data.get('id'))
+                item.verb = data.get('verb')
+                item.create_time = data.get('created_time')
+                item.actor = data.get('actor').get('url_token')
+                target = data.get('target')
+                if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
+                elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':     # 赞同了回答，回答了问题
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('question').get('title')
+                    item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('question').get('id'))
+                    item.target_content = target.get('excerpt')
+                    item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
+                        qid=target.get('question').get('id'), aid=target.get('id'))
+                    item.thumbnail = target.get('thumbnail')
+                elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':   # 赞了文章，发表了文章
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
+                    item.target_content = target.get('excerpt')
+                    item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
+                    item.thumbnail = target.get('image_url')
+                elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':    # 关注了话题，创建了话题
+                    item.target_title = target.get('name')
+                    item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
+                        id=target.get('id'))
+                    item.thumbnail = target.get('avatar_url')
+                elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':    # 关注了收藏夹，创建了收藏夹
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://zhuanlan.zhihu.com/{id}'.format(id=target.get('id'))
+                    item.thumbnail = target.get('image_url')
+                elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':      # 发布了想法，关注了想法
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_content = target.get('excerpt_new')
+                    item.target_content_url = 'https://www.zhihu.com/pin/{id}'.format(id=target.get('id'))
+                item.action_text = data.get('action_text')
+                activities.append(item)
+                if len(activities) >= number:
+                    break
+            if len(activities) >= number or result.get('paging').get('is_end'):
+                break
+            response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=activities[-1].id), headers=zhihu_header)
+            result = response.json()
         if log_zhihu:
             logging.info('Succeed in scraping activities of zhihu user: %s.' % user)
         return activities
