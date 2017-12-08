@@ -3,13 +3,13 @@
 @date: 2017/10/05
 @desc: Scraper for sina weibo.
 """
+import time
 import re
 import requests
-from bs4 import BeautifulSoup
 from exceptions import MethodParamError
 from weibo.items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from base_spider import SocialMediaSpider
-from configs import weibo_header, weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
+from configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
     weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo
 
 
@@ -259,8 +259,14 @@ class WeiboSpider(SocialMediaSpider):
                 item.owner.avatar_url = mblog.get('user').get('profile_image_url')
                 item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
                 item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                response = requests.get(item.url, headers=weibo_header)
-                item.time = int(re.search(r'date=\\\"(\d+)\\\"', response.text).group(1)[:-3])
+                res = requests.get(card.get('scheme'))
+                if '微博-出错了' in res.text:        # 该微博已被删除
+                    continue
+                else:
+                    time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
+                    time_lst.pop(-2)        # 删除时区信息
+                    time_str = ' '.join(time_lst)
+                    item.time = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))    # 获取时间戳
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
