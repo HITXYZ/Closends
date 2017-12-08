@@ -33,7 +33,7 @@ setting_patterns = [
     url(r'friend_manage$', friend_manage.friend_manage, name='friend_manage'),
     url(r'friend_manage/add_group$', friend_manage.add_group, name='add_group'),
     url(r'friend_manage/delete_group$', friend_manage.delete_group, name='delete_group'),
-    url(r'friend_manage/get_group_friends/(?P<group>\w+)/(?P<page>[0-9]+)$', friend_manage.get_group_friends, name='get_group_friends'),
+    url(r'friend_manage/get_group_friends/(?:group-(?P<group>\d+))/(?:page-(?P<page>\d+)/)$', friend_manage.get_group_friends, name='get_group_friends'),
 
     # friend manage
     url(r'friend_manage/add_friend$', friend_manage.add_friend, name='add_friend'),
@@ -60,8 +60,8 @@ setting_patterns = [
 ]
 
 content_patterns = [
-    url(r'query_all/(?:page-(?P<page>\d+)/)?$', main_page.query_all, name='index'),
-    url(r'query_by_group/(?P<group>\w+)/(?:page-(?P<page>\d+)/)$', main_page.query_by_group, name='query_by_group'),
+    url(r'query_all/(?:page-(?P<page>\d+)/)$', main_page.query_all, name='index'),
+    url(r'query_by_group/(?:group-(?P<group>\d+))/(?:page-(?P<page>\d+)/)$', main_page.query_by_group, name='query_by_group'),
     url(r'query_by_platform/(?P<platform>\w+)/(?:page-(?P<page>\d+)/)', main_page.query_by_platform, name='query_by_platform'),
     url(r'query_by_topic/(?:topic-(?P<topic>\w+))/(?:page-(?P<page>\d+)/)', main_page.query_by_topic, name='query_by_topic'),
 ]

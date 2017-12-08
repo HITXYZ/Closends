@@ -16,14 +16,14 @@ topic_name = ['体育', '健康', '动漫', '女性', '娱乐', '房产',
               '教育', '文学', '新闻', '旅游', '时尚', '校园',
               '汽车', '游戏', '生活', '科技', '美食', '育儿', '财经']
 
+
 @csrf_exempt
 @login_required
 def query_all(request, page=1):
     user = request.user.userinfo
     friends = user.friend_set.all()
-    group_name = user.group_list.split(',')
-    group_index = ['group_' + str(index) for index in range(len(group_name))]
-    group_list = list(zip(group_index, group_name))
+    group_list = user.group_list.split(',')
+    group_list = list(enumerate(group_list))
     topic_list = list(enumerate(topic_name))
 
     all_contents = []
@@ -65,14 +65,12 @@ def query_all(request, page=1):
 def query_by_group(request, group, page=1):
     user = request.user.userinfo
     friends = user.friend_set.all()
-    group_name = user.group_list.split(',')
-    group_index = ['group_' + str(index) for index in range(len(group_name))]
-    group_list = list(zip(group_index, group_name))
+    group_list = user.group_list.split(',')
     topic_list = list(enumerate(topic_name))
 
     all_contents = []
     for friend in friends:
-        if friend.group == group:
+        if friend.group == group_list[int(group)]:
             weibo_contents = friend.weibocontent_set.all()
             zhihu_contents = friend.zhihucontent_set.all()
             tieba_contents = friend.tiebacontent_set.all()
@@ -99,6 +97,7 @@ def query_by_group(request, group, page=1):
     except EmptyPage:
         contents = paginator.page(paginator.num_pages)
 
+    group_list = list(enumerate(group_list))
     result = {'group_list': group_list,
               'topic_list': topic_list,
               'current_group': group,
@@ -111,9 +110,8 @@ def query_by_group(request, group, page=1):
 def query_by_platform(request, platform, page=1):
     user = request.user.userinfo
     friends = user.friend_set.all()
-    group_name = user.group_list.split(',')
-    group_index = ['group_' + str(index) for index in range(len(group_name))]
-    group_list = list(zip(group_index, group_name))
+    group_list = user.group_list.split(',')
+    group_list = list(enumerate(group_list))
     topic_list = list(enumerate(topic_name))
 
     all_contents = []
@@ -158,9 +156,8 @@ def query_by_topic(request, topic, page=1):
     print(topic)
     user = request.user.userinfo
     friends = user.friend_set.all()
-    group_name = user.group_list.split(',')
-    group_index = ['group_' + str(index) for index in range(len(group_name))]
-    group_list = list(zip(group_index, group_name))
+    group_list = user.group_list.split(',')
+    group_list = list(enumerate(group_list))
     topic_list = list(enumerate(topic_name))
 
     all_contents = []

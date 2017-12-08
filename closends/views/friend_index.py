@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from closends.word2cloud.word2cloud import generate_cloud
 from closends.methods.draw_bar import draw_bar
 
+
 @csrf_exempt
 @login_required
 def friend_index(request, friend, page=1):
@@ -32,7 +33,7 @@ def friend_index(request, friend, page=1):
     # draw bar of first five interest
     labels = [label for label, _ in word_num[:5]]
     quants = [num for _, num in word_num[:5]]
-    quants = [num/sum(quants) for num in quants]
+    quants = [num / sum(quants) for num in quants]
     draw_bar(labels, quants)
 
     # all_contents.sort(key=lambda content: content.pub_date)
@@ -47,5 +48,5 @@ def friend_index(request, friend, page=1):
 
     result = {'contents': contents,
               'friend': friend_item,
-              'current_friend': friend,}
+              'current_friend': friend, }
     return render(request, 'closends/friend_index.html', result)

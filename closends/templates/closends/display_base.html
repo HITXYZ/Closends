@@ -9,8 +9,9 @@
     <style>
         .left_sidebar{
             width: 200px;
-            height: 800px;
+            height: 600px;
             margin-left: 20%;
+            margin-bottom: 20%;
             border: 1px solid;
             position: fixed;
         }
@@ -19,6 +20,7 @@
             width: 600px;
             margin-left: 35%;
             margin-top: 6.7%;
+            margin-bottom: 10%;
             border: 1px solid;
         }
 
@@ -98,6 +100,24 @@
             margin-left: 10%;
         }
 
+        .topics .left_btn{
+            margin-top: 20%;
+            margin-left: 8%;
+        }
+
+        .topics .topic_list{
+            margin-left: 2%;
+        }
+
+        .topics .right_btn{
+            margin-left: 6%;
+            margin-top: 20%;
+        }
+
+        .topics #list_2, #list_3, #list_4{
+            display: none;
+        }
+
         .topics span{
             width: 100px;
             margin-left: 20px;
@@ -117,7 +137,6 @@
 
         .topics .topic_list .topic{
             margin-top: 2%;
-            margin-left: 50px;
         }
 
         .topics .topic_list button{
@@ -460,15 +479,53 @@
                         <img class="img-circle" src="/static/closends/img/unfold.png">
                     </button>
                 </span>
-                <div class="topic_list">
-                    {% for topic in topic_list %}
-                        <div class="topic">
-                            <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
-                                <button class="btn-link text-left">{{ topic.1 }}</button>
-                            </a>
+                <div class="row">
+                    <div class="col-md-1 left_btn">
+                        <button type="button" class="btn-link btn"><<</button>
+                    </div>
+                    <div class="topic_list col-md-2">
+                        <div id="list_1">
+                            {% for topic in topic_list|slice:'0:5' %}
+                                <div class="topic">
+                                    <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
+                                        <button class="btn-link text-left">{{ topic.1 }}</button>
+                                    </a>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
+                        <div id="list_2">
+                            {% for topic in topic_list|slice:'6:11' %}
+                                <div class="topic">
+                                    <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
+                                        <button class="btn-link text-left">{{ topic.1 }}</button>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="list_3">
+                            {% for topic in topic_list|slice:'11:16' %}
+                                <div class="topic">
+                                    <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
+                                        <button class="btn-link text-left">{{ topic.1 }}</button>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="list_4">
+                            {% for topic in topic_list|slice:'16:20' %}
+                                <div class="topic">
+                                    <a href="{% url 'closends:content:query_by_topic' topic=topic.0 page=1 %}">
+                                        <button class="btn-link text-left">{{ topic.1 }}</button>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-1 right_btn">
+                        <button type="button" class="btn-link btn">>></button>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -488,6 +545,43 @@
 
             $("#unfold_topics").on("click", function () {
                 $(".topic_list").toggle();
+            });
+
+            let current_list = 1;
+            $(".right_btn").on("click", function () {
+                if(current_list === 1){
+                    current_list += 1;
+                    $("#list_1").hide();
+                    $("#list_2").show();
+                }
+                else if(current_list === 2){
+                    current_list += 1;
+                    $("#list_2").hide();
+                    $("#list_3").show();
+                }
+                else if(current_list === 3){
+                    current_list += 1;
+                    $("#list_3").hide();
+                    $("#list_4").show();
+                }
+            });
+
+            $(".left_btn").on("click", function () {
+                if(current_list === 4){
+                    current_list -= 1;
+                    $("#list_4").hide();
+                    $("#list_3").show();
+                }
+                else if(current_list === 3){
+                    current_list -= 1;
+                    $("#list_3").hide();
+                    $("#list_2").show();
+                }
+                else if(current_list === 2){
+                    current_list -= 1;
+                    $("#list_2").hide();
+                    $("#list_1").show();
+                }
             });
         })
     </script>

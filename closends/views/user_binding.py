@@ -34,7 +34,7 @@ def query_weibo_user(request):
         if request.POST['adding_option'] == "账号":
             user_ids, user_htmls = get_weibo_user_by_account(weibo_account)
             if not user_ids:
-                result = {'status':'error', 'error_msg': 'user_not_exist'}
+                result = {'status': 'error', 'error_msg': 'user_not_exist'}
             else:
                 result = {'status': 'success', 'person_html': user_htmls[0], 'person_id': user_ids[0]}
             return HttpResponse(json.dumps(result), content_type='application/json')
@@ -68,7 +68,7 @@ def weibo_binding(request):
         head = request.POST['head']
         site = user.website_set.filter(site='weibo')
         if not site:  # binding account
-            user.website_set.create(site='weibo', site_account=account, site_ID=ID,site_link=link, site_head=head)
+            user.website_set.create(site='weibo', site_account=account, site_ID=ID, site_link=link, site_head=head)
             user.save()
         else:  # update account
             site = site[0]
@@ -103,7 +103,7 @@ def query_zhihu_user(request):
         if request.POST['adding_option'] == "账号":
             user_ids, user_htmls = get_zhihu_user_by_account(zhihu_account)
             if not user_ids:
-                result = {'status':'error', 'error_msg': 'user_not_exist'}
+                result = {'status': 'error', 'error_msg': 'user_not_exist'}
             else:
                 result = {'status': 'success', 'htmls': user_htmls[0], 'person_id': user_ids[0]}
             return HttpResponse(json.dumps(result), content_type='application/json')
@@ -138,7 +138,7 @@ def zhihu_binding(request):
         head = request.POST['head']
         site = user.website_set.filter(site='zhihu')
         if not site:  # binding account
-            user.website_set.create(site='zhihu', site_account=account, site_ID=ID,site_link=link, site_head=head)
+            user.website_set.create(site='zhihu', site_account=account, site_ID=ID, site_link=link, site_head=head)
             user.save()
         else:  # update account
             site = site[0]
@@ -150,7 +150,7 @@ def zhihu_binding(request):
         result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
-    
+
 @csrf_exempt
 @login_required
 def zhihu_unbinding(request):
@@ -175,9 +175,9 @@ def query_tieba_user(request):
         else:
             user_id, user_html = get_tieba_user_by_homepage(tieba_account)
         if not user_id:
-            result = {'status':'error', 'error_msg': 'user_not_exist'}
+            result = {'status': 'error', 'error_msg': 'user_not_exist'}
         else:
-            result = {'status':'success', 'user_html': user_html, 'person_id': user_id}
+            result = {'status': 'success', 'user_html': user_html, 'person_id': user_id}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
 
@@ -202,7 +202,7 @@ def tieba_binding(request):
         head = request.POST['head']
         site = user.website_set.filter(site='tieba')
         if not site:  # binding account
-            user.website_set.create(site='tieba', site_account=account, site_ID=ID,site_link=link, site_head=head)
+            user.website_set.create(site='tieba', site_account=account, site_ID=ID, site_link=link, site_head=head)
             user.save()
         else:  # update account
             site = site[0]
@@ -214,7 +214,7 @@ def tieba_binding(request):
         result = {'status': 'success'}
         return HttpResponse(json.dumps(result), content_type='application/json')
 
-    
+
 @csrf_exempt
 @login_required
 def tieba_unbinding(request):

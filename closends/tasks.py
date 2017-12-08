@@ -65,49 +65,59 @@ def weibo_spider():
 
 @periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
 def zhihu_spider():
-    friends = Friend.objects.all().exclude(zhihu_account='')
     spider = ZhihuSpider()
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    friends = Friend.objects.all().exclude(zhihu_account='')
     for friend in friends:
         zhihus = spider.scrape_user_activities(friend.zhihu_ID)
-        # for zhihu in zhihus:
-        #     zhihu = zhihu.convert_format()
-        #     try:
-        #         content = ZhihuContent(pub_date            = zhihu['pub_date'],
-        #                                action_type         = zhihu['action_type'],
-        #                                target_user_name    = zhihu['target_user_name'],
-        #                                target_user_head    = zhihu['target_user_head'],
-        #                                target_user_url     = zhihu['target_user_url'],
-        #                                target_user_headline= zhihu['target_user_headline'],
-        #                                target_title        = zhihu['target_title'],
-        #                                target_title_url    = zhihu['target_title_url'],
-        #                                target_content      = zhihu['target_content'],
-        #                                target_content_url  = zhihu['target_content_url'],
-        #                                friend_id           = friend.id)
-        #         if zhihu['cover_image']:
-        #             content.cover_image = zhihu['cover_image']
-        #         content.save()
-        #     except: pass
+        for zhihu in zhihus:
+            zhihu = zhihu.convert_format()
+            try:
+                vector = lab.text_preprocess(zhihu['target_content'])
+                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
+                content = ZhihuContent(pub_date            = zhihu['pub_date'],
+                                       action_type         = zhihu['action_type'],
+                                       target_user_name    = zhihu['target_user_name'],
+                                       target_user_head    = zhihu['target_user_head'],
+                                       target_user_url     = zhihu['target_user_url'],
+                                       target_user_headline= zhihu['target_user_headline'],
+                                       target_title        = zhihu['target_title'],
+                                       target_title_url    = zhihu['target_title_url'],
+                                       target_content      = zhihu['target_content'],
+                                       target_content_url  = zhihu['target_content_url'],
+                                       topic               = topic_name[int(p_label[0]) - 1],
+                                       friend_id           = friend.id)
+                if zhihu['cover_image']:
+                    content.cover_image = zhihu['cover_image']
+                content.save()
+            except: pass
 
 
 @periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
 def tieba_spider():
-    friends = Friend.objects.all().exclude(tieba_account='')
     spider = TiebaSpider()
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    friends = Friend.objects.all().exclude(tieba_account='')
     for friend in friends:
-        tiebas = spider.scrape_user_posts(friend.tieba_ID)
-        # for tieba in tiebas:
-        #     tieba = tieba.convert_format()
-        #     try:
-        #         content = TiebaContent(pub_date     = tieba['pub_date'],
-        #                                forum        = tieba['forum'],
-        #                                forum_url    = tieba['forum_url'],
-        #                                title        = tieba['title'],
-        #                                title_url    = tieba['title_url'],
-        #                                content      = tieba['content'],
-        #                                content_url  = tieba['content_url'],
-        #                                friend_id    = friend.id)
-        #         content.save()
-        #     except: pass
+        tiebas = spider.scrape_user_posts(friend.tieba_ID, 50)
+        for tieba in tiebas:
+            tieba = tieba.convert_format()
+            try:
+                vector = lab.text_preprocess(tieba['content'])
+                p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
+                content = TiebaContent(pub_date     = tieba['pub_date'],
+                                       forum        = tieba['forum'],
+                                       forum_url    = tieba['forum_url'],
+                                       title        = tieba['title'],
+                                       title_url    = tieba['title_url'],
+                                       content      = tieba['content'],
+                                       content_url  = tieba['content_url'],
+                                       topic        = topic_name[int(p_label[0]) - 1],
+                                       friend_id    = friend.id)
+                content.save()
+            except: pass
 
 
 @task(name="weibo_spider_friend")
@@ -164,10 +174,14 @@ def weibo_spider_friend(friend):
 @task(name="zhihu_spider_friend")
 def zhihu_spider_friend(friend):
     spider = ZhihuSpider()
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     zhihus = spider.scrape_user_activities(friend['zhihu_ID'])
     for zhihu in zhihus:
         zhihu = zhihu.convert_format()
         try:
+            vector = lab.text_preprocess(zhihu['target_content'])
+            p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
             content = ZhihuContent(pub_date             = zhihu['pub_date'],
                                    action_type          = zhihu['action_type'],
                                    target_user_name     = zhihu['target_user_name'],
@@ -178,6 +192,7 @@ def zhihu_spider_friend(friend):
                                    target_title_url     = zhihu['target_title_url'],
                                    target_content       = zhihu['target_content'],
                                    target_content_url   = zhihu['target_content_url'],
+                                   topic                = topic_name[int(p_label[0]) - 1],
                                    friend_id            = friend['id'])
             if zhihu['cover_image']:
                 content.cover_image = zhihu['cover_image']
@@ -188,17 +203,22 @@ def zhihu_spider_friend(friend):
 @task(name="tieba_spider_friend")
 def tieba_spider_friend(friend):
     spider = TiebaSpider()
-    tiebas = spider.scrape_user_posts(friend['tieba_ID'])
+    lab = Preprocess('', 1000)
+    svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    tiebas = spider.scrape_user_posts(friend['tieba_ID'], 50)
     for tieba in tiebas:
         tieba = tieba.convert_format()
         try:
-            content = TiebaContent(pub_date     =tieba['pub_date'],
-                                   forum        =tieba['forum'],
-                                   forum_url    =tieba['forum_url'],
-                                   title        =tieba['title'],
-                                   title_url    =tieba['title_url'],
-                                   content      =tieba['content'],
-                                   content_url  =tieba['content_url'],
-                                   friend_id    =friend['id'])
+            vector = lab.text_preprocess(tieba['content'])
+            p_label, _, _ = svm_predict([0, ], [vector, ], svm_model)
+            content = TiebaContent(pub_date     = tieba['pub_date'],
+                                   forum        = tieba['forum'],
+                                   forum_url    = tieba['forum_url'],
+                                   title        = tieba['title'],
+                                   title_url    = tieba['title_url'],
+                                   content      = tieba['content'],
+                                   content_url  = tieba['content_url'],
+                                   topic        = topic_name[int(p_label[0]) - 1],
+                                   friend_id    = friend['id'])
             content.save()
         except: pass

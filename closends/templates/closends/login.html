@@ -244,7 +244,7 @@
                     async: false,
                     success: function (ret) {
                         if (ret.status === "success")
-                            window.location = '{% url 'closends:content:index' %}';
+                            window.location = '{% url 'closends:content:index' page=1%}';
                         else {
                             $('#username_login_form').find('input').each(function () {
                                 $(this).val("");
@@ -266,7 +266,7 @@
                         async: false,
                         success: function (ret) {
                             if (ret.status === "success")
-                                window.location = '{% url 'closends:content:index' %}';
+                                window.location = '{% url 'closends:content:index' page=1%}';
                             else {
                                 $('#username_login_form').find('input').each(function () {
                                     $(this).val("");

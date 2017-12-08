@@ -64,10 +64,10 @@ class Friend(models.Model):
     def tieba_is_blank(self):
         return not self.tieba_account
 
-    group_choices = (('group_0', '未分组'), ('group_1', '同学'), ('group_2', '好友'), ('group_3', '家人'))
+    group_choices = (('未分组', '未分组'), ('同学', '同学'), ('好友', '好友'), ('家人', '家人'))
     nickname = models.CharField(max_length=30)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
-    group = models.CharField(max_length=10, default='group_0', choices=group_choices)
+    group = models.CharField(max_length=10, default='未分组', choices=group_choices)
 
     weibo_account = models.CharField(max_length=20, blank=True)
     weibo_ID = models.CharField(max_length=20, blank=True)

@@ -24,7 +24,7 @@
         .friend_list img{
             width: 15px;
             height: 15px;
-{#            display: none;#}
+            display: none;
         }
 
         .friend_list .row{
@@ -665,7 +665,7 @@
                 <div>
                     <div class="row">
                         <div class="col-md-1 display_group">
-                            <a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
+                            <a href="{% url 'closends:setting:get_group_friends' group=group.0 page=1 %}">
                             <button class="btn btn-primary">{{ group.1 }}</button>
                             </a>
                         </div>
@@ -678,7 +678,7 @@
                 <div>
                     <div class="row">
                         <div class="col-md-1 display_group">
-                            <a href="{% url 'closends:setting:get_group_friends' group.0 1 %}">
+                            <a href="{% url 'closends:setting:get_group_friends' group=group.0 page=1 %}">
                             <button class="btn">{{ group.1 }}</button>
                             </a>
                         </div>
@@ -742,7 +742,7 @@
                     data: {'group_name': group_name},
                     async: false,
                     success: function () {
-                        window.location.reload();
+                        window.location.href = '/closends/setting/friend_manage/get_group_friends/group-0/page-1/';
                     }//success
                 })//ajax
             });
@@ -760,7 +760,7 @@
                             window.location.reload();
                         }
                         else {
-                            //分组已存在
+                            alert("分组已存在！");
                         }
                     }//success
                 })//ajax
@@ -850,7 +850,7 @@
                                     <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
                                 </div>
                                 <div class="col-md-1">
-                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <p>{{ friend.tieba_is_blank }}</p>
                                     <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
                                 </div>
                             </div>
@@ -893,7 +893,7 @@
                                     <img class="zhihu_logo img-circle" src="/static/closends/img/zhihu.jpg">
                                 </div>
                                 <div class="col-md-1">
-                                    <p>{{ tieba.weibo_is_blank }}</p>
+                                    <p>{{ friend.tieba_is_blank }}</p>
                                     <img class="tieba_logo img-circle" src="/static/closends/img/tieba.jpg">
                                 </div>
                             </div>
