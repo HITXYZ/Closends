@@ -197,7 +197,7 @@ class WeiboSpider(SocialMediaSpider):
             logging.info('Scraping weibos of weibo user: %d...' % id)
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
-        total = result.get('cardlistInfo').get('total')
+        total = result.get('data').get('cardlistInfo').get('total')
         if number <= 0:
             need_count = 10
         else:
@@ -209,7 +209,7 @@ class WeiboSpider(SocialMediaSpider):
             position += 1
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
-            for card in result.get('cards'):
+            for card in result.get('data').get('cards'):
                 if finish_count >= need_count:
                     break
                 if card.get('card_type') != 9:
