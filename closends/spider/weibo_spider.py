@@ -211,74 +211,81 @@ class WeiboSpider(SocialMediaSpider):
         stop_flag = False
         while finish_count < need_count:
             position += 1
+            print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
             for card in result.get('data').get('cards'):
-                if finish_count >= need_count:
-                    break
-                if card.get('card_type') != 9:
-                    continue
-                res = requests.get(card.get('scheme'))
-                if '微博-出错了' in res.text:  # 该微博已被删除
-                    continue
-                time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
-                time_lst.pop(-2)  # 删除时区信息
-                time_str = ' '.join(time_lst)
-                time_value = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))  # 获取时间戳
-                if time_value > before:
-                    continue
-                if time_value < after:
-                    stop_flag = True
-                    break
-                mblog = card.get('mblog')
-                if 'retweeted_status' in mblog.keys():  # 转发微博
-                    item = WeiboRepostContentItem()
-                    retweet = mblog.get('retweeted_status')
-                    item.content = retweet.get('text')
-                    item.source_id = retweet.get('bid')
-                    if 'pics' in retweet.keys():
-                        for pic in retweet.get('pics'):
-                            item.pictures.append(pic.get('url'))
-                    if 'page_info' in retweet.keys():
-                        item.media_pic = retweet.get('page_info').get('page_pic').get('url')
-                        page_url = retweet.get('page_info').get('page_url')
-                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
-                            article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
-                            item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
+                try:
+                    if finish_count >= need_count:
+                        break
+                    if card.get('card_type') != 9:
+                        continue
+                    res = requests.get(card.get('scheme'))
+                    if '微博-出错了' in res.text:  # 该微博已被删除
+                        continue
+                    time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
+                    time_lst.pop(-2)  # 删除时区信息
+                    time_str = ' '.join(time_lst)
+                    time_value = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))  # 获取时间戳
+                    mblog = card.get('mblog')
+                    if time_value > before:
+                        continue
+                    if time_value < after:
+                        if not mblog.get('isTop'):  # 置顶微博有可能造成异常
+                            stop_flag = True
+                            break
                         else:
-                            item.media_url = page_url
-                    if retweet.get('user') is not None:  # 原微博可能已被删除
-                        item.source_url = 'https://weibo.com/{uid}/{bid}'.format(uid=retweet.get('user').get('id'),
-                                                                                 bid=item.source_id)
-                        item.source_owner.id = retweet.get('user').get('id')
-                        item.source_owner.name = retweet.get('user').get('screen_name')
-                        item.source_owner.avatar_url = retweet.get('user').get('profile_image_url')
-                        item.source_owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.source_owner.id)
-                    item.repost_reason = mblog.get('text')
-                else:
-                    item = WeiboContentItem()
-                    item.content = mblog.get('text')
-                    if 'pics' in mblog.keys():
-                        for pic in mblog.get('pics'):
-                            item.pictures.append(pic.get('url'))
-                    if 'page_info' in mblog.keys():
-                        item.media_pic = mblog.get('page_info').get('page_pic').get('url')
-                        page_url = mblog.get('page_info').get('page_url')
-                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
-                            article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
-                            item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
-                        else:
-                            item.media_url = page_url
-                item.id = mblog.get('bid')
-                item.owner.id = mblog.get('user').get('id')
-                item.owner.name = mblog.get('user').get('screen_name')
-                item.owner.avatar_url = mblog.get('user').get('profile_image_url')
-                item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
-                item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                item.time = time_value
-                item.source = mblog.get('source')
-                weibos.append(item)
-                finish_count += 1
+                            continue
+                    if 'retweeted_status' in mblog.keys():  # 转发微博
+                        item = WeiboRepostContentItem()
+                        retweet = mblog.get('retweeted_status')
+                        item.content = retweet.get('text')
+                        item.source_id = retweet.get('bid')
+                        if 'pics' in retweet.keys():
+                            for pic in retweet.get('pics'):
+                                item.pictures.append(pic.get('url'))
+                        if 'page_info' in retweet.keys():
+                            item.media_pic = retweet.get('page_info').get('page_pic').get('url')
+                            page_url = retweet.get('page_info').get('page_url')
+                            if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
+                                article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
+                                item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
+                            else:
+                                item.media_url = page_url
+                        if retweet.get('user') is not None:  # 原微博可能已被删除
+                            item.source_url = 'https://weibo.com/{uid}/{bid}'.format(uid=retweet.get('user').get('id'),
+                                                                                     bid=item.source_id)
+                            item.source_owner.id = retweet.get('user').get('id')
+                            item.source_owner.name = retweet.get('user').get('screen_name')
+                            item.source_owner.avatar_url = retweet.get('user').get('profile_image_url')
+                            item.source_owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.source_owner.id)
+                        item.repost_reason = mblog.get('text')
+                    else:
+                        item = WeiboContentItem()
+                        item.content = mblog.get('text')
+                        if 'pics' in mblog.keys():
+                            for pic in mblog.get('pics'):
+                                item.pictures.append(pic.get('url'))
+                        if 'page_info' in mblog.keys():
+                            item.media_pic = mblog.get('page_info').get('page_pic').get('url')
+                            page_url = mblog.get('page_info').get('page_url')
+                            if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
+                                article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
+                                item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
+                            else:
+                                item.media_url = page_url
+                    item.id = mblog.get('bid')
+                    item.owner.id = mblog.get('user').get('id')
+                    item.owner.name = mblog.get('user').get('screen_name')
+                    item.owner.avatar_url = mblog.get('user').get('profile_image_url')
+                    item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
+                    item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
+                    item.time = time_value
+                    item.source = mblog.get('source')
+                    weibos.append(item)
+                    finish_count += 1
+                except AttributeError:
+                    continue
             if finish_count >= need_count or stop_flag:
                 break
         if log_weibo:
@@ -288,13 +295,13 @@ class WeiboSpider(SocialMediaSpider):
 
 
 if __name__ == '__main__':
-    # time_1 = time.time()
-    time_1 =time.mktime(time.strptime('2017-12-4 12:00:00', '%Y-%m-%d %H:%M:%S'))
-    time_2 =time.mktime(time.strptime('2017-12-1 12:00:00', '%Y-%m-%d %H:%M:%S'))
+    time_1 = time.time()
+    # time_1 =time.mktime(time.strptime('2017-12-4 12:00:00', '%Y-%m-%d %H:%M:%S'))
+    time_2 =time.mktime(time.strptime('2017-12-2 12:00:00', '%Y-%m-%d %H:%M:%S'))
 
     spider = WeiboSpider()
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
-    weibos = spider.scrape_user_weibo(1618051664, before=time_1, after=time_2, number=50)
+    weibos = spider.scrape_user_weibo(1618051664, before=time_1, after=time_2, number=1000)
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
 
     print(len(weibos))

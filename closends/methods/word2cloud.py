@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 def generate_cloud(word_num):
     """generate wordcloud with the given word_num"""
 
-    with codecs.open(settings.BASE_DIR + '/closends/word2cloud/words.txt', 'r', encoding='utf8') as fr:
+    with codecs.open(settings.BASE_DIR + '/closends/methods/words.txt', 'r', encoding='utf8') as fr:
         words = fr.read()
 
     word_list = []
@@ -28,7 +28,7 @@ def generate_cloud(word_num):
     )
 
     word_cloud = cloud.generate(text)  # 产生词云
-    cloud.to_file(settings.BASE_DIR + '/static/closends/wordcloud/cloud.jpg')
+    cloud.to_file(settings.BASE_DIR + '/static/closends/bar_graph/cloud.jpg')
     return word_cloud
 
 

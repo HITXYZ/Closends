@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 
 import time
+import codecs
 from libsvm.svmutil import *
 from celery.task import task
 from celery.task import periodic_task
@@ -25,7 +26,13 @@ def weibo_spider():
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
     for friend in friends:
-        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
+        try:
+            weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
+        except:
+            with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            continue
         for weibo in weibos:
             weibo = weibo.convert_format()
             try:
@@ -78,7 +85,13 @@ def zhihu_spider():
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(zhihu_account='')
     for friend in friends:
-        zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
+        try:
+            zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
+        except:
+            with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            continue
         for zhihu in zhihus:
             zhihu = zhihu.convert_format()
             try:
@@ -109,7 +122,13 @@ def tieba_spider():
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(tieba_account='')
     for friend in friends:
-        tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
+        try:
+            tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
+        except:
+            with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieba_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            continue
         for tieba in tiebas:
             tieba = tieba.convert_format()
             try:
@@ -133,7 +152,13 @@ def weibo_spider_friend(friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
+    try:
+        weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
+    except:
+        with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
+            current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
+        return
     for weibo in weibos:
         weibo = weibo.convert_format()
         try:
@@ -184,7 +209,13 @@ def zhihu_spider_friend(friend):
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
+    try:
+        zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
+    except:
+        with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
+            current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
+        return
     for zhihu in zhihus:
         zhihu = zhihu.convert_format()
         try:
@@ -213,7 +244,13 @@ def tieba_spider_friend(friend):
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
+    try:
+        tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
+    except:
+        with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
+            current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieb_ID + '\t' + str(time_1) + '\t' + str(time_2))
+        return
     for tieba in tiebas:
         tieba = tieba.convert_format()
         try:
@@ -255,7 +292,7 @@ def cached_query_all(username):
         all_contents += zhihu_contents
         all_contents += tieba_contents
 
-    # all_contents.sort(key= lambda content: content.pub_date)
+    all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_paginator', paginator, 5 * 60)
 
@@ -284,7 +321,7 @@ def cached_query_platform(username, platform):
         for friend in friends:
             all_contents += friend.tiebacontent_set.all()
 
-    # all_contents.sort(key=lambda content: content.pub_date)
+    all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_' + platform + '_paginator', paginator, 5 * 60)
 
@@ -314,7 +351,7 @@ def cached_query_group(username, group):
             all_contents += zhihu_contents
             all_contents += tieba_contents
 
-    # all_contents.sort(key=lambda content: content.pub_date)
+    all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_' + group + '_paginator', paginator, 5 * 60)
 
@@ -341,6 +378,6 @@ def cached_query_topic(username, topic):
         all_contents += zhihu_contents
         all_contents += tieba_contents
 
-    # all_contents.sort(key=lambda content: content.pub_date)
+    all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_' + topic + '_paginator', paginator, 5 * 60)

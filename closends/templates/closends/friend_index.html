@@ -17,7 +17,6 @@
 
         .left_sidebar {
             width: 400px;
-{#            height: 800px;#}
             margin-left: 15.5%;
             margin-top: 2%;
             padding-bottom: 1%;
@@ -61,7 +60,7 @@
     <style>
         .liveness {
             width: 100%;
-            height: 250px;
+            height: 280px;
             margin-top: 3%;
             background-color: whitesmoke;
         }
@@ -74,6 +73,12 @@
         .liveness .row .col-md-1{
             width: 60px;
             margin-left: 5px;
+        }
+
+        .liveness .liveness_contents img{
+            margin-left: -5%;
+            width: 110%;
+            height: 120%;
         }
 
         #total_liveness, #weibo_liveness, #zhihu_liveness, #tieba_liveness{
@@ -146,7 +151,7 @@
         }
 
         .WB_friend_info .WB_from {
-            width: 180px;
+            width: 200px;
             margin-top: 10px;
             margin-left: -32px;
             font-size: 16px;
@@ -242,15 +247,9 @@
         }
 
         .friend_info .col-md-3 {
-            width: 180px;
+            width: 200px;
             margin-top: 10px;
             margin-left: -35px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .friend_info .col-md-4 {
-            margin-top: 8px;
             font-size: 16px;
             font-weight: bold;
         }
@@ -263,30 +262,9 @@
             margin-top: -10px;
         }
 
-        .zhihu_content .author_info {
-            padding-left: 80px;
-        }
-
-        .zhihu_content .author_info .author_info_link {
-            margin-top: 5px;
-            margin-left: -20px;
-        }
-
         .zhihu_content .author_info .author_info_link img {
             width: 25px;
             height: 25px;
-        }
-
-        .zhihu_content .author_info .author_info_head {
-            margin-top: 5px;
-            font-size: 16px;
-        }
-
-        .zhihu_content .author_info .author_info_text {
-            margin-top: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: "Consolas", sans-serif;
         }
 
         .zhihu_content .topic {
@@ -351,7 +329,7 @@
         }
 
         .tieba_friend_info .tieba_from {
-            width: 180px;
+            width: 240px;
             margin-top: 10px;
             margin-left: -100px;
             font-size: 16px;
@@ -424,10 +402,18 @@
                 </div>
 
                 <div class="liveness_contents">
-                    <div id="total_liveness">total</div>
-                    <div id="weibo_liveness">weibo</div>
-                    <div id="zhihu_liveness">zhihu</div>
-                    <div id="tieba_liveness">tieba</div>
+                    <div id="total_liveness">
+                        <img src="/static/closends/bar_graph/total_liveness.jpg">
+                    </div>
+                    <div id="weibo_liveness">
+                        <img src="/static/closends/bar_graph/weibo_liveness.jpg">
+                    </div>
+                    <div id="zhihu_liveness">
+                        <img src="/static/closends/bar_graph/zhihu_liveness.jpg">
+                    </div>
+                    <div id="tieba_liveness">
+                        <img src="/static/closends/bar_graph/tieba_liveness.jpg">
+                    </div>
                 </div>
             </div>
 
@@ -436,7 +422,7 @@
                     <img src="/static/closends/bar_graph/interest_bar.jpg">
                 </div>
                 <div class="interest_word_cloud">
-                    <img src="/static/closends/wordcloud/cloud.jpg">
+                    <img src="/static/closends/bar_graph/cloud.jpg">
                 </div>
             </div>
         </div>
@@ -457,7 +443,7 @@
                                     <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
                                 </div>
                                 <div class="col-md-3 WB_from">
-                                    <a href="javascript:void(0)">15:57</a>
+                                    <a href="javascript:void(0)">{{ content.str_time }}</a>
                                     <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
                                 </div>
                             </div>
@@ -505,7 +491,7 @@
                                     <a href="{{ content.friend_weibo_link }}" target="_blank">({{ content.friend_weibo_account }})</a>
                                 </div>
                                 <div class="col-md-3 WB_from">
-                                    <a href="javascript:void(0)">15:57</a>
+                                    <a href="javascript:void(0)">{{ content.str_time }}</a>
                                     <a href="{{ content.src_url }}" class="weibo_link" target="_blank">查看原文</a>
                                 </div>
                             </div>
@@ -570,7 +556,7 @@
                                 <a href="{{ content.friend_zhihu_link }}" target="_blank">({{ content.friend_zhihu_account }})</a>
                             </div>
                             <div class="col-md-3">
-                                <a href="javascript:void(0)">15:57</a>
+                                <a href="javascript:void(0)">{{ content.str_time }}</a>
                                 <a href="{{ content.target_content_url }}" class="zhihu_link" target="_blank">查看原文</a>
                             </div>
                             <div class="col-md-3">
@@ -625,7 +611,7 @@
                                 <a href="{% url 'closends:friend_index' friend=content.friend_nickname page=1 %}">{{ content.friend_nickname }}</a>
                             </div>
                             <div class="col-md-3 tieba_from ">
-                                <a href="javascript:void(0)">15:57</a>
+                                <a href="javascript:void(0)">{{ content.str_time }}</a>
                                 <a href="{{ content.content_url }}" class="tieba_link" target="_blank">查看原文</a>
                             </div>
                         </div>

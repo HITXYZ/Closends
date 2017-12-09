@@ -5,8 +5,10 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from closends.word2cloud.word2cloud import generate_cloud
+
 from closends.methods.draw_bar import draw_bar
+from closends.methods.draw_line import draw_liveness
+from closends.methods.word2cloud import generate_cloud
 
 
 @csrf_exempt
@@ -14,12 +16,16 @@ from closends.methods.draw_bar import draw_bar
 def friend_index(request, friend, page=1):
     user = request.user.userinfo
     friend_item = user.friend_set.filter(nickname=friend)[0]
-    all_contents = []
-    all_contents += friend_item.weibocontent_set.all()
-    all_contents += friend_item.zhihucontent_set.all()
-    all_contents += friend_item.tiebacontent_set.all()
 
-    # generate wordcloud
+    weibo_contents = friend_item.weibocontent_set.all()
+    zhihu_contents = friend_item.zhihucontent_set.all()
+    tieba_contents = friend_item.tiebacontent_set.all()
+    all_contents = []
+    all_contents += weibo_contents
+    all_contents += zhihu_contents
+    all_contents += tieba_contents
+    all_contents.sort(key=lambda content: content.pub_date, reverse=True)
+
     word_num = {}
     for content in all_contents:
         topic = content.topic
@@ -28,15 +34,10 @@ def friend_index(request, friend, page=1):
         else:
             word_num[topic] += 1
     word_num = sorted(word_num.items(), key=operator.itemgetter(1, 0), reverse=True)
+
+    draw_bar(word_num)
     generate_cloud(word_num)
-
-    # draw bar of first five interest
-    labels = [label for label, _ in word_num[:5]]
-    quants = [num for _, num in word_num[:5]]
-    quants = [num / sum(quants) for num in quants]
-    draw_bar(labels, quants)
-
-    # all_contents.sort(key=lambda content: content.pub_date)
+    draw_liveness(weibo_contents, zhihu_contents, tieba_contents)
 
     paginator = Paginator(all_contents, 20)
     try:

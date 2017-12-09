@@ -112,6 +112,9 @@ class WeiboContent(models.Model):
     def platform(self):
         return 'weibo'
 
+    def str_time(self):
+        return str(self.pub_date)[5:-3]
+
     pub_date = models.DateTimeField(default=timezone.now)
     src_url = models.URLField(max_length=500)
     content = models.TextField()
@@ -163,6 +166,9 @@ class ZhihuContent(models.Model):
     def platform(self):
         return 'zhihu'
 
+    def str_time(self):
+        return str(self.pub_date)[5:-3]
+
     pub_date = models.DateTimeField(default=timezone.now)
     action_type = models.CharField(max_length=10)
 
@@ -204,6 +210,9 @@ class TiebaContent(models.Model):
 
     def platform(self):
         return 'tieba'
+
+    def str_time(self):
+        return str(self.pub_date)[5:-3]
 
     pub_date = models.DateTimeField(default=timezone.now)
 

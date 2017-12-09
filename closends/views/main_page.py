@@ -53,7 +53,7 @@ def query_all(request, page=1):
             all_contents += zhihu_contents
             all_contents += tieba_contents
 
-        # all_contents.sort(key= lambda content: content.pub_date)
+        all_contents.sort(key= lambda content: content.pub_date, reverse=True)
         paginator = Paginator(all_contents, 20)
 
     try:
@@ -102,7 +102,7 @@ def query_by_platform(request, platform, page=1):
             for friend in friends:
                 all_contents += friend.tiebacontent_set.all()
 
-        # all_contents.sort(key=lambda content: content.pub_date)
+        all_contents.sort(key=lambda content: content.pub_date, reverse=True)
         paginator = Paginator(all_contents, 20)
 
     try:
@@ -151,7 +151,7 @@ def query_by_group(request, group, page=1):
                 all_contents += zhihu_contents
                 all_contents += tieba_contents
 
-        # all_contents.sort(key=lambda content: content.pub_date)
+        all_contents.sort(key=lambda content: content.pub_date, reverse=True)
         paginator = Paginator(all_contents, 20)
 
     try:
@@ -200,7 +200,7 @@ def query_by_topic(request, topic, page=1):
             all_contents += zhihu_contents
             all_contents += tieba_contents
 
-        # all_contents.sort(key=lambda content: content.pub_date)
+        all_contents.sort(key=lambda content: content.pub_date, reverse=True)
         paginator = Paginator(all_contents, 20)
 
     try:

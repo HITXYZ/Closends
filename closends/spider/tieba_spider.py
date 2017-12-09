@@ -81,26 +81,24 @@ class TiebaSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if not isinstance(number, int):
             raise MethodParamError("Parameter \'number\' isn\'t an instance of type \'int\'!")
-        if before is None:
-            before = int(time.time())
-        if after is None:
-            after = 0
+        before = int(time.time()) if before is None else int(before)
+        after = 0 if after is None else int(after)
         if log_tieba:
             logging.info('Scraping posts of tieba user: %s...' % user)
-        response = requests.get(tieba_user_profile_url.format(user=quote(user)))
-        bs = BeautifulSoup(response.text, 'lxml')
-        post = bs.find('span', {'class': 'user_name'}).find_all('span')[4].get_text()
-        total = int(re.search(r'发贴:(\d+)', post).group(1))
         if number <= 0:
             number = 10
-        else:
-            number = min((number, total))
         finish = 0
         posts = []
         page = 1
         stop_flag = False
         while finish < number:
-            response = requests.get(tieba_user_post_url.format(user=user, page=page))
+            print(tieba_user_post_url.format(user=user, page=page))
+            while True:
+                response = requests.get(tieba_user_post_url.format(user=user, page=page))
+                if response.text.startswith('<!DOCTYPE html>'):  # 得到贴吧404界面
+                    time.sleep(3)
+                else:
+                    break
             result = response.json()
             for thread in result.get('data').get('thread_list'):
                 if finish >= number:
