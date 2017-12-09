@@ -190,24 +190,30 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_followers[user] = fans
         return fans
 
-    def scrape_user_activities(self, user, after=None, number=1):
+    def scrape_user_activities(self, user, before=None, after=None, number=10):
         if not isinstance(user, str):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
+        if before is None:
+            before = int(time.time())
         if after is None:
-            after = int(time.time())
+            after = 0
         if number <= 0:
-            number = 1
+            number = 10
         if log_zhihu:
             logging.info('Scraping activities of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=after), headers=zhihu_header)
+        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=before), headers=zhihu_header)
         result = response.json()
         activities = []
+        stop_flag = False
         while len(activities) < number:
             for data in result.get('data'):
                 item = ZhihuActivityItem()
                 item.id = int(data.get('id'))
+                if item.id < after:
+                    stop_flag = True
+                    break
                 item.verb = data.get('verb')
                 item.create_time = data.get('created_time')
                 item.actor = data.get('actor').get('url_token')
@@ -269,7 +275,7 @@ class ZhihuSpider(SocialMediaSpider):
                 activities.append(item)
                 if len(activities) >= number:
                     break
-            if len(activities) >= number or result.get('paging').get('is_end'):
+            if len(activities) >= number or result.get('paging').get('is_end') or stop_flag:
                 break
             response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=activities[-1].id), headers=zhihu_header)
             result = response.json()
