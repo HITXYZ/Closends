@@ -6,20 +6,6 @@ log_zhihu = False  # 是否需要记录知乎爬虫日志
 log_path = 'D:\PyCharm\PycharmProjects\SocialMediaScraper\logs'  # 日志文件夹路径
 
 # weibo configurations
-weibo_header = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393',
-    'Cookie': 'YF-Page-G0=4c69ce1a525bc6d50f53626826cd2894; '
-              'SUB=_2AkMtdJbwf8NxqwJRmPEWyWPkb412yg7EieKbKGcrJRMxHRl-yT83qmgQtRB6BvS4H2vJceb0gNQg2H61tEaA8CXXIiEh; '
-              'SUBP=0033WrSXqPxfM72-Ws9jqgMF55529P9D9WhTDr1Pqg-wN34gv6-PEWLS; '
-              '_s_tentry=passport.weibo.com; '
-              'Apache=3933605227673.2046.1512577494548; '
-              'SINAGLOBAL=3933605227673.2046.1512577494548; '
-              'ULV=1512577494658:1:1:1:3933605227673.2046.1512577494548:; '
-              'YF-Ugrow-G0=b02489d329584fca03ad6347fc915997; '
-              'YF-V5-G0=c998e7c570da2f8537944063e27af755; '
-              'wb_cusLike_3655689037=N',
-}
 weibo_user_profile_url = 'https://m.weibo.cn/api/container/getIndex?uid={uid1}&luicode=10000012&type=uid&value={uid2}'
 weibo_user_info_url = 'https://m.weibo.cn/api/container/getIndex?containerid=230283{uid1}_-_INFO' \
                       '&title=%25E5%259F%25BA%25E6%259C%25AC%25E4%25BF%25A1%25E6%2581%25AF&luicode=10000011' \
@@ -36,13 +22,13 @@ zhihu_header = {
                   '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     'authorization': 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20'
 }
-zhihu_user_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
-zhihu_follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?' \
-                    'include={include}&offset={offset}&limit={limit}'
-zhihu_followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?' \
-                      'include={include}&offset={offset}&limit={limit}'
-zhihu_activity_url = 'https://www.zhihu.com/api/v4/members/{user}/activities?' \
-                     'limit={limit}&after_id={after}&desktop=True'
+zhihu_user_info_url = 'https://www.zhihu.com/api/v4/members/{user}?include={include}'
+zhihu_user_follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?' \
+                         'include={include}&offset={offset}&limit={limit}'
+zhihu_user_followers_url = 'https://www.zhihu.com/api/v4/members/{user}/followers?' \
+                           'include={include}&offset={offset}&limit={limit}'
+zhihu_user_activity_url = 'https://www.zhihu.com/api/v4/members/{user}/activities?' \
+                          'limit={limit}&after_id={after}&desktop=True'
 zhihu_question_url = 'https://www.zhihu.com/api/v4/questions/{id}?include={include}'
 zhihu_user_questions_url = 'https://www.zhihu.com/api/v4/members/{user}' \
                            '/questions?offset={offset}&limit={limit}'

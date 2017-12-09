@@ -10,7 +10,7 @@ from closends.spider.base_exceptions import MethodParamError
 from closends.spider.weibo_items import WeiboUserItem, WeiboContentItem, WeiboRepostContentItem
 from closends.spider.base_spider import SocialMediaSpider
 from closends.spider.base_configs import weibo_user_fans_url, weibo_user_follow_url, weibo_user_info_url, \
-    weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo, weibo_header
+    weibo_user_profile_url, weibo_user_weibo_url, log_path, log_weibo
 
 if log_weibo:
     import logging
@@ -197,7 +197,7 @@ class WeiboSpider(SocialMediaSpider):
             logging.info('Scraping weibos of weibo user: %d...' % id)
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
-        total = result.get('cardlistInfo').get('total')
+        total = result.get('data').get('cardlistInfo').get('total')
         if number <= 0:
             need_count = 10
         else:
@@ -209,13 +209,13 @@ class WeiboSpider(SocialMediaSpider):
             position += 1
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
-            for card in result.get('cards'):
+            for card in result.get('data').get('cards'):
                 if finish_count >= need_count:
                     break
                 if card.get('card_type') != 9:
                     continue
                 mblog = card.get('mblog')
-                if 'retweeted_status' in mblog.keys():  # 转发微博
+                if 'retweeted_status' in mblog.keys():      # 转发微博
                     item = WeiboRepostContentItem()
                     retweet = mblog.get('retweeted_status')
                     item.content = retweet.get('text')
@@ -226,12 +226,12 @@ class WeiboSpider(SocialMediaSpider):
                     if 'page_info' in retweet.keys():
                         item.media_pic = retweet.get('page_info').get('page_pic').get('url')
                         page_url = retweet.get('page_info').get('page_url')
-                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):  # 移动端文章链接打不开，将其换为PC端链接
+                        if re.match(r'http://media\.weibo\.cn/article\?.*id=\d+', page_url):    # 移动端文章链接打不开，将其换为PC端链接
                             article_id = re.search(r'http://media\.weibo\.cn/article\?.*id=(\d+)', page_url).group(1)
                             item.media_url = 'https://weibo.com/ttarticle/p/show?id={id}'.format(id=article_id)
                         else:
                             item.media_url = page_url
-                    if retweet.get('user') is not None:  # 原微博可能已被删除
+                    if retweet.get('user') is not None:     # 原微博可能已被删除
                         item.source_url = 'https://weibo.com/{uid}/{bid}'.format(uid=retweet.get('user').get('id'),
                                                                                  bid=item.source_id)
                         item.source_owner.id = retweet.get('user').get('id')
@@ -258,10 +258,15 @@ class WeiboSpider(SocialMediaSpider):
                 item.owner.name = mblog.get('user').get('screen_name')
                 item.owner.avatar_url = mblog.get('user').get('profile_image_url')
                 item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
-                # item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                # response = requests.get(item.url, headers=weibo_header)
-                # item.time = int(re.search(r'date=\\\"(\d+)\\\"', response.text).group(1)[:-3])
-                item.time = 1381419600
+                item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
+                res = requests.get(card.get('scheme'))
+                if '微博-出错了' in res.text:        # 该微博已被删除
+                    continue
+                else:
+                    time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
+                    time_lst.pop(-2)        # 删除时区信息
+                    time_str = ' '.join(time_lst)
+                    item.time = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))    # 获取时间戳
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
@@ -274,8 +279,9 @@ class WeiboSpider(SocialMediaSpider):
 if __name__ == '__main__':
     spider = WeiboSpider()
     import time
+
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
-    weibos = spider.scrape_user_weibo(1747104004, 20)
+    weibos = spider.scrape_user_weibo(1618051664, 20)
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
     for weibo in weibos:
         print(weibo)

@@ -4,6 +4,7 @@
 @desc: Scraper for zhihu.
 """
 
+import re
 import csv
 import time
 import requests
@@ -11,10 +12,10 @@ from bs4 import BeautifulSoup
 from closends.spider.zhihu_items import *
 from closends.spider.base_exceptions import MethodParamError
 from closends.spider.base_spider import SocialMediaSpider
-from closends.spider.base_configs import zhihu_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
-    zhihu_followers_url, zhihu_follows_query, zhihu_follows_url, zhihu_header, zhihu_question_answers_url, \
+from closends.spider.base_configs import zhihu_user_activity_url, zhihu_answer_query, zhihu_answer_url, zhihu_followers_query, \
+    zhihu_user_followers_url, zhihu_follows_query, zhihu_user_follows_url, zhihu_header, zhihu_question_answers_url, \
     zhihu_question_query, zhihu_question_url, zhihu_user_answers_url, zhihu_user_query, zhihu_user_questions_url, \
-    zhihu_user_url, log_path, log_zhihu
+    zhihu_user_info_url, log_path, log_zhihu
 
 if log_zhihu:
     import logging
@@ -41,13 +42,13 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if log_zhihu:
             logging.info('Scraping info of zhihu user: %s...' % user)
-        response = requests.get(zhihu_user_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
-        if response.status_code == 404:  # 用户不存在或账号被封禁
+        response = requests.get(zhihu_user_info_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return None
         result = response.json()
-        if result.get('error') is not None:  # 身份未经过验证
+        if result.get('error') is not None: # 身份未经过验证
             if log_zhihu:
                 logging.warning('Your identity hasn\'t been confirmed.')
             return None
@@ -106,9 +107,9 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping follows of zhihu user: %s...' % user)
-        response = requests.get(zhihu_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
+        response = requests.get(zhihu_user_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
                                 headers=zhihu_header)
-        if response.status_code == 404:  # 用户不存在或账号被封禁
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -152,8 +153,8 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if log_zhihu:
             logging.info('Scraping followers of zhihu user: %s...' % user)
-        response = requests.get(zhihu_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:  # 用户不存在或账号被封禁
+        response = requests.get(zhihu_user_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -190,77 +191,95 @@ class ZhihuSpider(SocialMediaSpider):
         self.scraped_followers[user] = fans
         return fans
 
-    def scrape_user_activities(self, user):
+    def scrape_user_activities(self, user, before=None, after=None, number=10):
         if not isinstance(user, str):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
+        if not isinstance(number, int):
+            raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
+        if before is None:
+            before = int(time.time())
+        if after is None:
+            after = 0
+        if number <= 0:
+            number = 10
         if log_zhihu:
             logging.info('Scraping activities of zhihu user: %s...' % user)
-        timestamp = int(time.time())
-        response = requests.get(zhihu_activity_url.format(user=user, limit=10, after=timestamp), headers=zhihu_header)
+        response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=before), headers=zhihu_header)
         result = response.json()
         activities = []
-        for data in result.get('data'):
-            item = ZhihuActivityItem()
-            item.id = int(data.get('id'))
-            item.verb = data.get('verb')
-            item.create_time = time.ctime(data.get('created_time'))
-            item.actor = data.get('actor').get('url_token')
-            target = data.get('target')
-            if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':  # 关注了问题，添加了问题
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
-            elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':  # 赞同了回答，回答了问题
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('question').get('title')
-                item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('question').get('id'))
-                item.target_content = target.get('excerpt')
-                item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
-                    qid=target.get('question').get('id'), aid=target.get('id'))
-                item.thumbnail = target.get('thumbnail')
-            elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':  # 赞了文章，发表了文章
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
-                item.target_content = target.get('excerpt')
-                item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
-                item.thumbnail = target.get('image_url')
-            elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':  # 关注了话题，创建了话题
-                item.target_title = target.get('name')
-                item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
-                    id=target.get('id'))
-                item.thumbnail = target.get('avatar_url')
-            elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':  # 关注了收藏夹，创建了收藏夹
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_title = target.get('title')
-                item.target_title_url = 'https://zhuanlan.zhihu.com/{id}'.format(id=target.get('id'))
-                item.thumbnail = target.get('image_url')
-            elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':  # 发布了想法，关注了想法
-                item.target_user_name = target.get('author').get('name')
-                item.target_user_avatar = target.get('author').get('avatar_url')
-                item.target_user_headline = target.get('author').get('headline')
-                item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
-                    user=target.get('author').get('url_token'))
-                item.target_content = target.get('excerpt_new')
-                item.target_content_url = 'https://www.zhihu.com/pin/{id}'.format(id=target.get('id'))
-            item.action_text = data.get('action_text')
-            activities.append(item)
+        stop_flag = False
+        while len(activities) < number:
+            for data in result.get('data'):
+                item = ZhihuActivityItem()
+                item.id = int(data.get('id'))
+                if item.id < after:
+                    stop_flag = True
+                    break
+                item.verb = data.get('verb')
+                item.create_time = data.get('created_time')
+                item.actor = data.get('actor').get('url_token')
+                target = data.get('target')
+                if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
+                elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':     # 赞同了回答，回答了问题
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('question').get('title')
+                    item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('question').get('id'))
+                    item.target_content = target.get('excerpt')
+                    item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
+                        qid=target.get('question').get('id'), aid=target.get('id'))
+                    item.thumbnail = target.get('thumbnail')
+                elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':   # 赞了文章，发表了文章
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
+                    item.target_content = target.get('excerpt')
+                    item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
+                    item.thumbnail = target.get('image_url')
+                elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':    # 关注了话题，创建了话题
+                    item.target_title = target.get('name')
+                    item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
+                        id=target.get('id'))
+                    item.thumbnail = target.get('avatar_url')
+                elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':    # 关注了收藏夹，创建了收藏夹
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_title = target.get('title')
+                    item.target_title_url = 'https://zhuanlan.zhihu.com/{id}'.format(id=target.get('id'))
+                    item.thumbnail = target.get('image_url')
+                elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':      # 发布了想法，关注了想法
+                    item.target_user_name = target.get('author').get('name')
+                    item.target_user_avatar = target.get('author').get('avatar_url')
+                    item.target_user_headline = target.get('author').get('headline')
+                    item.target_user_url = 'https://www.zhihu.com/people/{user}/activities'.format(
+                        user=target.get('author').get('url_token'))
+                    item.target_content = target.get('excerpt_new')
+                    item.target_content_url = 'https://www.zhihu.com/pin/{id}'.format(id=target.get('id'))
+                item.action_text = data.get('action_text')
+                activities.append(item)
+                if len(activities) >= number:
+                    break
+            if len(activities) >= number or result.get('paging').get('is_end') or stop_flag:
+                break
+            response = requests.get(zhihu_user_activity_url.format(user=user, limit=10, after=activities[-1].id), headers=zhihu_header)
+            result = response.json()
         if log_zhihu:
             logging.info('Succeed in scraping activities of zhihu user: %s.' % user)
         return activities
@@ -279,8 +298,8 @@ class ZhihuSpider(SocialMediaSpider):
         item = ZhihuQuestionItem()
         item.id = result.get('id')
         item.title = result.get('title')
-        item.create_time = time.ctime(result.get('created'))
-        item.update_time = time.ctime(result.get('updated_time'))
+        item.create_time = result.get('created')
+        item.update_time = result.get('updated_time')
         page = requests.get('https://www.zhihu.com/question/%d' % id, headers=zhihu_header)
         bs = BeautifulSoup(page.text, 'lxml')
         content_div = bs.find('div', {'class': 'QuestionRichText'})
@@ -306,7 +325,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping questions of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_questions_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:  # 用户不存在或账号被封禁
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -360,8 +379,8 @@ class ZhihuSpider(SocialMediaSpider):
         item.id = result.get('id')
         item.author = result.get('author').get('name')
         item.question_id = result.get('question').get('id')
-        item.create_time = time.ctime(result.get('created_time'))
-        item.update_time = time.ctime(result.get('updated_time'))
+        item.create_time = result.get('created_time')
+        item.update_time = result.get('updated_time')
         page = requests.get('https://www.zhihu.com/question/%d/answer/%d' % (item.question_id, id), headers=zhihu_header)
         bs = BeautifulSoup(page.text, 'lxml')
         content_span = bs.find('div', {'class': 'RichContent'}).div.span
@@ -382,7 +401,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping answers of question: %d...' % id)
         response = requests.get(zhihu_question_answers_url.format(id=id, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:  # 问题不存在
+        if response.status_code == 404:     # 问题不存在
             if log_zhihu:
                 logging.warning('404 error. The question doesn\'t exist.')
             return []
@@ -427,7 +446,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping answers of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_answers_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:  # 用户不存在或账号被封禁
+        if response.status_code == 404:     # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -471,7 +490,7 @@ class ZhihuSpider(SocialMediaSpider):
             if log_zhihu:
                 logging.warning('Haven\'t scraped info of any zhihu user.')
             return
-        if user is None:  # 保存所有爬取过的用户信息
+        if user is None:    # 保存所有爬取过的用户信息
             csv_file = open(directory + 'all-user-info.csv', 'w')
             writer = csv.writer(csv_file)
             writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
@@ -597,7 +616,7 @@ class ZhihuSpider(SocialMediaSpider):
 
 if __name__ == '__main__':
     spider = ZhihuSpider()
-    activities = spider.scrape_user_activities('kaifulee')
+    activities = spider.scrape_user_activities('kaifulee', number=20)
     for activity in activities:
         print(activity)
         print(activity.convert_format())

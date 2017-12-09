@@ -1,5 +1,9 @@
-from libsvm.svmutil import *
 from django.conf import settings
+from django.core.cache import cache
+from django.core.paginator import Paginator
+from django.contrib.contenttypes.models import ContentType
+
+from libsvm.svmutil import *
 from celery.task import task
 from celery.task import periodic_task
 from celery.schedules import crontab
@@ -7,7 +11,7 @@ from closends.svm.svm import Preprocess, topic_name
 from closends.spider.weibo_spider import WeiboSpider
 from closends.spider.zhihu_spider import ZhihuSpider
 from closends.spider.tieba_spider import TiebaSpider
-from .models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image
+from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
 
 @periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
@@ -222,3 +226,116 @@ def tieba_spider_friend(friend):
                                    friend_id    = friend['id'])
             content.save()
         except: pass
+
+
+@task(name="cache_query_all")
+def cached_query_all(username):
+    user = User.objects.get(username=username).userinfo
+    friends = user.friend_set.all()
+
+    all_contents = []
+    for friend in friends:
+        weibo_contents = friend.weibocontent_set.all()
+        zhihu_contents = friend.zhihucontent_set.all()
+        tieba_contents = friend.tiebacontent_set.all()
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in weibo_contents:
+            if not content.is_repost:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+
+        all_contents += weibo_contents
+        all_contents += zhihu_contents
+        all_contents += tieba_contents
+
+    # all_contents.sort(key= lambda content: content.pub_date)
+    paginator = Paginator(all_contents, 20)
+    cache.set(username + '_paginator', paginator, 5 * 60)
+
+@task(name="cache_query_platform")
+def cached_query_platform(username, platform):
+    user = User.objects.get(username=username).userinfo
+    friends = user.friend_set.all()
+
+    all_contents = []
+    if platform == 'weibo':
+        for friend in friends:
+            all_contents += friend.weibocontent_set.all()
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in all_contents:
+            if not content.is_repost:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+    elif platform == 'zhihu':
+        for friend in friends:
+            all_contents += friend.zhihucontent_set.all()
+    elif platform == 'tieba':
+        for friend in friends:
+            all_contents += friend.tiebacontent_set.all()
+
+    # all_contents.sort(key=lambda content: content.pub_date)
+    paginator = Paginator(all_contents, 20)
+    cache.set(username + '_' + platform + '_paginator', paginator, 5 * 60)
+
+
+@task(name="cache_query_group")
+def cached_query_group(username, group):
+    user = User.objects.get(username=username).userinfo
+    friends = user.friend_set.all()
+    group_list = user.group_list.split(',')
+
+    all_contents = []
+    for friend in friends:
+        if friend.group == group_list[int(group)]:
+            weibo_contents = friend.weibocontent_set.all()
+            zhihu_contents = friend.zhihucontent_set.all()
+            tieba_contents = friend.tiebacontent_set.all()
+            content_type = ContentType.objects.get_for_model(WeiboContent)
+            for content in weibo_contents:
+                if not content.is_repost:
+                    if content.has_image:
+                        content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+                else:
+                    if content.origin_has_image:
+                        content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+
+            all_contents += weibo_contents
+            all_contents += zhihu_contents
+            all_contents += tieba_contents
+
+    # all_contents.sort(key=lambda content: content.pub_date)
+    paginator = Paginator(all_contents, 20)
+    cache.set(username + '_' + group + '_paginator', paginator, 5 * 60)
+
+
+@task(name="cache_query_topic")
+def cached_query_topic(username, topic):
+    user = User.objects.get(username=username).userinfo
+    friends = user.friend_set.all()
+
+    all_contents = []
+    for friend in friends:
+        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic_name[int(topic)]]
+        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic_name[int(topic)]]
+        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic_name[int(topic)]]
+        content_type = ContentType.objects.get_for_model(WeiboContent)
+        for content in weibo_contents:
+            if not content.is_repost:
+                if content.has_image:
+                    content.images = Image.objects.filter(content_type=content_type, object_id=content.id)
+            else:
+                if content.origin_has_image:
+                    content.origin_images = Image.objects.filter(content_type=content_type, object_id=content.id)
+        all_contents += weibo_contents
+        all_contents += zhihu_contents
+        all_contents += tieba_contents
+
+    # all_contents.sort(key=lambda content: content.pub_date)
+    paginator = Paginator(all_contents, 20)
+    cache.set(username + '_' + topic + '_paginator', paginator, 5 * 60)

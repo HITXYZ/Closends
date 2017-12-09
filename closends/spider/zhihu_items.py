@@ -4,7 +4,7 @@
 @desc: Items of zhihu scraping.
 """
 
-import re
+from time import strftime, localtime
 from closends.spider.base_item import SocialMediaItem
 
 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -184,7 +184,7 @@ class ZhihuActivityItem(ZhihuItem):
         string = ''
         string += 'ID: ' + str(self.id) + '\n'
         string += 'Verb: ' + str(self.verb) + '\n'
-        string += 'Create Time: ' + str(self.create_time) + '\n'
+        string += 'Create Time: ' + strftime("%Y-%m-%d %H:%M:%S", localtime(self.create_time)) + '\n'
         string += 'Actor: ' + str(self.actor) + '\n'
         string += 'Target User Name: ' + str(self.target_user_name) + '\n'
         string += 'Target User Avatar: ' + str(self.target_user_avatar) + '\n'
@@ -199,12 +199,9 @@ class ZhihuActivityItem(ZhihuItem):
         return string
 
     def convert_format(self):
-        time_str = re.split('\s+', self.create_time)
-        time_str[1] = str(months.index(time_str[1]))
-        pub_date = time_str[-1] + '-' + time_str[1] + '-' + time_str[2] + ' ' + time_str[-2]
 
         zhihu = {}
-        zhihu['pub_date'] = pub_date
+        zhihu['pub_date'] = strftime("%Y-%m-%d %H:%M:%S", localtime(self.create_time))
         zhihu['action_type'] = str(self.action_text)
 
         zhihu['target_user_name'] = str(self.target_user_name)
