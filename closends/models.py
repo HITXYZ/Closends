@@ -21,6 +21,7 @@ class UserInfo(models.Model):
     user = models.OneToOneField(User)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
     group_list = models.CharField(default='未分组', max_length=1024)
+    update_friend = models.BooleanField(default=False)
 
 
 class Website(models.Model):

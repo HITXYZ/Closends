@@ -51,6 +51,7 @@ def get_user_by_homepage(url):
     num = html.find_all('span')[-6].get_text()
     return user, [head, link, sex, age, num]
 
+
 if __name__ == '__main__':
     user, html = get_user_by_search('愛你沒法說')
     print(user, html)

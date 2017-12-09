@@ -190,7 +190,7 @@ def add_found_friend_weibo(request):
         friend.save()
 
         args = {'id': friend.id, 'weibo_ID': friend.weibo_ID}
-        weibo_spider_friend.delay(args)
+        weibo_spider_friend.delay(request.user.username, args)
         return HttpResponse("")
 
 
@@ -237,7 +237,7 @@ def add_found_friend_zhihu(request):
         friend.save()
 
         args = {'id': friend.id, 'zhihu_ID': friend.zhihu_ID}
-        zhihu_spider_friend.delay(args)
+        zhihu_spider_friend.delay(request.user.username, args)
         return HttpResponse("")
 
 
@@ -284,7 +284,7 @@ def add_found_friend_tieba(request):
         friend.save()
 
         args = {'id': friend.id, 'tieba_ID': friend.tieba_ID}
-        tieba_spider_friend.delay(args)
+        tieba_spider_friend.delay(request.user.username, args)
         return HttpResponse("")
 
 

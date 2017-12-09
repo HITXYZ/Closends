@@ -17,7 +17,7 @@ from closends.spider.tieba_spider import TiebaSpider
 from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name="weibo_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
@@ -91,7 +91,7 @@ def weibo_spider():
     print("爬取完毕, 微博更新了" + str(update_num) + '条动态!')
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name="zhihu_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
 def zhihu_spider():
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
@@ -143,7 +143,7 @@ def zhihu_spider():
     print("爬取完毕, 知乎更新了" + str(update_num) + '条动态!')
 
 
-@periodic_task(run_every=(crontab(minute='*/10')), name="tieba_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
 def tieba_spider():
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
@@ -191,7 +191,7 @@ def tieba_spider():
 
 
 @task(name="weibo_spider_friend")
-def weibo_spider_friend(friend):
+def weibo_spider_friend(username, friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
@@ -251,11 +251,16 @@ def weibo_spider_friend(friend):
                     for image_url in weibo['origin_images']:
                         Image(content_object=content, image_url=image_url).save()
         except: pass
+
+    user = User.objects.get(username=username).userinfo
+    user.update_friend = True
+    user.save()
+
     print("爬取完毕, 微博初次抓取了" + str(len(weibos)) + '条动态!')
 
 
 @task(name="zhihu_spider_friend")
-def zhihu_spider_friend(friend):
+def zhihu_spider_friend(username, friend):
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
@@ -293,11 +298,16 @@ def zhihu_spider_friend(friend):
                 content.cover_image = zhihu['cover_image']
             content.save()
         except: pass
+
+    user = User.objects.get(username=username).userinfo
+    user.update_friend = True
+    user.save()
+
     print("爬取完毕, 知乎初次抓取了" + str(len(zhihus)) + '条动态!')
 
 
 @task(name="tieba_spider_friend")
-def tieba_spider_friend(friend):
+def tieba_spider_friend(username, friend):
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
@@ -330,6 +340,11 @@ def tieba_spider_friend(friend):
                                    friend_id    = friend['id'])
             content.save()
         except: pass
+
+    user = User.objects.get(username=username).userinfo
+    user.update_friend = True
+    user.save()
+
     print("爬取完毕, 贴吧初次抓取了" + str(len(tiebas)) + '条动态!')
 
 

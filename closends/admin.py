@@ -55,6 +55,7 @@ class WeiboContentAdmin(admin.ModelAdmin):
     list_display = ('friend_nickname', 'pub_date', 'content_section', 'is_repost')
     list_filter = ['is_repost']
 
+
 class ZhihuContentAdmin(admin.ModelAdmin):
     pass
     # list_display = ('nickname', 'content', 'pub_date')

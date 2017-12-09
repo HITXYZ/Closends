@@ -10,7 +10,6 @@ from django.contrib.contenttypes.models import ContentType
 from ..models import WeiboContent, Image
 from ..tasks import cached_query_all, cached_query_platform, cached_query_group, cached_query_topic
 
-
 """
     动态主页模块：
         平台、分组、主题、时间、关键字查询
@@ -32,7 +31,11 @@ def query_all(request, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_paginator')
-    if not paginator:
+    if not paginator or user.update_friend:
+        if user.update_friend:
+            cache.delete(username + '_paginator')
+            user.update_friend = False
+            user.save()
         cached_query_all.delay(username)
 
         all_contents = []
@@ -80,7 +83,11 @@ def query_by_platform(request, platform, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_' + platform + '_paginator')
-    if not paginator:
+    if not paginator or user.update_friend:
+        if user.update_friend:
+            cache.delete(username + '_' + platform + '_paginator')
+            user.update_friend = False
+            user.save()
         cached_query_platform.delay(username, platform)
 
         all_contents = []
@@ -129,7 +136,11 @@ def query_by_group(request, group, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_' + group + '_paginator')
-    if not paginator:
+    if not paginator or user.update_friend:
+        if user.update_friend:
+            cache.delete(username + '_' + group + '_paginator')
+            user.update_friend = False
+            user.save()
         cached_query_group.delay(username, group)
 
         all_contents = []
@@ -180,7 +191,11 @@ def query_by_topic(request, topic, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_' + topic + '_paginator')
-    if not paginator:
+    if not paginator or user.update_friend:
+        if user.update_friend:
+            cache.delete(username + '_' + topic + '_paginator')
+            user.update_friend = False
+            user.save()
         cached_query_topic.delay(username, topic)
 
         all_contents = []
