@@ -92,7 +92,7 @@ class TiebaSpider(SocialMediaSpider):
         page = 1
         stop_flag = False
         while finish < number:
-            print(tieba_user_post_url.format(user=user, page=page))
+            # print(tieba_user_post_url.format(user=user, page=page))
             while True:
                 response = requests.get(tieba_user_post_url.format(user=user, page=page))
                 if response.text.startswith('<!DOCTYPE html>'):  # 得到贴吧404界面

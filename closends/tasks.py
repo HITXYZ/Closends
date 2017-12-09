@@ -5,11 +5,11 @@ from django.contrib.contenttypes.models import ContentType
 
 import time
 import codecs
-from datetime import datetime, timedelta
 from libsvm.svmutil import *
 from celery.task import task
 from celery.task import periodic_task
 from celery.schedules import crontab
+from datetime import datetime, timedelta
 from closends.svm.svm import Preprocess, topic_name
 from closends.spider.weibo_spider import WeiboSpider
 from closends.spider.zhihu_spider import ZhihuSpider
@@ -17,20 +17,24 @@ from closends.spider.tieba_spider import TiebaSpider
 from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
+@periodic_task(run_every=(crontab(minute='*/10')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
+
+    update_num = 0
     for friend in friends:
         try:
-            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+            start_time = friend.weibocontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
             start_time = datetime.now() + timedelta(days=-7)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
+
         try:
             weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
         except:
@@ -38,6 +42,8 @@ def weibo_spider():
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
             continue
+        update_num += len(weibos)
+
         for weibo in weibos:
             weibo = weibo.convert_format()
             try:
@@ -46,13 +52,13 @@ def weibo_spider():
                     vector = lab.text_preprocess(weibo['content'])
                     p_label, _, _ = svm_predict([0,], [vector,], svm_model)
                     content = WeiboContent(pub_date     = weibo['pub_date'],
-                                       src_url      = weibo['src_url'],
-                                       content      = weibo['content'],
-                                       is_repost    = weibo['is_repost'],
-                                       has_image    = has_image,
-                                       video_image  = weibo['video_image'],
-                                       topic        = topic_name[int(p_label[0])-1],
-                                       friend_id    = friend.id)
+                                           src_url      = weibo['src_url'],
+                                           content      = weibo['content'],
+                                           is_repost    = weibo['is_repost'],
+                                           has_image    = has_image,
+                                           video_image  = weibo['video_image'],
+                                           topic        = topic_name[int(p_label[0])-1],
+                                           friend_id    = friend.id)
                     content.save()
                     if has_image:
                         for image_url in weibo['images']:
@@ -82,21 +88,27 @@ def weibo_spider():
                             Image(content_object=content, image_url=image_url).save()
             except: pass
 
+    print("爬取完毕, 微博更新了" + str(update_num) + '条动态!')
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
+
+@periodic_task(run_every=(crontab(minute='*/10')), name="zhihu_spider")
 def zhihu_spider():
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(zhihu_account='')
+
+    update_num = 0
     for friend in friends:
         try:
-            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+            start_time = friend.zhihucontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
             start_time = datetime.now() + timedelta(days=-7)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
+
         try:
             zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
         except:
@@ -104,6 +116,8 @@ def zhihu_spider():
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
             continue
+        update_num += len(zhihus)
+
         for zhihu in zhihus:
             zhihu = zhihu.convert_format()
             try:
@@ -126,21 +140,27 @@ def zhihu_spider():
                 content.save()
             except: pass
 
+    print("爬取完毕, 知乎更新了" + str(update_num) + '条动态!')
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
+
+@periodic_task(run_every=(crontab(minute='*/10')), name="tieba_spider")
 def tieba_spider():
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(tieba_account='')
+
+    update_num = 0
     for friend in friends:
         try:
-            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+            start_time = friend.tiebacontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
             start_time = datetime.now() + timedelta(days=-7)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
+
         try:
             tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
         except:
@@ -148,6 +168,8 @@ def tieba_spider():
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieba_ID + '\t' + str(time_1) + '\t' + str(time_2))
             continue
+
+        update_num += len(tiebas)
         for tieba in tiebas:
             tieba = tieba.convert_format()
             try:
@@ -165,6 +187,8 @@ def tieba_spider():
                 content.save()
             except: pass
 
+    print("爬取完毕, 贴吧更新了" + str(update_num) + '条动态!')
+
 
 @task(name="weibo_spider_friend")
 def weibo_spider_friend(friend):
@@ -175,6 +199,7 @@ def weibo_spider_friend(friend):
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
+
     try:
         weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
     except:
@@ -182,6 +207,7 @@ def weibo_spider_friend(friend):
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
             fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
         return
+
     for weibo in weibos:
         weibo = weibo.convert_format()
         try:
@@ -225,6 +251,7 @@ def weibo_spider_friend(friend):
                     for image_url in weibo['origin_images']:
                         Image(content_object=content, image_url=image_url).save()
         except: pass
+    print("爬取完毕, 微博初次抓取了" + str(len(weibos)) + '条动态!')
 
 
 @task(name="zhihu_spider_friend")
@@ -236,6 +263,7 @@ def zhihu_spider_friend(friend):
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
+
     try:
         zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
     except:
@@ -243,6 +271,7 @@ def zhihu_spider_friend(friend):
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
             fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
         return
+
     for zhihu in zhihus:
         zhihu = zhihu.convert_format()
         try:
@@ -264,6 +293,7 @@ def zhihu_spider_friend(friend):
                 content.cover_image = zhihu['cover_image']
             content.save()
         except: pass
+    print("爬取完毕, 知乎初次抓取了" + str(len(zhihus)) + '条动态!')
 
 
 @task(name="tieba_spider_friend")
@@ -275,6 +305,7 @@ def tieba_spider_friend(friend):
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
+
     try:
         tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
     except:
@@ -282,6 +313,7 @@ def tieba_spider_friend(friend):
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
             fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieb_ID + '\t' + str(time_1) + '\t' + str(time_2))
         return
+
     for tieba in tiebas:
         tieba = tieba.convert_format()
         try:
@@ -298,6 +330,7 @@ def tieba_spider_friend(friend):
                                    friend_id    = friend['id'])
             content.save()
         except: pass
+    print("爬取完毕, 贴吧初次抓取了" + str(len(tiebas)) + '条动态!')
 
 
 @task(name="cache_query_all")

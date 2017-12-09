@@ -211,7 +211,7 @@ class WeiboSpider(SocialMediaSpider):
         stop_flag = False
         while finish_count < need_count:
             position += 1
-            print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
+            # print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
             for card in result.get('data').get('cards'):
@@ -297,7 +297,7 @@ class WeiboSpider(SocialMediaSpider):
 if __name__ == '__main__':
     time_1 = time.time()
     # time_1 =time.mktime(time.strptime('2017-12-4 12:00:00', '%Y-%m-%d %H:%M:%S'))
-    time_2 =time.mktime(time.strptime('2017-12-2 12:00:00', '%Y-%m-%d %H:%M:%S'))
+    time_2 =time.mktime(time.strptime('2017-12-9 22:00:00', '%Y-%m-%d %H:%M:%S'))
 
     spider = WeiboSpider()
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
