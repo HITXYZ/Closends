@@ -35,4 +35,4 @@ def scrape_user_weibo_test(id, number):
 scrape_user_info_test(5648343109)
 scrape_user_follows_test(5648343109, 10)
 scrape_user_fans_test(5648343109, 10)
-scrape_user_weibo_test(5648343109, 10)
+scrape_user_weibo_test(1618051664, 10)
