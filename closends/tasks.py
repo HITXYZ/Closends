@@ -3,6 +3,7 @@ from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 
+import time
 from libsvm.svmutil import *
 from celery.task import task
 from celery.task import periodic_task
@@ -13,15 +14,18 @@ from closends.spider.zhihu_spider import ZhihuSpider
 from closends.spider.tieba_spider import TiebaSpider
 from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
+time_1 = time.time()
+time_2 = time.mktime(time.strptime('2017-12-2 12:00:00', '%Y-%m-%d %H:%M:%S'))
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
+
+@periodic_task(run_every=(crontab(minute='*/1')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
     for friend in friends:
-        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), 50)
+        weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
         for weibo in weibos:
             weibo = weibo.convert_format()
             try:
@@ -67,14 +71,14 @@ def weibo_spider():
             except: pass
 
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
+@periodic_task(run_every=(crontab(minute='*/1')), name="zhihu_spider")
 def zhihu_spider():
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(zhihu_account='')
     for friend in friends:
-        zhihus = spider.scrape_user_activities(friend.zhihu_ID)
+        zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
         for zhihu in zhihus:
             zhihu = zhihu.convert_format()
             try:
@@ -98,14 +102,14 @@ def zhihu_spider():
             except: pass
 
 
-@periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
+@periodic_task(run_every=(crontab(minute='*/1')), name="tieba_spider")
 def tieba_spider():
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(tieba_account='')
     for friend in friends:
-        tiebas = spider.scrape_user_posts(friend.tieba_ID, 50)
+        tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
         for tieba in tiebas:
             tieba = tieba.convert_format()
             try:
@@ -129,7 +133,7 @@ def weibo_spider_friend(friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), 50)
+    weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
     for weibo in weibos:
         weibo = weibo.convert_format()
         try:
@@ -180,7 +184,7 @@ def zhihu_spider_friend(friend):
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    zhihus = spider.scrape_user_activities(friend['zhihu_ID'])
+    zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
     for zhihu in zhihus:
         zhihu = zhihu.convert_format()
         try:
@@ -209,7 +213,7 @@ def tieba_spider_friend(friend):
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    tiebas = spider.scrape_user_posts(friend['tieba_ID'], 50)
+    tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
     for tieba in tiebas:
         tieba = tieba.convert_format()
         try:
@@ -254,6 +258,7 @@ def cached_query_all(username):
     # all_contents.sort(key= lambda content: content.pub_date)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_paginator', paginator, 5 * 60)
+
 
 @task(name="cache_query_platform")
 def cached_query_platform(username, platform):

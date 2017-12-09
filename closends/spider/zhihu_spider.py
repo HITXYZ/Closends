@@ -43,12 +43,12 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping info of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_info_url.format(user=user, include=zhihu_user_query), headers=zhihu_header)
-        if response.status_code == 404:     # 用户不存在或账号被封禁
+        if response.status_code == 404:  # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return None
         result = response.json()
-        if result.get('error') is not None: # 身份未经过验证
+        if result.get('error') is not None:  # 身份未经过验证
             if log_zhihu:
                 logging.warning('Your identity hasn\'t been confirmed.')
             return None
@@ -109,7 +109,7 @@ class ZhihuSpider(SocialMediaSpider):
             logging.info('Scraping follows of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_follows_url.format(user=user, include=zhihu_follows_query, offset=0, limit=20),
                                 headers=zhihu_header)
-        if response.status_code == 404:     # 用户不存在或账号被封禁
+        if response.status_code == 404:  # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -154,7 +154,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping followers of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_followers_url.format(user=user, include=zhihu_followers_query, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:     # 用户不存在或账号被封禁
+        if response.status_code == 404:  # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -198,8 +198,12 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
         if before is None:
             before = int(time.time())
+        else:
+            before = int(before)
         if after is None:
             after = 0
+        else:
+            after = int(after)
         if number <= 0:
             number = 10
         if log_zhihu:
@@ -219,7 +223,7 @@ class ZhihuSpider(SocialMediaSpider):
                 item.create_time = data.get('created_time')
                 item.actor = data.get('actor').get('url_token')
                 target = data.get('target')
-                if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':     # 关注了问题，添加了问题
+                if item.verb == 'QUESTION_CREATE' or item.verb == 'QUESTION_FOLLOW':  # 关注了问题，添加了问题
                     item.target_user_name = target.get('author').get('name')
                     item.target_user_avatar = target.get('author').get('avatar_url')
                     item.target_user_headline = target.get('author').get('headline')
@@ -227,7 +231,7 @@ class ZhihuSpider(SocialMediaSpider):
                         user=target.get('author').get('url_token'))
                     item.target_title = target.get('title')
                     item.target_title_url = 'https://www.zhihu.com/question/{id}'.format(id=target.get('id'))
-                elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':     # 赞同了回答，回答了问题
+                elif item.verb == 'ANSWER_VOTE_UP' or item.verb == 'ANSWER_CREATE':  # 赞同了回答，回答了问题
                     item.target_user_name = target.get('author').get('name')
                     item.target_user_avatar = target.get('author').get('avatar_url')
                     item.target_user_headline = target.get('author').get('headline')
@@ -239,7 +243,7 @@ class ZhihuSpider(SocialMediaSpider):
                     item.target_content_url = 'https://www.zhihu.com/question/{qid}/answer/{aid}'.format(
                         qid=target.get('question').get('id'), aid=target.get('id'))
                     item.thumbnail = target.get('thumbnail')
-                elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':   # 赞了文章，发表了文章
+                elif item.verb == 'MEMBER_VOTEUP_ARTICLE' or item.verb == 'MEMBER_CREATE_ARTICLE':  # 赞了文章，发表了文章
                     item.target_user_name = target.get('author').get('name')
                     item.target_user_avatar = target.get('author').get('avatar_url')
                     item.target_user_headline = target.get('author').get('headline')
@@ -250,12 +254,12 @@ class ZhihuSpider(SocialMediaSpider):
                     item.target_content = target.get('excerpt')
                     item.target_content_url = 'https://zhuanlan.zhihu.com/p/{id}'.format(id=target.get('id'))
                     item.thumbnail = target.get('image_url')
-                elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':    # 关注了话题，创建了话题
+                elif item.verb == 'TOPIC_FOLLOW' or item.verb == 'TOPIC_CREATE':  # 关注了话题，创建了话题
                     item.target_title = target.get('name')
                     item.target_title_url = item.target_title_url = 'https://www.zhihu.com/topic/{id}'.format(
                         id=target.get('id'))
                     item.thumbnail = target.get('avatar_url')
-                elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':    # 关注了收藏夹，创建了收藏夹
+                elif item.verb == 'MEMBER_FOLLOW_COLUMN' or item.verb == 'MEMBER_CREATE_COLUMN':  # 关注了收藏夹，创建了收藏夹
                     item.target_user_name = target.get('author').get('name')
                     item.target_user_avatar = target.get('author').get('avatar_url')
                     item.target_user_headline = target.get('author').get('headline')
@@ -264,7 +268,7 @@ class ZhihuSpider(SocialMediaSpider):
                     item.target_title = target.get('title')
                     item.target_title_url = 'https://zhuanlan.zhihu.com/{id}'.format(id=target.get('id'))
                     item.thumbnail = target.get('image_url')
-                elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':      # 发布了想法，关注了想法
+                elif item.verb == 'MEMBER_CREATE_PIN' or item.verb == 'MEMBER_FOLLOW_PIN':  # 发布了想法，关注了想法
                     item.target_user_name = target.get('author').get('name')
                     item.target_user_avatar = target.get('author').get('avatar_url')
                     item.target_user_headline = target.get('author').get('headline')
@@ -325,7 +329,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping questions of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_questions_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:     # 用户不存在或账号被封禁
+        if response.status_code == 404:  # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -401,7 +405,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping answers of question: %d...' % id)
         response = requests.get(zhihu_question_answers_url.format(id=id, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:     # 问题不存在
+        if response.status_code == 404:  # 问题不存在
             if log_zhihu:
                 logging.warning('404 error. The question doesn\'t exist.')
             return []
@@ -446,7 +450,7 @@ class ZhihuSpider(SocialMediaSpider):
         if log_zhihu:
             logging.info('Scraping answers of zhihu user: %s...' % user)
         response = requests.get(zhihu_user_answers_url.format(user=user, offset=0, limit=20), headers=zhihu_header)
-        if response.status_code == 404:     # 用户不存在或账号被封禁
+        if response.status_code == 404:  # 用户不存在或账号被封禁
             if log_zhihu:
                 logging.warning('404 error. The user doesn\'t exist or has been blocked.')
             return []
@@ -490,7 +494,7 @@ class ZhihuSpider(SocialMediaSpider):
             if log_zhihu:
                 logging.warning('Haven\'t scraped info of any zhihu user.')
             return
-        if user is None:    # 保存所有爬取过的用户信息
+        if user is None:  # 保存所有爬取过的用户信息
             csv_file = open(directory + 'all-user-info.csv', 'w')
             writer = csv.writer(csv_file)
             writer.writerow(('ID', '用户名', '性别', '头像链接', '行业', '一句话描述', '个人介绍', '提问数', '回答数',
@@ -615,8 +619,15 @@ class ZhihuSpider(SocialMediaSpider):
 
 
 if __name__ == '__main__':
+    # time_1 = time.time()
+    time_1 = time.mktime(time.strptime('2017-12-4 12:00:00', '%Y-%m-%d %H:%M:%S'))
+    time_2 = time.mktime(time.strptime('2017-11-1 12:00:00', '%Y-%m-%d %H:%M:%S'))
+
     spider = ZhihuSpider()
-    activities = spider.scrape_user_activities('kaifulee', number=20)
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+    activities = spider.scrape_user_activities('kaifulee', before=time_1, after=time_2, number=20)
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+
+    print(len(activities))
     for activity in activities:
         print(activity)
-        print(activity.convert_format())
