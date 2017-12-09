@@ -5,6 +5,7 @@
 """
 import re
 import requests
+import time
 from bs4 import BeautifulSoup
 from base_spider import SocialMediaSpider
 from urllib.request import quote
@@ -74,11 +75,13 @@ class TiebaSpider(SocialMediaSpider):
             logging.info('Succeed in scraping forums of tieba user: %s.' % user)
         return forums
 
-    def scrape_user_posts(self, user, number=10):
+    def scrape_user_posts(self, user, before=None, after=None, number=10):
         if not isinstance(user, str):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if not isinstance(number, int):
             raise MethodParamError("Parameter \'number\' isn\'t an instance of type \'int\'!")
+        before = int(time.time()) if before is None else int(before)
+        after = 0 if after is None else int(after)
         if log_tieba:
             logging.info('Scraping posts of tieba user: %s...' % user)
         response = requests.get(tieba_user_profile_url.format(user=quote(user)))
@@ -92,6 +95,7 @@ class TiebaSpider(SocialMediaSpider):
         finish = 0
         posts = []
         page = 1
+        stop_flag = False
         while finish < number:
             response = requests.get(tieba_user_post_url.format(user=user, page=page))
             result = response.json()
@@ -100,6 +104,11 @@ class TiebaSpider(SocialMediaSpider):
                     break
                 item = TiebaPostItem()
                 item.time = int(thread.get('create_time'))
+                if item.time > before:
+                    continue
+                if item.time < after:
+                    stop_flag = True
+                    break
                 item.title = thread.get('title')
                 if re.match(r'^回复：', item.title):
                     item.title = item.title[3:]
@@ -112,6 +121,8 @@ class TiebaSpider(SocialMediaSpider):
                 posts.append(item)
                 finish += 1
             page += 1
+            if finish >= number or not result.get('data').get('has_more') or stop_flag:
+                break
         if log_tieba:
             logging.info('Succeed in scraping posts of tieba user: %s.' % user)
         return posts

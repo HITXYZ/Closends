@@ -195,10 +195,8 @@ class ZhihuSpider(SocialMediaSpider):
             raise MethodParamError('Parameter \'user\' isn\'t an instance of type \'str\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
-        if before is None:
-            before = int(time.time())
-        if after is None:
-            after = 0
+        before = int(time.time()) if before is None else int(before)
+        after = 0 if after is None else int(after)
         if number <= 0:
             number = 10
         if log_zhihu:

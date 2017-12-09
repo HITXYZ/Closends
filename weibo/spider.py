@@ -41,14 +41,14 @@ class WeiboSpider(SocialMediaSpider):
         # 通过主页请求获取关注数、粉丝数、头像url
         response = requests.get(weibo_user_profile_url.format(uid1=id, uid2=id))
         result = response.json()
-        item.follow_count = result.get('userInfo').get('follow_count')
-        item.fans_count = result.get('userInfo').get('followers_count')
-        item.avatar_url = result.get('userInfo').get('profile_image_url')
+        item.follow_count = result.get('data').get('userInfo').get('follow_count')
+        item.fans_count = result.get('data').get('userInfo').get('followers_count')
+        item.avatar_url = result.get('data').get('userInfo').get('profile_image_url')
 
         # 通过详细资料请求获取详细资料
         response = requests.get(weibo_user_info_url.format(uid1=id, uid2=id))
         result = response.json()
-        for card in result.get('cards'):
+        for card in result.get('data').get('cards'):
             if card.get('card_type') != 11:
                 continue
             for card_inner in card.get('card_group'):
@@ -70,7 +70,7 @@ class WeiboSpider(SocialMediaSpider):
         # 通过用户微博请求获取用户微博数
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
         result = response.json()
-        item.weibo_count = result.get('cardlistInfo').get('total')
+        item.weibo_count = result.get('data').get('cardlistInfo').get('total')
         if log_weibo:
             logging.info('Succeed in scraping info of weibo user: %d.' % id)
         self.scraped_infos[id] = item
@@ -85,7 +85,7 @@ class WeiboSpider(SocialMediaSpider):
             logging.info('Scraping follows of weibo user: %d...' % id)
         response = requests.get(weibo_user_follow_url.format(uid=id, page=1))
         result = response.json()
-        total = result.get('count')
+        total = result.get('data').get('count')
         if number <= 0:
             need_count = 10
         else:
@@ -97,10 +97,9 @@ class WeiboSpider(SocialMediaSpider):
             position += 1
             response = requests.get(weibo_user_follow_url.format(uid=id, page=position))
             result = response.json()
-            for card in result.get('cards'):
+            for user in result.get('data').get('users'):
                 if finish_count >= need_count:
                     break
-                user = card.get('user')
                 item = WeiboUserItem()
                 item.id = user.get('id')
                 item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.id)
@@ -113,7 +112,7 @@ class WeiboSpider(SocialMediaSpider):
                 item.fans_count = user.get('followers_count')
                 response_info = requests.get(weibo_user_info_url.format(uid1=item.id, uid2=item.id))
                 result_info = response_info.json()
-                for card in result_info.get('cards'):
+                for card in result_info.get('data').get('cards'):
                     if card.get('card_type') != 11:
                         continue
                     for card_inner in card.get('card_group'):
@@ -141,7 +140,7 @@ class WeiboSpider(SocialMediaSpider):
             logging.info('Scraping fans of weibo user: %d...' % id)
         response = requests.get(weibo_user_fans_url.format(uid=id, page=1))
         result = response.json()
-        total = result.get('count')
+        total = result.get('data').get('count')
         if number <= 0:
             need_count = 10
         else:
@@ -153,10 +152,9 @@ class WeiboSpider(SocialMediaSpider):
             position += 1
             response = requests.get(weibo_user_fans_url.format(uid=id, page=position))
             result = response.json()
-            for card in result.get('cards'):
+            for user in result.get('data').get('users'):
                 if finish_count >= need_count:
                     break
-                user = card.get('user')
                 item = WeiboUserItem()
                 item.id = user.get('id')
                 item.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.id)
@@ -169,7 +167,7 @@ class WeiboSpider(SocialMediaSpider):
                 item.fans_count = user.get('followers_count')
                 response_info = requests.get(weibo_user_info_url.format(uid1=item.id, uid2=item.id))
                 result_info = response_info.json()
-                for card in result_info.get('cards'):
+                for card in result_info.get('data').get('cards'):
                     if card.get('card_type') != 11:
                         continue
                     for card_inner in card.get('card_group'):
@@ -188,11 +186,13 @@ class WeiboSpider(SocialMediaSpider):
         self.scraped_fans[id] = fans
         return fans
 
-    def scrape_user_weibo(self, id, number=0):
+    def scrape_user_weibo(self, id, before=None, after=None, number=0):
         if not isinstance(id, int):
             raise MethodParamError('Parameter \'id\' isn\'t an instance of type \'int\'!')
         if not isinstance(number, int):
             raise MethodParamError('Parameter \'number\' isn\'t an instance of type \'int\'!')
+        before = int(time.time()) if before is None else int(before)
+        after = 0 if after is None else int(after)
         if log_weibo:
             logging.info('Scraping weibos of weibo user: %d...' % id)
         response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=1))
@@ -205,8 +205,10 @@ class WeiboSpider(SocialMediaSpider):
         finish_count = 0
         weibos = []
         position = 0
+        stop_flag = False
         while finish_count < need_count:
             position += 1
+            print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
             for card in result.get('data').get('cards'):
@@ -214,6 +216,18 @@ class WeiboSpider(SocialMediaSpider):
                     break
                 if card.get('card_type') != 9:
                     continue
+                res = requests.get(card.get('scheme'))
+                if '微博-出错了' in res.text:  # 该微博已被删除
+                    continue
+                time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
+                time_lst.pop(-2)  # 删除时区信息
+                time_str = ' '.join(time_lst)
+                time_value = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))  # 获取时间戳
+                if time_value > before:
+                    continue
+                if time_value < after:
+                    stop_flag = True
+                    break
                 mblog = card.get('mblog')
                 if 'retweeted_status' in mblog.keys():      # 转发微博
                     item = WeiboRepostContentItem()
@@ -259,17 +273,12 @@ class WeiboSpider(SocialMediaSpider):
                 item.owner.avatar_url = mblog.get('user').get('profile_image_url')
                 item.owner.profile_url = 'https://weibo.com/u/{uid}'.format(uid=item.owner.id)
                 item.url = 'https://weibo.com/{uid}/{bid}'.format(uid=item.owner.id, bid=item.id)
-                res = requests.get(card.get('scheme'))
-                if '微博-出错了' in res.text:        # 该微博已被删除
-                    continue
-                else:
-                    time_lst = re.search(r'"created_at": "(.*?)"', res.text).group(1).split()
-                    time_lst.pop(-2)        # 删除时区信息
-                    time_str = ' '.join(time_lst)
-                    item.time = time.mktime(time.strptime(time_str, '%a %b %d %H:%M:%S %Y'))    # 获取时间戳
+                item.time = time_value
                 item.source = mblog.get('source')
                 weibos.append(item)
                 finish_count += 1
+            if finish_count >= need_count or stop_flag:
+                break
         if log_weibo:
             logging.info('Succeed in scraping weibos of weibo user: %d.' % id)
         self.scraped_weibos[id] = weibos
