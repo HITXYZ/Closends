@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 import time
 import codecs
+from datetime import datetime, timedelta
 from libsvm.svmutil import *
 from celery.task import task
 from celery.task import periodic_task
@@ -15,17 +16,21 @@ from closends.spider.zhihu_spider import ZhihuSpider
 from closends.spider.tieba_spider import TiebaSpider
 from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
-time_1 = time.time()
-time_2 = time.mktime(time.strptime('2017-12-2 12:00:00', '%Y-%m-%d %H:%M:%S'))
 
-
-@periodic_task(run_every=(crontab(minute='*/1')), name="weibo_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
     for friend in friends:
+        try:
+            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            start_time = datetime.now() + timedelta(days=-7)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+        time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+        time_1 = time.time()
         try:
             weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
         except:
@@ -78,13 +83,20 @@ def weibo_spider():
             except: pass
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="zhihu_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="zhihu_spider")
 def zhihu_spider():
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(zhihu_account='')
     for friend in friends:
+        try:
+            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            start_time = datetime.now() + timedelta(days=-7)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+        time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+        time_1 = time.time()
         try:
             zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
         except:
@@ -115,13 +127,20 @@ def zhihu_spider():
             except: pass
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="tieba_spider")
+@periodic_task(run_every=(crontab(minute='*/5')), name="tieba_spider")
 def tieba_spider():
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(tieba_account='')
     for friend in friends:
+        try:
+            start_time = friend.tiebacontent_set.latest('pub_date').pub_date.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            start_time = datetime.now() + timedelta(days=-7)
+            start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+        time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+        time_1 = time.time()
         try:
             tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
         except:
@@ -152,6 +171,10 @@ def weibo_spider_friend(friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    start_time = datetime.now() + timedelta(days=-7)
+    start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+    time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+    time_1 = time.time()
     try:
         weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
     except:
@@ -209,6 +232,10 @@ def zhihu_spider_friend(friend):
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    start_time = datetime.now() + timedelta(days=-7)
+    start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+    time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+    time_1 = time.time()
     try:
         zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
     except:
@@ -244,6 +271,10 @@ def tieba_spider_friend(friend):
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
+    start_time = datetime.now() + timedelta(days=-7)
+    start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
+    time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
+    time_1 = time.time()
     try:
         tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
     except:
