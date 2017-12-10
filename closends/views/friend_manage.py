@@ -1,4 +1,5 @@
 import json
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
@@ -191,6 +192,10 @@ def add_found_friend_weibo(request):
 
         args = {'id': friend.id, 'weibo_ID': friend.weibo_ID}
         weibo_spider_friend.delay(request.user.username, args)
+        
+        updating_list = cache.get_or_set('weibo_updating_list', set())
+        updating_list.add(friend.id)
+        cache.set('weibo_updating_list', updating_list, None)
         return HttpResponse("")
 
 
@@ -238,6 +243,10 @@ def add_found_friend_zhihu(request):
 
         args = {'id': friend.id, 'zhihu_ID': friend.zhihu_ID}
         zhihu_spider_friend.delay(request.user.username, args)
+
+        updating_list = cache.get_or_set('zhihu_updating_list', set())
+        updating_list.add(friend.id)
+        cache.set('zhihu_updating_list', updating_list, None)
         return HttpResponse("")
 
 
@@ -285,6 +294,10 @@ def add_found_friend_tieba(request):
 
         args = {'id': friend.id, 'tieba_ID': friend.tieba_ID}
         tieba_spider_friend.delay(request.user.username, args)
+
+        updating_list = cache.get_or_set('tieba_updating_list', set())
+        updating_list.add(friend.id)
+        cache.set('tieba_updating_list', updating_list, None)
         return HttpResponse("")
 
 

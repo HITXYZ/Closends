@@ -21,7 +21,6 @@ class UserInfo(models.Model):
     user = models.OneToOneField(User)
     head_img = models.ImageField(blank=True, upload_to=BASE_DIR + '/media/head')
     group_list = models.CharField(default='未分组', max_length=1024)
-    update_friend = models.BooleanField(default=False)
 
 
 class Website(models.Model):
@@ -71,18 +70,18 @@ class Friend(models.Model):
     group = models.CharField(max_length=10, default='未分组', choices=group_choices)
 
     weibo_account = models.CharField(max_length=20, blank=True)
-    weibo_ID = models.CharField(max_length=20, blank=True)
+    weibo_ID = models.CharField(max_length=100, blank=True)
     weibo_link = models.URLField(max_length=500, blank=True)
     weibo_head = models.URLField(max_length=500, blank=True)
 
     zhihu_account = models.CharField(max_length=20, blank=True)
-    zhihu_ID = models.CharField(max_length=20, blank=True)
+    zhihu_ID = models.CharField(max_length=100, blank=True)
     zhihu_link = models.URLField(max_length=500, blank=True)
     zhihu_head = models.URLField(max_length=500, blank=True)
     zhihu_detail = models.CharField(max_length=200, blank=True)
 
     tieba_account = models.CharField(max_length=20, blank=True)
-    tieba_ID = models.CharField(max_length=20, blank=True)
+    tieba_ID = models.CharField(max_length=100, blank=True)
     tieba_link = models.URLField(max_length=500, blank=True)
     tieba_head = models.URLField(max_length=500, blank=True)
 

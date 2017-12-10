@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 
 from ..models import WeiboContent, Image
-from ..tasks import cached_query_all, cached_query_platform, cached_query_group, cached_query_topic
+from ..tasks import cached_query_all, cached_query_platform, \
+    cached_query_group, cached_query_topic, update_all_cache
+
 
 """
     动态主页模块：
@@ -31,11 +33,21 @@ def query_all(request, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_paginator')
-    if not paginator or user.update_friend:
-        if user.update_friend:
-            cache.delete(username + '_paginator')
-            user.update_friend = False
-            user.save()
+
+    updated_list = cache.get_or_set('updated_list', set())
+    if username in updated_list:
+        flag = True
+        updated_list.remove(username)
+        cache.set('updated_list', updated_list, None)
+        cache.delete(username + '_paginator')
+        keys = cache.keys(username + '*')
+        update_all_cache.delay(keys)
+    elif not paginator:
+        flag = True
+    else:
+        flag = False
+
+    if flag:
         cached_query_all.delay(username)
 
         all_contents = []
@@ -83,11 +95,21 @@ def query_by_platform(request, platform, page=1):
     topic_list = list(enumerate(topic_name))
 
     paginator = cache.get(username + '_' + platform + '_paginator')
-    if not paginator or user.update_friend:
-        if user.update_friend:
-            cache.delete(username + '_' + platform + '_paginator')
-            user.update_friend = False
-            user.save()
+
+    updated_list = cache.get_or_set('updated_list', set())
+    if username in updated_list:
+        flag = True
+        updated_list.remove(username)
+        cache.set('updated_list', updated_list, None)
+        cache.delete(username + '_' + platform + '_paginator')
+        keys = cache.keys(username + '*')
+        update_all_cache.delay(keys)
+    elif not paginator:
+        flag = True
+    else:
+        flag = False
+
+    if flag:
         cached_query_platform.delay(username, platform)
 
         all_contents = []
@@ -135,13 +157,21 @@ def query_by_group(request, group, page=1):
     group_list = user.group_list.split(',')
     topic_list = list(enumerate(topic_name))
 
-    paginator = cache.get(username + '_' + group + '_paginator')
-    if not paginator or user.update_friend:
-        if user.update_friend:
-            cache.delete(username + '_' + group + '_paginator')
-            user.update_friend = False
-            user.save()
-        cached_query_group.delay(username, group)
+    paginator = cache.get(username + '_' + group_list[int(group)] + '_paginator')
+
+    updated_list = cache.get_or_set('updated_list', set())
+    if username in updated_list:
+        flag = True
+        updated_list.remove(username)
+        cache.set('updated_list', updated_list, None)
+        cache.delete(username + '_' + group_list[int(group)] + '_paginator')
+    elif not paginator:
+        flag = True
+    else:
+        flag = False
+
+    if flag:
+        cached_query_group.delay(username, group_list[int(group)])
 
         all_contents = []
         for friend in friends:
@@ -190,13 +220,23 @@ def query_by_topic(request, topic, page=1):
     group_list = list(enumerate(group_list))
     topic_list = list(enumerate(topic_name))
 
-    paginator = cache.get(username + '_' + topic + '_paginator')
-    if not paginator or user.update_friend:
-        if user.update_friend:
-            cache.delete(username + '_' + topic + '_paginator')
-            user.update_friend = False
-            user.save()
-        cached_query_topic.delay(username, topic)
+    paginator = cache.get(username + '_' + topic_name[int(topic)] + '_paginator')
+
+    updated_list = cache.get_or_set('updated_list', set())
+    if username in updated_list:
+        flag = True
+        updated_list.remove(username)
+        cache.set('updated_list', updated_list, None)
+        cache.delete(username + '_' + topic_name[int(topic)] + '_paginator')
+        keys = cache.keys(username + '*')
+        update_all_cache.delay(keys)
+    elif not paginator:
+        flag = True
+    else:
+        flag = False
+
+    if flag:
+        cached_query_topic.delay(username, topic_name[int(topic)])
 
         all_contents = []
         for friend in friends:

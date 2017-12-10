@@ -23,9 +23,12 @@ def weibo_spider():
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(weibo_account='')
+    updating_list = cache.get('weibo_updating_list', set())
 
     update_num = 0
     for friend in friends:
+        if friend.id in updating_list: continue
+
         try:
             start_time = friend.weibocontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -97,9 +100,12 @@ def zhihu_spider():
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(zhihu_account='')
+    updating_list = cache.get_or_set('zhihu_updating_list', set())
 
     update_num = 0
     for friend in friends:
+        if friend.id in updating_list: continue
+
         try:
             start_time = friend.zhihucontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -149,9 +155,12 @@ def tieba_spider():
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
     friends = Friend.objects.all().exclude(tieba_account='')
+    updating_list = cache.get_or_set('tieba_updating_list', set())
 
     update_num = 0
     for friend in friends:
+        if friend.id in updating_list: continue
+
         try:
             start_time = friend.tiebacontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -252,9 +261,13 @@ def weibo_spider_friend(username, friend):
                         Image(content_object=content, image_url=image_url).save()
         except: pass
 
-    user = User.objects.get(username=username).userinfo
-    user.update_friend = True
-    user.save()
+    updating_list = cache.get('weibo_updating_list')
+    updating_list.remove(friend['id'])
+    cache.set('weibo_updating_list', updating_list, None)
+    
+    updated_list = cache.get_or_set('updated_list', set())
+    updated_list.add(username)
+    cache.set('updated_list', updated_list, 5*60)
 
     print("爬取完毕, 微博初次抓取了" + str(len(weibos)) + '条动态!')
 
@@ -299,9 +312,13 @@ def zhihu_spider_friend(username, friend):
             content.save()
         except: pass
 
-    user = User.objects.get(username=username).userinfo
-    user.update_friend = True
-    user.save()
+    updating_list = cache.get('zhihu_updating_list')
+    updating_list.remove(friend['id'])
+    cache.set('zhihu_updating_list', updating_list, None)
+
+    updated_list = cache.get_or_set('updated_list', set())
+    updated_list.add(username)
+    cache.set('updated_list', updated_list, 5*60)
 
     print("爬取完毕, 知乎初次抓取了" + str(len(zhihus)) + '条动态!')
 
@@ -341,9 +358,13 @@ def tieba_spider_friend(username, friend):
             content.save()
         except: pass
 
-    user = User.objects.get(username=username).userinfo
-    user.update_friend = True
-    user.save()
+    updating_list = cache.get('tieba_updating_list')
+    updating_list.remove(friend['id'])
+    cache.set('tieba_updating_list', updating_list, None)
+    
+    updated_list = cache.get_or_set('updated_list', set())
+    updated_list.add(username)
+    cache.set('updated_list', updated_list, 5*60)
 
     print("爬取完毕, 贴吧初次抓取了" + str(len(tiebas)) + '条动态!')
 
@@ -378,6 +399,7 @@ def cached_query_all(username):
 
 @task(name="cache_query_platform")
 def cached_query_platform(username, platform):
+    print("enter")
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
 
@@ -406,14 +428,14 @@ def cached_query_platform(username, platform):
 
 
 @task(name="cache_query_group")
-def cached_query_group(username, group):
+def cached_query_group(username, group_name):
+    print("enter")
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
-    group_list = user.group_list.split(',')
 
     all_contents = []
     for friend in friends:
-        if friend.group == group_list[int(group)]:
+        if friend.group == group_name:
             weibo_contents = friend.weibocontent_set.all()
             zhihu_contents = friend.zhihucontent_set.all()
             tieba_contents = friend.tiebacontent_set.all()
@@ -432,7 +454,7 @@ def cached_query_group(username, group):
 
     all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
-    cache.set(username + '_' + group + '_paginator', paginator, 5 * 60)
+    cache.set(username + '_' + group_name + '_paginator', paginator, 5 * 60)
 
 
 @task(name="cache_query_topic")
@@ -442,9 +464,9 @@ def cached_query_topic(username, topic):
 
     all_contents = []
     for friend in friends:
-        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic_name[int(topic)]]
-        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic_name[int(topic)]]
-        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic_name[int(topic)]]
+        weibo_contents = [content for content in friend.weibocontent_set.all() if content.topic == topic]
+        zhihu_contents = [content for content in friend.zhihucontent_set.all() if content.topic == topic]
+        tieba_contents = [content for content in friend.tiebacontent_set.all() if content.topic == topic]
         content_type = ContentType.objects.get_for_model(WeiboContent)
         for content in weibo_contents:
             if not content.is_repost:
@@ -460,3 +482,22 @@ def cached_query_topic(username, topic):
     all_contents.sort(key=lambda content: content.pub_date, reverse=True)
     paginator = Paginator(all_contents, 20)
     cache.set(username + '_' + topic + '_paginator', paginator, 5 * 60)
+
+
+@task(name="update_all_cache")
+def update_all_cache(keys):
+    for key in keys:
+        if key.count('_') == 1:
+            cached_query_all(key.split('_')[0])
+        elif key.split('_')[1] in ['weibo', 'zhihu', 'tieba']:
+            username, platform, _ = key.split('_')
+            print(username, platform)
+            cached_query_platform(username, platform)
+        elif key.split('_')[1] in topic_name:
+            username, topic, _ = key.split('_')
+            print(username, topic)
+            cached_query_topic(username, topic)
+        else:
+            username, group, _ = key.split('_')
+            print(username, group)
+            cached_query_group(username, group)
