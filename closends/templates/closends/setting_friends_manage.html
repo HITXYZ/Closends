@@ -21,14 +21,26 @@
             width: 80px;
         }
 
-        .friend_list img{
+        .friend_list .delete_group img{
             width: 15px;
             height: 15px;
             display: none;
+            border-radius:50%;
         }
 
         .friend_list .row{
             width: 150px;
+        }
+
+        .friend_list .group_manage a{
+            width: 30px;
+            margin-left: 8px;
+        }
+
+        .friend_list .group_manage img{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
         }
 
         .friend_list .display_group{
@@ -169,7 +181,6 @@
 
         #weibo_search_modal .modal-body .search_result {
             margin-top: 5%;
-            display: none;
         }
 
         #weibo_search_modal .modal-body .search_result .person {
@@ -178,6 +189,7 @@
             margin-top: 3%;
             margin-left: 12%;
             background-color: whitesmoke;
+            display: none;
         }
 
         #weibo_search_modal .modal-body .search_result .feedback {
@@ -340,7 +352,6 @@
 
         #zhihu_search_modal .search_result {
             margin-top: 2%;
-            display: none;
         }
 
         #zhihu_search_modal .search_result .person {
@@ -348,6 +359,7 @@
             width: 80%;
             margin-left: 10%;
             background-color: lightblue;
+            display: none;
         }
 
         #zhihu_search_modal .search_result .person .col-md-10 {
@@ -516,7 +528,6 @@
 
         #tieba_search_modal .search_result {
             margin-top: 2%;
-            display: none;
         }
 
         #tieba_search_modal .search_result .person {
@@ -524,6 +535,7 @@
             width: 80%;
             margin-left: 10%;
             background-color: lightblue;
+            display: none;
         }
 
         #tieba_search_modal .search_result .person img{
@@ -689,9 +701,14 @@
                 </div>
             {% endifequal %}
         {% endfor %}
-        <div style="margin-left: 27px; margin-top: 10px"><a href="javascript:void(0)">
-            <button type="button" class="btn" data-toggle="modal" data-target="#group_add_modal">添加分组</button>
-        </a></div>
+        <div class="row group_manage" style="margin-top: 10px">
+            <a href="javascript:void(0)" class="col-md-1" data-toggle="modal" data-target="#group_add_modal">
+                <img src="/static/closends/img/add_signal.png">
+            </a>
+            <a href="javascript:void(0)" class="col-md-1 show_delete_signal">
+                <img src="/static/closends/img/subtract_signal.png">
+            </a>
+        </div>
     </div>
 
     <div id="group_add_modal" class="modal fade" role="dialog">
@@ -727,7 +744,16 @@
 
     <script>
         $(document).ready(function () {
-            $(".friend_list img").on("click", function () {
+            let status = 0;
+            $(".friend_list .group_manage .show_delete_signal").on("click", function () {
+                if(status === 0)
+                    $(".friend_list .delete_group img").show();
+                else
+                    $(".friend_list .delete_group img").hide();
+                status = 1 - status;
+            });
+
+            $(".friend_list .delete_group img").on("click", function () {
                 let group_name = $(this).parent().parent().find("button").eq(0).text();
                 $("#group_delete_modal").modal('show');
                 $("#group_delete_modal .group_name").text(group_name);
@@ -1229,6 +1255,9 @@
                         <div class="form-group">
                             <button id="query_friend_tieba" type="button" class="btn btn-default">查询</button>
                         </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
                     </form>
 
                     <div class="search_result text-left">
@@ -1417,7 +1446,8 @@
                 if ($(this).prev().text() === "True") {
                     $("#weibo_search_modal").modal("show");
                     $("#weibo_search_modal input").val("");
-                    $("#weibo_search_modal .search_result").hide();
+                    $("#weibo_search_modal .search_result .person").hide();
+                    $("#weibo_search_modal .search_result .feedback").hide();
                     $("#weibo_search_modal .check_found_weibo_user").hide();
                     $("#weibo_search_modal .friend_name").text(friend_name);
                 }
@@ -1458,12 +1488,19 @@
                     success: function (ret) {
                         if (ret.status === 'success') {
                             $("#person_id").text(ret.person_id);
-                            $("#weibo_search_modal .search_result").show();
+                            $("#weibo_search_modal .search_result .person").show();
+                            $("#weibo_search_modal .search_result .feedback").hide();
+                            $("#weibo_search_modal .check_found_weibo_user").show();
+                            $("#weibo_search_modal #adding_found_friend_weibo").text("确认");
+
                             $("#weibo_search_modal .search_result .person").empty();
                             $("#weibo_search_modal .search_result .person").append(ret.person_html);
-                            $(".check_found_weibo_user").show();
                         }
                         else {
+                            $("#weibo_search_modal .search_result .person").hide();
+                            $("#weibo_search_modal .search_result .feedback").show();
+                            $("#weibo_search_modal .check_found_weibo_user").show();
+                            
                             $("#weibo_search_modal .search_result .feedback strong").text("查询失败,请直接添加链接!");
                             $("#weibo_search_modal #adding_found_friend_weibo").text("重新查询");
                         }
@@ -1505,7 +1542,9 @@
                     window.location.reload();
                 }
                 else {
-                    //查询失败
+                    $("#weibo_search_modal input").val("");
+                    $("#weibo_search_modal .search_result .feedback").hide();
+                    $("#weibo_search_modal .check_found_weibo_user").hide();
                 }
             });
 
@@ -1541,7 +1580,8 @@
                 if ($(this).prev().text() === "True") {
                     $("#zhihu_search_modal").modal("show");
                     $("#zhihu_search_modal input").val("");
-                    $("#zhihu_search_modal .search_result").hide();
+                    $("#zhihu_search_modal .search_result .person").hide();
+                    $("#zhihu_search_modal .search_result .feedback").hide();
                     $("#zhihu_search_modal .check_found_zhihu_user").hide();
                     $("#zhihu_search_modal .friend_name").text(friend_name);
                 }
@@ -1581,8 +1621,12 @@
                     async: false,
                     success: function (ret) {
                         if (ret.status === 'success') {
-                            $("#zhihu_search_modal .search_result").show();
-                            $(".check_found_zhihu_user").show();
+                            $("#zhihu_search_modal .search_result .person").show();
+                            $("#zhihu_search_modal .search_result .feedback").hide();
+                            $("#zhihu_search_modal .check_found_zhihu_user").show();
+                            $("#zhihu_search_modal #adding_found_friend_zhihu").text("确认");
+
+
                             $("#zhihu_person_id").text(ret.person_id);
                             $("#zhihu_search_modal .search_result .head_img").empty();
                             $("#zhihu_search_modal .search_result .head_img").append(ret.htmls[0]);
@@ -1597,6 +1641,10 @@
                             detail.append(ret.htmls[5]);
                         }
                         else {
+                            $("#zhihu_search_modal .search_result .person").hide();
+                            $("#zhihu_search_modal .search_result .feedback").show();
+                            $("#zhihu_search_modal .check_found_zhihu_user").show();
+
                             $("#zhihu_search_modal .search_result .feedback strong").text("查询失败,请直接添加链接!");
                             $("#zhihu_search_modal #adding_found_friend_zhihu").text("重新查询");
                         }
@@ -1638,7 +1686,9 @@
                     window.location.reload();
                 }
                 else {
-                    //查询失败
+                    $("#zhihu_search_modal input").val("");
+                    $("#zhihu_search_modal .search_result .feedback").hide();
+                    $("#zhihu_search_modal .check_found_zhihu_user").hide();
                 }
             });
 
@@ -1674,7 +1724,8 @@
                 if ($(this).prev().text() === "True") {
                     $("#tieba_search_modal").modal("show");
                     $("#tieba_search_modal input").val("");
-                    $("#tieba_search_modal .search_result").hide();
+                    $("#tieba_search_modal .search_result .person").hide();
+                    $("#tieba_search_modal .search_result .feedback").hide();
                     $("#tieba_search_modal .check_found_tieba_user").hide();
                     $("#tieba_search_modal .friend_name").text(friend_name);
                 }
@@ -1714,8 +1765,11 @@
                         async: false,
                         success: function (ret) {
                             if(ret.status === 'success'){
-                                $("#tieba_search_modal .search_result").show();
-                                $(".check_found_tieba_user").show();
+                                $("#tieba_search_modal .search_result .person").show();
+                                $("#tieba_search_modal .search_result .feedback").hide();
+                                $("#tieba_search_modal .check_found_tieba_user").show();
+                                $("#tieba_search_modal #adding_found_friend_tieba").text("确认");
+
                                 $("#tieba_search_modal img").attr('src', ret.user_html[0]);
                                 $("#tieba_search_modal #person_id").text(ret.person_id).attr('href', ret.user_html[1]);
                                 if(ret.user_html[2] === 'male')
@@ -1724,8 +1778,12 @@
                                 $("#tieba_search_modal .userinfo_num").text(ret.user_html[4]);
                             }
                             else{
+                                $("#tieba_search_modal .search_result .person").hide();
+                                $("#tieba_search_modal .search_result .feedback").show();
+                                $("#tieba_search_modal .check_found_tieba_user").show();
+                            
                                 $("#tieba_search_modal .search_result .feedback strong").text("查询失败,请直接添加链接!");
-                                $("#tieba_search_modal #adding_found_tieba_user").text("重新查询");
+                                $("#tieba_search_modal #adding_found_friend_tieba").text("重新查询");
                             }
                         }
                     });//ajax
@@ -1764,7 +1822,9 @@
                     window.location.reload();
                 }
                 else {
-                    //查询失败
+                    $("#tieba_search_modal input").val("");
+                    $("#tieba_search_modal .search_result .feedback").hide();
+                    $("#tieba_search_modal .check_found_tieba_user").hide();
                 }
             });
 

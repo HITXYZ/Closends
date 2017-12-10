@@ -29,7 +29,7 @@ def username_login(request):
         username = info['username']
         password = info['password']
         if not User.objects.filter(username=username):
-            result = {'status': 'error', 'error_message': 'user_not_exist'}
+            result = {'status': 'error', 'error_msg': 'user_not_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
 
         user = authenticate(request=request, username=username, password=password)
@@ -41,7 +41,7 @@ def username_login(request):
                 request.session.set_expiry(0)
             result = {'status': 'success'}
             return HttpResponse(json.dumps(result), content_type='application/json')
-        result = {'status': 'error', 'error_message': 'wrong_password'}
+        result = {'status': 'error', 'error_msg': 'wrong_password'}
         return HttpResponse(json.dumps(result), content_type='application/json')
     else:
         return render_to_response('404.html')
@@ -53,8 +53,9 @@ def email_login(request):
         info = request.POST
         email = info['email']
         password = info['password']
-        if not User.objects.get(email=email):
-            result = {'status': 'error', 'error_message': 'user_not_exist'}
+        print(email, password)
+        if not User.objects.filter(email=email):
+            result = {'status': 'error', 'error_msg': 'user_not_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')
 
         user = authenticate(request=request, email=email, password=password)
@@ -66,7 +67,7 @@ def email_login(request):
                 request.session.set_expiry(0)
             result = {'status': 'success'}
             return HttpResponse(json.dumps(result), content_type='application/json')
-        result = {'status': 'error', 'error_message': 'wrong_password'}
+        result = {'status': 'error', 'error_msg': 'wrong_password'}
         return HttpResponse(json.dumps(result), content_type='application/json')
     else:
         return render_to_response('404.html')
@@ -92,7 +93,11 @@ def register(request):
         # register new user
         password = info['password1']
         try:
-            User.objects.create_user(username, email, password).save()
+            user = User.objects.create_user(username, email, password)
+            userinfo = UserInfo(user=user)
+            user.userinfo = userinfo
+            userinfo.save()
+            user.save()
         except:
             result = {'status': 'error', 'error_message': 'other'}
             return HttpResponse(json.dumps(result), content_type='application/json')

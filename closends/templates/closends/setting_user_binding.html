@@ -42,7 +42,6 @@
 
         .weibo_binding .search_result{
             margin-top: 2%;
-            display: none;
         }
 
         .weibo_binding .search_result .person{
@@ -50,6 +49,7 @@
             width: 60%;
             margin-left: 20%;
             background-color: lightblue;
+            display: none;
         }
 
         .weibo_binding .search_result .feedback{
@@ -82,11 +82,14 @@
             margin-left: 25%;
         }
 
+        .weibo_binding .check_found_weibo_user{
+            display: none;
+        }
+
         .weibo_binding #adding_found_weibo_user{
             width: 20%;
             margin-top: 1%;
             margin-left: 40%;
-            display: none;
         }
 
         .bound_weibo_info{
@@ -117,7 +120,6 @@
 
         .zhihu_binding .search_result{
             margin-top: 2%;
-            display: none;
         }
 
         .zhihu_binding .search_result .person{
@@ -125,6 +127,7 @@
             width: 80%;
             margin-left: 10%;
             background-color: lightblue;
+            display: none;
         }
 
         .zhihu_binding .search_result .person .col-md-10{
@@ -162,11 +165,14 @@
             margin-top: 50%;
         }
 
+        .zhihu_binding .check_found_zhihu_user{
+            display: none;
+        }
+
         .zhihu_binding #adding_found_zhihu_user{
             width: 20%;
             margin-top: 1%;
             margin-left: 40%;
-            display: none;
         }
 
         .bound_zhihu_info{
@@ -199,7 +205,6 @@
 
         .tieba_binding .search_result{
             margin-top: 2%;
-            display: none;
         }
 
         .tieba_binding .search_result .person{
@@ -207,6 +212,7 @@
             width: 60%;
             margin-left: 20%;
             background-color: lightblue;
+            display: none;
         }
 
         .tieba_binding .search_result .person img{
@@ -247,11 +253,14 @@
             margin-top: 50%;
         }
 
+        .tieba_binding .check_found_tieba_user{
+            display: none;
+        }
+        
         .tieba_binding #adding_found_tieba_user{
             width: 20%;
             margin-top: 1%;
             margin-left: 40%;
-            display: none;
         }
 
         .bound_tieba_info{
@@ -494,9 +503,9 @@
                     $(".weibo_binding select").val("账号");
                     $(".weibo_binding input").val("");
                     $(".weibo_binding .person").empty();
-                    $(".weibo_binding .search_result").hide();
-                    $(".weibo_binding strong").text("");
-                    $(".weibo_binding #adding_found_weibo_user").hide();
+                    $(".weibo_binding .search_result .person").hide();
+                    $(".weibo_binding .search_result .feedback").hide();
+                    $(".weibo_binding .check_found_weibo_user").hide();
                 }
                 else
                     window.location.href = '{% url 'closends:setting:weibo_unbinding' %}';
@@ -536,12 +545,18 @@
                         success: function (ret) {
                             if(ret.status === 'success'){
                                 $("#weibo_person_id").text(ret.person_id);
-                                $(".weibo_binding .search_result").show();
+                                $(".weibo_binding .search_result .person").show();
+                                $(".weibo_binding .search_result .feedback").hide();
+                                $(".weibo_binding .check_found_weibo_user").show();
+                                $(".weibo_binding #adding_found_weibo_user").text("确认");
                                 $(".weibo_binding .search_result .person").empty();
                                 $(".weibo_binding .search_result .person").append(ret.person_html);
-                                $("#adding_found_weibo_user").show();
                             }
                             else{
+                                $(".weibo_binding .search_result .person").hide();
+                                $(".weibo_binding .search_result .feedback").show();
+                                $(".weibo_binding .check_found_weibo_user").show();
+
                                 $(".weibo_binding .search_result .feedback strong").text("查询失败,请直接添加链接!");
                                 $(".weibo_binding #adding_found_weibo_user").text("重新查询");
                             }
@@ -550,26 +565,33 @@
             });
 
             $("#adding_found_weibo_user").on("click", function () {
-                let account = $(".person_name a em").text();
-                let ID = $("#weibo_person_id").text();
-                let link = $(".person_name a").attr('href');
-                let head = $(".person_pic img").attr('src');
-                let weibo_user = {'account':account, 'ID':ID, 'link':link, 'head': head};
-                $.ajax({
-                        url: "{% url 'closends:setting:weibo_binding' %}",
-                        type: "post",
-                        datatype: "json",
-                        data: weibo_user,
-                        async: false,
-                        success: function (ret) {
-                            if(ret.status === 'success'){
-                                window.location.href = '{% url 'closends:setting:user_binding' %}';
+                if($(this).text() === "重新查询"){
+                    $(".weibo_binding input").val("");
+                    $(".weibo_binding .search_result .feedback").hide();
+                    $(".weibo_binding .check_found_weibo_user").hide();
+                }
+                else{
+                    let account = $(".person_name a em").text();
+                    let ID = $("#weibo_person_id").text();
+                    let link = $(".person_name a").attr('href');
+                    let head = $(".person_pic img").attr('src');
+                    let weibo_user = {'account':account, 'ID':ID, 'link':link, 'head': head};
+                    $.ajax({
+                            url: "{% url 'closends:setting:weibo_binding' %}",
+                            type: "post",
+                            datatype: "json",
+                            data: weibo_user,
+                            async: false,
+                            success: function (ret) {
+                                if(ret.status === 'success'){
+                                    window.location.href = '{% url 'closends:setting:user_binding' %}';
+                                }
+                                else{
+                                    //pass
+                                }
                             }
-                            else{
-                                //pass
-                            }
-                        }
-                    });//ajax
+                        });//ajax
+                }
             });
         });
     </script>
@@ -587,9 +609,9 @@
                     $(".zhihu_binding select").val("账号");
                     $(".zhihu_binding input").val("");
                     $(".zhihu_binding .person").empty();
-                    $(".zhihu_binding .search_result").hide();
-                    $(".zhihu_binding strong").text("");
-                    $(".zhihu_binding #adding_found_zhihu_user").hide();
+                    $(".zhihu_binding .search_result .person").hide();
+                    $(".zhihu_binding .search_result .feedback").hide();
+                    $(".zhihu_binding .check_found_zhihu_user").hide();
                 }
                 else
                     window.location.href = '{% url 'closends:setting:zhihu_unbinding' %}';
@@ -628,18 +650,29 @@
                         async: false,
                         success: function (ret) {
                             if(ret.status === 'success'){
-                                $(".zhihu_binding .search_result").show();
-                                $("#adding_found_zhihu_user").show();
+                                $(".zhihu_binding .search_result .person").show();
+                                $(".zhihu_binding .search_result .feedback").hide();
+                                $(".zhihu_binding .check_found_zhihu_user").show();
+                                $(".zhihu_binding #adding_found_zhihu_user").text("确认");
+                                
                                 $("#zhihu_person_id").text(ret.person_id);
+                                $(".zhihu_binding .head_img").empty();
                                 $(".zhihu_binding .head_img").append(ret.htmls[0]);
+                                $(".zhihu_binding .body").children().eq(0).empty();
                                 $(".zhihu_binding .body").children().eq(0).append(ret.htmls[1]);
+                                $(".zhihu_binding .body").children().eq(1).empty();
                                 $(".zhihu_binding .body").children().eq(1).append(ret.htmls[2]);
                                 detail = $(".zhihu_binding .detail");
+                                detail.empty();
                                 detail.append(ret.htmls[3]);
                                 detail.append(ret.htmls[4]);
                                 detail.append(ret.htmls[5]);
                             }
                             else{
+                                $(".zhihu_binding .search_result .person").hide();
+                                $(".zhihu_binding .search_result .feedback").show();
+                                $(".zhihu_binding .check_found_zhihu_user").show();
+                                
                                 $(".zhihu_binding .search_result .feedback strong").text("查询失败,请直接添加链接!");
                                 $(".zhihu_binding #adding_found_zhihu_user").text("重新查询");
                             }
@@ -648,26 +681,34 @@
             });
             
             $("#adding_found_zhihu_user").on("click", function () {
-                let account = $(".zhihu_binding .name-link").text();
-                let ID = $(".zhihu_binding #zhihu_person_id").text();
-                let link = $(".zhihu_binding .name-link").attr('href');
-                let head = $(".zhihu_binding img").attr('src');
-                let zhihu_user = {'account':account, 'ID':ID, 'link':link, 'head': head};
-                $.ajax({
-                        url: "{% url 'closends:setting:zhihu_binding' %}",
-                        type: "post",
-                        datatype: "json",
-                        data: zhihu_user,
-                        async: false,
-                        success: function (ret) {
-                            if(ret.status === 'success'){
-                                window.location.href = '{% url 'closends:setting:user_binding' %}';
+                if($(this).text() === "重新查询"){
+                    $(".zhihu_binding input").val("");
+                    $(".zhihu_binding .search_result .feedback").hide();
+                    $(".zhihu_binding .check_found_zhihu_user").hide();
+                }
+                else{
+                    let account = $(".zhihu_binding .name-link").text();
+                    let ID = $(".zhihu_binding #zhihu_person_id").text();
+                    let link = $(".zhihu_binding .name-link").attr('href');
+                    let head = $(".zhihu_binding img").attr('src');
+                    let zhihu_user = {'account':account, 'ID':ID, 'link':link, 'head': head};
+                    $.ajax({
+                            url: "{% url 'closends:setting:zhihu_binding' %}",
+                            type: "post",
+                            datatype: "json",
+                            data: zhihu_user,
+                            async: false,
+                            success: function (ret) {
+                                if(ret.status === 'success'){
+                                    window.location.href = '{% url 'closends:setting:user_binding' %}';
+                                }
+                                else{
+                                    //pass
+                                }
                             }
-                            else{
-                                //pass
-                            }
-                        }
-                    });//ajax
+                        });//ajax
+                }
+
             });
         })
     </script>
@@ -685,9 +726,9 @@
                     $(".tieba_binding select").val("账号");
                     $(".tieba_binding input").val("");
                     $(".tieba_binding .person").empty();
-                    $(".tieba_binding .search_result").hide();
-                    $(".tieba_binding strong").text("");
-                    $(".tieba_binding #adding_found_tieba_user").hide();
+                    $(".tieba_binding .search_result .person").hide();
+                    $(".tieba_binding .search_result .feedback").hide();
+                    $(".tieba_binding .check_found_tieba_user").hide();
                 }
                 else
                     window.location.href = '{% url 'closends:setting:tieba_unbinding' %}';
@@ -726,8 +767,11 @@
                         async: false,
                         success: function (ret) {
                             if(ret.status === 'success'){
-                                $(".tieba_binding .search_result").show();
-                                $("#adding_found_tieba_user").show();
+                                $(".tieba_binding .search_result .person").show();
+                                $(".tieba_binding .search_result .feedback").hide();
+                                $(".tieba_binding .check_found_tieba_user").show();
+                                $(".tieba_binding #adding_found_tieba_user").text("确认");
+                                
                                 $(".tieba_binding img").attr('src', ret.user_html[0]);
                                 $(".tieba_binding #person_id").text(ret.person_id).attr('href', ret.user_html[1]);
                                 if(ret.user_html[2] === 'male')
@@ -736,6 +780,10 @@
                                 $(".tieba_binding .userinfo_num").text(ret.user_html[4]);
                             }
                             else{
+                                $(".tieba_binding .search_result .person").hide();
+                                $(".tieba_binding .search_result .feedback").show();
+                                $(".tieba_binding .check_found_tieba_user").show();
+                                
                                 $(".tieba_binding .search_result .feedback strong").text("查询失败,请直接添加链接!");
                                 $(".tieba_binding #adding_found_tieba_user").text("重新查询");
                             }
@@ -744,25 +792,33 @@
             });
             
             $("#adding_found_tieba_user").on("click", function () {
-                let ID = $(".tieba_binding #person_id").text();
-                let link = $(".tieba_binding #person_id").attr('href');
-                let head = $(".tieba_binding img").attr('src');
-                let tieba_user = {'account':ID, 'ID':ID, 'link':link, 'head': head};
-                $.ajax({
-                        url: "{% url 'closends:setting:tieba_binding' %}",
-                        type: "post",
-                        datatype: "json",
-                        data: tieba_user,
-                        async: false,
-                        success: function (ret) {
-                            if(ret.status === 'success'){
-                                window.location.href = '{% url 'closends:setting:user_binding' %}';
+                if($(this).text() === "重新查询"){
+                    $(".tieba_binding input").val("");
+                    $(".tieba_binding .search_result .feedback").hide();
+                    $(".tieba_binding .check_found_tieba_user").hide();
+                }
+                else{
+                    let ID = $(".tieba_binding #person_id").text();
+                    let link = $(".tieba_binding #person_id").attr('href');
+                    let head = $(".tieba_binding img").attr('src');
+                    let tieba_user = {'account':ID, 'ID':ID, 'link':link, 'head': head};
+                    $.ajax({
+                            url: "{% url 'closends:setting:tieba_binding' %}",
+                            type: "post",
+                            datatype: "json",
+                            data: tieba_user,
+                            async: false,
+                            success: function (ret) {
+                                if(ret.status === 'success'){
+                                    window.location.href = '{% url 'closends:setting:user_binding' %}';
+                                }
+                                else{
+                                    //pass
+                                }
                             }
-                            else{
-                                //pass
-                            }
-                        }
-                    });//ajax
+                        });//ajax
+                }
+                
             });
         })
     </script>

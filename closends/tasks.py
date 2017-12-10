@@ -43,7 +43,7 @@ def weibo_spider():
         except:
             with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
         update_num += len(weibos)
 
@@ -120,7 +120,7 @@ def zhihu_spider():
         except:
             with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
         update_num += len(zhihus)
 
@@ -175,7 +175,7 @@ def tieba_spider():
         except:
             with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieba_ID + '\t' + str(time_1) + '\t' + str(time_2))
+                fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieba_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
 
         update_num += len(tiebas)
@@ -214,7 +214,7 @@ def weibo_spider_friend(username, friend):
     except:
         with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for weibo in weibos:
@@ -287,7 +287,7 @@ def zhihu_spider_friend(username, friend):
     except:
         with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for zhihu in zhihus:
@@ -338,7 +338,7 @@ def tieba_spider_friend(username, friend):
     except:
         with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieb_ID + '\t' + str(time_1) + '\t' + str(time_2))
+            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieb_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for tieba in tiebas:
@@ -491,13 +491,10 @@ def update_all_cache(keys):
             cached_query_all(key.split('_')[0])
         elif key.split('_')[1] in ['weibo', 'zhihu', 'tieba']:
             username, platform, _ = key.split('_')
-            print(username, platform)
             cached_query_platform(username, platform)
         elif key.split('_')[1] in topic_name:
             username, topic, _ = key.split('_')
-            print(username, topic)
             cached_query_topic(username, topic)
         else:
             username, group, _ = key.split('_')
-            print(username, group)
             cached_query_group(username, group)
