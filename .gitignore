@@ -5,6 +5,7 @@ data_svm/
 data_pos/
 data_cnt/
 migrations/
+media/head/*
 collected_static/
 
 celerybeat-schedule.bak
