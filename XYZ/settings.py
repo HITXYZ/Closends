@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '512!rtj)$i0=g=eubj^3-x2k-w6zme%+wo-n3snpyxz(nk6#=-'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -103,25 +103,21 @@ USE_TZ = False
 
 LOGIN_URL = '/closends/'
 
+# static files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+# media setting
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# celery中间件
+# celery setting
 BROKER_URL = 'redis://localhost:6379'
-
-# celery结果返回, 用于跟踪结果
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-
-# celery内容等消息的格式设置
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
-# celery时区设置
 CELERY_TIMEZONE = 'Asia/Shanghai'

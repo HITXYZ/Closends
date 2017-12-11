@@ -53,7 +53,6 @@ def email_login(request):
         info = request.POST
         email = info['email']
         password = info['password']
-        print(email, password)
         if not User.objects.filter(email=email):
             result = {'status': 'error', 'error_msg': 'user_not_exist'}
             return HttpResponse(json.dumps(result), content_type='application/json')

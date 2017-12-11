@@ -1,3 +1,4 @@
+import os
 import re
 import math
 import jieba
@@ -6,8 +7,6 @@ from libsvm.svmutil import *
 from collections import Counter
 from itertools import chain, zip_longest
 from django.conf import settings
-
-import os
 
 DEBUG = False
 DIR = os.getcwd()

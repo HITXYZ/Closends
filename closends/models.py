@@ -24,7 +24,7 @@ class UserInfo(models.Model):
 
 
 class Website(models.Model):
-    """用户各网站授权码"""
+    """用户各网站账号"""
 
     def __str__(self):
         return marks[self.site]

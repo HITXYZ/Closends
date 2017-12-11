@@ -82,7 +82,6 @@ def delete_group(request):
         for friend in friends:
             friend.group = '未分组'
             friend.save()
-
         return HttpResponse("")
 
 

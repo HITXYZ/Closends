@@ -32,22 +32,18 @@ class ZhihuContentInline(admin.StackedInline):
 
 
 class MyUserAdmin(UserAdmin):
-    # list_display = ('username', 'email', 'is_staff')
     inlines = (UserInfoInline,)
 
 
 class UserInfoAdmin(admin.ModelAdmin):
-    # list_display = ('__str__',)
     inlines = (WebsiteInline, FriendInline)
 
 
 class WebsiteAdmin(admin.ModelAdmin):
     pass
-    # list_display = ('username', 'site', 'authcode')
 
 
 class FriendAdmin(admin.ModelAdmin):
-    # list_display = ('username', 'nickname', 'group')
     inlines = (TiebaContentInline, WeiboContentInline, ZhihuContentInline,)
 
 
@@ -58,7 +54,6 @@ class WeiboContentAdmin(admin.ModelAdmin):
 
 class ZhihuContentAdmin(admin.ModelAdmin):
     pass
-    # list_display = ('nickname', 'content', 'pub_date')
 
 
 class TiebaContentAdmin(admin.ModelAdmin):
