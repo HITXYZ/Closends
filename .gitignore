@@ -1,10 +1,12 @@
 .idea/
 *.pyc
+
 data_svm/
 data_pos/
 data_cnt/
 migrations/
 collected_static/
+
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir

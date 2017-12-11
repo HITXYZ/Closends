@@ -211,7 +211,7 @@ class WeiboSpider(SocialMediaSpider):
         stop_flag = False
         while finish_count < need_count:
             position += 1
-            # print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
+            print(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             response = requests.get(weibo_user_weibo_url.format(uid1=id, uid2=id, page=position))
             result = response.json()
             for card in result.get('data').get('cards'):

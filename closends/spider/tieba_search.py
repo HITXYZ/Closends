@@ -53,8 +53,8 @@ def get_user_by_homepage(url):
 
 
 if __name__ == '__main__':
-    user, html = get_user_by_search('愛你沒法說')
+    user, html = get_user_by_search('孤独凤凰战士')
     print(user, html)
 
-    user, html = get_user_by_homepage('http://tieba.baidu.com/home/main?un=%E6%84%9B%E4%BD%A0%E6%B2%92%E6%B3%95%E8%AA%AA')
+    user, html = get_user_by_homepage('https://www.baidu.com/p/%B9%C2%B6%C0%B7%EF%BB%CB%D5%BD%CA%BF?from=tieba')
     print(user, html)

@@ -73,6 +73,6 @@ def get_user_by_homepage(url):
 
 
 if __name__ == '__main__':
-    print(get_user_by_search('江枫', number=2))
-    # print(get_user_by_homepage('https://www.zhihu.com/people/excited-vczh/activities'))
+    print(get_user_by_search('孤独凤凰战士', number=2))
+    print(get_user_by_homepage('https://www.baidu.com/p/%B9%C2%B6%C0%B7%EF%BB%CB%D5%BD%CA%BF?from=tieba'))
     # print(get_user_by_homepage('https://www.zhihu.com/people/jiang-feng-72-58'))

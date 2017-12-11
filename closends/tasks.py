@@ -17,6 +17,10 @@ from closends.spider.tieba_spider import TiebaSpider
 from closends.models import Friend, WeiboContent, ZhihuContent, TiebaContent, Image, User
 
 
+delta_days = 7
+scrape_num = 1000
+
+
 @periodic_task(run_every=(crontab(minute='*/5')), name="weibo_spider")
 def weibo_spider():
     spider = WeiboSpider()
@@ -33,16 +37,18 @@ def weibo_spider():
             start_time = friend.weibocontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
-            start_time = datetime.now() + timedelta(days=-7)
+            start_time = datetime.now() + timedelta(days=-delta_days)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
 
         try:
-            weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=1000)
+            weibos = spider.scrape_user_weibo(int(friend.weibo_ID), before=time_1, after=time_2, number=scrape_num)
         except:
             with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+                time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
         update_num += len(weibos)
@@ -110,16 +116,18 @@ def zhihu_spider():
             start_time = friend.zhihucontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
-            start_time = datetime.now() + timedelta(days=-7)
+            start_time = datetime.now() + timedelta(days=-delta_days)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
 
         try:
-            zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=1000)
+            zhihus = spider.scrape_user_activities(friend.zhihu_ID, before=time_1, after=time_2, number=scrape_num)
         except:
             with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+                time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
         update_num += len(zhihus)
@@ -165,16 +173,18 @@ def tieba_spider():
             start_time = friend.tiebacontent_set.latest('pub_date').pub_date + timedelta(seconds=1)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         except:
-            start_time = datetime.now() + timedelta(days=-7)
+            start_time = datetime.now() + timedelta(days=-delta_days)
             start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
         time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
         time_1 = time.time()
 
         try:
-            tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=1000)
+            tiebas = spider.scrape_user_posts(friend.tieba_ID, before=time_1, after=time_2, number=scrape_num)
         except:
             with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+                time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+                time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
                 fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieba_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
             continue
 
@@ -204,17 +214,19 @@ def weibo_spider_friend(username, friend):
     spider = WeiboSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    start_time = datetime.now() + timedelta(days=-7)
+    start_time = datetime.now() + timedelta(days=-delta_days)
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
 
     try:
-        weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=1000)
+        weibos = spider.scrape_user_weibo(int(friend['weibo_ID']), before=time_1, after=time_2, number=scrape_num)
     except:
         with codecs.open('weibo_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.weibo_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
+            time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+            time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
+            fw.write(current_time + '\t' + username + '\t' + friend['weibo_ID'] + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for weibo in weibos:
@@ -277,17 +289,19 @@ def zhihu_spider_friend(username, friend):
     spider = ZhihuSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    start_time = datetime.now() + timedelta(days=-7)
+    start_time = datetime.now() + timedelta(days=-delta_days)
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
 
     try:
-        zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=1000)
+        zhihus = spider.scrape_user_activities(friend['zhihu_ID'], before=time_1, after=time_2, number=scrape_num)
     except:
         with codecs.open('zhihu_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.zhihu_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
+            time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+            time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
+            fw.write(current_time + '\t' + username + '\t' + friend['zhihu_ID'] + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for zhihu in zhihus:
@@ -328,17 +342,19 @@ def tieba_spider_friend(username, friend):
     spider = TiebaSpider()
     lab = Preprocess('', 1000)
     svm_model = svm_load_model(settings.BASE_DIR + '/closends/svm/svm.model')
-    start_time = datetime.now() + timedelta(days=-7)
+    start_time = datetime.now() + timedelta(days=-delta_days)
     start_time = start_time.strftime('%Y-%m-%d %H:%M:%S')
     time_2 = time.mktime(time.strptime(start_time, '%Y-%m-%d %H:%M:%S'))
     time_1 = time.time()
 
     try:
-        tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=1000)
+        tiebas = spider.scrape_user_posts(friend['tieba_ID'], before=time_1, after=time_2, number=scrape_num)
     except:
         with codecs.open('tieba_spider_error.txt', 'a', encoding='utf8') as fw:
             current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-            fw.write(current_time + '\t' + friend.nickname + '\t' + friend.tieb_ID + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
+            time_1 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_1))
+            time_2 = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time_2))
+            fw.write(current_time + '\t' + username + '\t' + friend['tieba_ID'] + '\t' + str(time_1) + '\t' + str(time_2)+'\n')
         return
 
     for tieba in tiebas:
@@ -399,7 +415,8 @@ def cached_query_all(username):
 
 @task(name="cache_query_platform")
 def cached_query_platform(username, platform):
-    print("enter")
+    print("enter " + username + " " +platform)
+
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
 
@@ -429,7 +446,8 @@ def cached_query_platform(username, platform):
 
 @task(name="cache_query_group")
 def cached_query_group(username, group_name):
-    print("enter")
+    print("enter " + username + " " + group_name)
+
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
 
@@ -459,6 +477,8 @@ def cached_query_group(username, group_name):
 
 @task(name="cache_query_topic")
 def cached_query_topic(username, topic):
+    print("enter "+ username + " " + topic)
+
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
 
