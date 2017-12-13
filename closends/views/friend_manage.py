@@ -187,6 +187,7 @@ def add_found_friend_weibo(request):
         friend.weibo_account = request.POST['account']
         friend.weibo_link = request.POST['link']
         friend.weibo_head = request.POST['head']
+        friend.weibocontent_set.all().delete()
         friend.save()
 
         args = {'id': friend.id, 'weibo_ID': friend.weibo_ID}
@@ -238,6 +239,7 @@ def add_found_friend_zhihu(request):
         friend.zhihu_account = request.POST['account']
         friend.zhihu_link = 'https://www.zhihu.com' + request.POST['link']
         friend.zhihu_head = request.POST['head']
+        friend.zhihucontent_set.all().delete()
         friend.save()
 
         args = {'id': friend.id, 'zhihu_ID': friend.zhihu_ID}
@@ -289,6 +291,7 @@ def add_found_friend_tieba(request):
         friend.tieba_account = request.POST['account']
         friend.tieba_link = request.POST['link']
         friend.tieba_head = request.POST['head']
+        friend.tiebacontent_set.all().delete()
         friend.save()
 
         args = {'id': friend.id, 'tieba_ID': friend.tieba_ID}

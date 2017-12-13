@@ -415,7 +415,7 @@ def cached_query_all(username):
 
 @task(name="cache_query_platform")
 def cached_query_platform(username, platform):
-    print("enter " + username + " " +platform)
+    print("caching " + username + " " +platform)
 
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
@@ -446,7 +446,7 @@ def cached_query_platform(username, platform):
 
 @task(name="cache_query_group")
 def cached_query_group(username, group_name):
-    print("enter " + username + " " + group_name)
+    print("caching " + username + " " + group_name)
 
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
@@ -477,7 +477,7 @@ def cached_query_group(username, group_name):
 
 @task(name="cache_query_topic")
 def cached_query_topic(username, topic):
-    print("enter "+ username + " " + topic)
+    print("caching "+ username + " " + topic)
 
     user = User.objects.get(username=username).userinfo
     friends = user.friend_set.all()
